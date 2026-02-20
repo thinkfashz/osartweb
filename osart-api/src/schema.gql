@@ -198,6 +198,7 @@ type Query {
   cart: Cart!
   categories: [Category!]!
   categoryBySlug(slug: String!): Category!
+  me: User
   order(orderId: String!): Order!
   orders: [Order!]!
   productBySlug(slug: String!): Product!
@@ -282,6 +283,7 @@ type User {
   fullName: String
   id: ID!
   phone: String
+  role: String
   totalOrders: Int!
   totalSpent: Float!
 }

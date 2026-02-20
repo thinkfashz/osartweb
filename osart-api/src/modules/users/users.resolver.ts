@@ -1,4 +1,4 @@
-import { Resolver, Query, Args, ID } from '@nestjs/graphql';
+import { Resolver, Query, Args, ID, Context } from '@nestjs/graphql';
 import { UsersService } from './users.service';
 import { User } from './models/user.model';
 import { GraphQLJSONObject } from 'graphql-scalars';
@@ -15,5 +15,12 @@ export class UsersResolver {
     @Query(() => GraphQLJSONObject)
     async adminCustomerDetail(@Args('id', { type: () => ID }) id: string) {
         return this.usersService.getCustomerDetail(id);
+    }
+
+    @Query(() => User, { name: 'me', nullable: true })
+    async me(@Context() ctx: any) {
+        const user = ctx.req.user;
+        if (!user) return null;
+        return this.usersService.getCustomerDetail(user.id);
     }
 }

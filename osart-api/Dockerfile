@@ -1,11 +1,11 @@
 # Base stage
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
 WORKDIR /app
 COPY package*.json ./
 
 # Dependencies stage
 FROM base AS dependencies
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 # Build stage
 FROM dependencies AS build
@@ -13,7 +13,7 @@ COPY . .
 RUN npm run build
 
 # Production stage
-FROM node:18-alpine AS release
+FROM node:20-alpine AS release
 WORKDIR /app
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY --from=build /app/dist ./dist

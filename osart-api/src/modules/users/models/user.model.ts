@@ -22,4 +22,7 @@ export class User {
 
     @Field(() => Float, { defaultValue: 0 })
     totalSpent: number;
+
+    @Field({ nullable: true })
+    role?: string;
 }
