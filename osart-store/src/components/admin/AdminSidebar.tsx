@@ -14,86 +14,148 @@ import {
     X,
     LogOut,
     TrendingUp,
-    ShieldCheck
+    ShieldCheck,
+    Zap,
+    Layers
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const NAV_ITEMS = [
-    { name: 'Power Hub', icon: LayoutDashboard, path: '/admin' },
-    { name: 'Catalog', icon: Package, path: '/admin/catalog' },
-    { name: 'Stock Control', icon: TrendingUp, path: '/admin/stock' },
-    { name: 'Customers', icon: Users, path: '/admin/customers' },
-    { name: 'Revenue', icon: BarChart3, path: '/admin/sales' },
-    { name: 'Database', icon: Database, path: '/admin/database' },
+    { name: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
+    { name: 'Productos', icon: Package, path: '/admin/products' },
+    { name: 'Categorías', icon: Layers, path: '/admin/categories' },
+    { name: 'Stock en Vivo', icon: TrendingUp, path: '/admin/stock' },
+    { name: 'Configuraciones', icon: Settings, path: '/admin/settings' },
 ];
 
-export default function AdminSidebar() {
+const SYSTEM_ITEMS = [
+    { name: 'Clientes', icon: Users, path: '/admin/customers' },
+    { name: 'Ventas', icon: BarChart3, path: '/admin/sales' },
+    { name: 'Sincronización', icon: Zap, path: '/admin/sync' },
+    { name: 'Base de Datos', icon: Database, path: '/admin/database' },
+];
+
+export default function AdminSidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: boolean) => void }) {
     const pathname = usePathname();
-    const [isOpen, setIsOpen] = React.useState(true);
+    const [isCollapsed, setIsCollapsed] = React.useState(false);
 
     return (
         <motion.aside
             initial={false}
-            animate={{ width: isOpen ? 280 : 80 }}
-            className="h-full bg-white border-r border-zinc-100 flex flex-col z-50 relative group shadow-sm"
+            animate={{
+                width: isCollapsed ? 80 : 280,
+                x: 0
+            }}
+            className={`
+                fixed inset-y-0 left-0 z-50 lg:relative lg:translate-x-0 transition-all duration-300 ease-in-out
+                ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+                h-full bg-zinc-950 border-r border-zinc-900/50 flex flex-col shadow-[20px_0_40px_rgba(0,0,0,0.4)] lg:shadow-none
+            `}
         >
-            {/* Sidebar Toggle */}
+            {/* Mobile Close Button */}
             <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="absolute -right-3 top-20 bg-white border border-zinc-100 rounded-full p-1.5 shadow-md hover:bg-zinc-50 transition-colors hidden md:block"
+                onClick={() => setIsOpen(false)}
+                className="absolute right-4 top-6 p-2 text-zinc-500 hover:text-white lg:hidden active:scale-95 transition-colors"
             >
-                {isOpen ? <X size={12} /> : <Menu size={12} />}
+                <X size={24} />
             </button>
 
-            {/* Logo */}
-            <div className={`p-6 mb-8 flex items-center gap-3 ${!isOpen && 'justify-center'}`}>
-                <div className="w-8 h-8 rounded-lg bg-zinc-950 flex items-center justify-center shrink-0 shadow-lg shadow-zinc-950/10">
-                    <ShieldCheck size={18} className="text-white" />
+            {/* Sidebar Toggle (Desktop Only) */}
+            <button
+                onClick={() => setIsCollapsed(!isCollapsed)}
+                className="absolute -right-3 top-20 bg-zinc-900 border border-zinc-800 rounded-full p-1.5 shadow-xl hover:bg-zinc-800 hover:border-zinc-700 transition-all hidden lg:flex items-center justify-center z-50 group"
+            >
+                {isCollapsed ?
+                    <Menu size={11} className="text-zinc-400 group-hover:text-electric-blue transition-colors" /> :
+                    <X size={11} className="text-zinc-400 group-hover:text-red-400 transition-colors" />
+                }
+            </button>
+
+            {/* Logo Section */}
+            <div className={`p-8 mb-4 flex items-center gap-4 ${isCollapsed ? 'justify-center px-0' : ''} transition-all`}>
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-950 border border-zinc-700/50 flex items-center justify-center shrink-0 shadow-2xl relative overflow-hidden group">
+                    <ShieldCheck size={20} className="text-electric-blue relative z-10" />
+                    <div className="absolute inset-0 bg-electric-blue/10 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
-                {isOpen && (
-                    <span className="font-bold text-xl tracking-tighter text-zinc-950 uppercase italic">
-                        OSART<span className="text-zinc-400 font-light">PRO</span>
-                    </span>
+                {!isCollapsed && (
+                    <div className="flex flex-col">
+                        <span className="font-black text-xl tracking-tighter text-white uppercase italic leading-none">
+                            OSART<span className="text-electric-blue font-light">PRO</span>
+                        </span>
+                        <span className="text-[8px] font-mono text-zinc-500 uppercase tracking-[0.3em] mt-1 pulse-slow">
+                            Nivel Crítico 01
+                        </span>
+                    </div>
                 )}
             </div>
 
             {/* Navigation */}
-            <nav className="flex-1 px-3 space-y-1">
-                {NAV_ITEMS.map((item) => {
-                    const isActive = pathname === item.path;
-                    return (
-                        <Link
-                            key={item.path}
-                            href={item.path}
-                            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group ${isActive
-                                    ? 'bg-zinc-950 text-white shadow-xl shadow-zinc-950/10'
-                                    : 'text-zinc-500 hover:bg-zinc-50 hover:text-zinc-950'
-                                } ${!isOpen && 'justify-center'}`}
-                        >
-                            <item.icon size={20} className={isActive ? 'text-electric-blue' : ''} />
-                            {isOpen && (
-                                <span className={`font-semibold tracking-tight ${isActive ? 'translate-x-1' : ''} transition-transform`}>
-                                    {item.name}
-                                </span>
-                            )}
-                            {isActive && isOpen && (
-                                <motion.div
-                                    layoutId="nav-active"
-                                    className="ml-auto w-1.5 h-1.5 rounded-full bg-electric-blue"
-                                />
-                            )}
-                        </Link>
-                    );
-                })}
+            <nav className="flex-1 px-4 space-y-10 overflow-y-auto custom-scrollbar-dark py-4">
+                <div>
+                    <h3 className={`px-4 mb-4 text-[9px] font-black uppercase tracking-[0.3em] text-zinc-600 flex items-center gap-2 ${isCollapsed ? 'justify-center px-0' : ''}`}>
+                        <div className="w-1 h-3 bg-zinc-800 rounded-full" />
+                        {!isCollapsed && "Núcleo Operativo"}
+                    </h3>
+                    <div className="space-y-1.5">
+                        {NAV_ITEMS.map((item) => (
+                            <NavItem key={item.path} item={item} pathname={pathname} isCollapsed={isCollapsed} />
+                        ))}
+                    </div>
+                </div>
+
+                <div>
+                    <h3 className={`px-4 mb-4 text-[9px] font-black uppercase tracking-[0.3em] text-zinc-600 flex items-center gap-2 ${isCollapsed ? 'justify-center px-0' : ''}`}>
+                        <div className="w-1 h-3 bg-zinc-800 rounded-full" />
+                        {!isCollapsed && "Sistemas de Red"}
+                    </h3>
+                    <div className="space-y-1.5">
+                        {SYSTEM_ITEMS.map((item) => (
+                            <NavItem key={item.path} item={item} pathname={pathname} isCollapsed={isCollapsed} />
+                        ))}
+                    </div>
+                </div>
             </nav>
 
-            {/* Footer / Logout */}
-            <div className="p-4 mt-auto border-t border-zinc-100">
-                <button className={`flex items-center gap-3 px-4 py-3 w-full text-zinc-400 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all ${!isOpen && 'justify-center'}`}>
-                    <LogOut size={20} />
-                    {isOpen && <span className="font-semibold">Sign Out</span>}
+            {/* Status & Logout */}
+            <div className="p-4 mt-auto border-t border-zinc-900/50 bg-black/20 backdrop-blur-xl">
+                {!isCollapsed && (
+                    <div className="px-4 py-3 mb-4 rounded-xl bg-zinc-900/50 border border-zinc-800/50 flex items-center gap-3">
+                        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                        <span className="text-[9px] font-mono text-zinc-400 uppercase tracking-widest">Sistema Operativo</span>
+                    </div>
+                )}
+                <button className={`flex items-center gap-3 px-4 py-3 w-full text-zinc-500 hover:text-red-400 hover:bg-red-950/20 rounded-xl transition-all group ${isCollapsed ? 'justify-center' : ''}`}>
+                    <LogOut size={18} className="group-hover:-translate-x-1 transition-transform" />
+                    {!isCollapsed && <span className="font-black text-[10px] uppercase tracking-widest">Cerrar Sesión</span>}
                 </button>
             </div>
         </motion.aside>
     );
 }
+
+const NavItem = ({ item, pathname, isCollapsed }: any) => {
+    const isActive = pathname === item.path;
+    return (
+        <Link
+            href={item.path}
+            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group relative overflow-hidden ${isActive
+                ? 'bg-zinc-100 text-black font-black'
+                : 'text-zinc-500 hover:text-zinc-200 hover:bg-zinc-900/50'
+                } ${isCollapsed ? 'justify-center px-0' : ''}`}
+        >
+            <item.icon size={18} className={`${isActive ? 'text-black' : 'group-hover:text-electric-blue group-hover:scale-110 transition-all duration-300'}`} />
+            {!isCollapsed && (
+                <span className={`text-[10px] font-black uppercase tracking-widest transition-all ${isActive ? 'translate-x-1' : 'group-hover:translate-x-1'}`}>
+                    {item.name}
+                </span>
+            )}
+
+            {isActive && !isCollapsed && (
+                <motion.div
+                    layoutId="nav-active"
+                    className="absolute right-0 top-0 bottom-0 w-1 bg-electric-blue"
+                />
+            )}
+        </Link>
+    );
+};

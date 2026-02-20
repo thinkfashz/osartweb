@@ -2,6 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #27272a;
+    border-radius: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #3f3f46;
+  }
+}
+
 @layer base {
   :root {
     --background: 240 10% 3.9%;
@@ -28,6 +48,31 @@
     /* Custom Tokens */
     --electric-blue: 186 100% 50%;
     --electric-blue-glow: 186 100% 50% / 0.4;
+
+    /* Responsive Typography Tokens */
+    --font-size-xs: clamp(0.7rem, 0.65rem + 0.25vw, 0.75rem);
+    --font-size-sm: clamp(0.8rem, 0.75rem + 0.25vw, 0.875rem);
+    --font-size-base: clamp(0.9rem, 0.85rem + 0.25vw, 1rem);
+    --font-size-lg: clamp(1rem, 0.95rem + 0.25vw, 1.125rem);
+    --font-size-xl: clamp(1.25rem, 1.15rem + 0.5vw, 1.5rem);
+    --font-size-2xl: clamp(1.5rem, 1.4rem + 0.75vw, 2.25rem);
+    --font-size-3xl: clamp(2rem, 1.8rem + 1vw, 3.5rem);
+
+    /* Layout Tokens */
+    --container-padding: clamp(1rem, 0.5rem + 2vw, 2.5rem);
+  }
+
+  .safe-area-pt {
+    padding-top: max(1.25rem, env(safe-area-inset-top));
+  }
+
+  .safe-area-pb {
+    padding-bottom: max(1.25rem, env(safe-area-inset-bottom));
+  }
+
+  .safe-area-px {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
   }
 
   .light-admin {
@@ -83,9 +128,28 @@
   @apply relative overflow-hidden bg-transparent text-electric-blue border-1.5 border-electric-blue px-6 py-3 rounded-lg font-semibold uppercase tracking-widest transition-all z-10;
 }
 
-.neon-button::before {
-  content: '';
-  @apply absolute top-0 left-0 w-full h-full bg-electric-blue opacity-0 -z-10 transition-all duration-300;
+.neon-button:hover::before {
+  @apply opacity-100;
+}
+
+.neon-button:active {
+  @apply scale-95;
+}
+
+/* Navbar Utilities */
+@layer components {
+  .navbar-link {
+    @apply text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-white transition-all relative;
+  }
+
+  .navbar-link::after {
+    content: '';
+    @apply absolute -bottom-1 left-0 w-0 h-[1px] bg-electric-blue transition-all duration-300;
+  }
+
+  .navbar-link:hover::after {
+    @apply w-full shadow-[0_0_8px_hsl(var(--electric-blue-glow))];
+  }
 }
 
 .neon-button:hover {

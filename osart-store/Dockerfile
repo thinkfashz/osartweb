@@ -1,11 +1,11 @@
 # Base stage
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
 WORKDIR /app
 COPY package*.json ./
 
 # Dependencies stage
 FROM base AS dependencies
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 # Build stage
 FROM dependencies AS build
@@ -15,12 +15,17 @@ COPY . .
 RUN npm run build
 
 # Production stage
-FROM node:18-alpine AS release
+FROM node:20-alpine AS release
 WORKDIR /app
+
+ENV NODE_ENV=production
+
+# Copy standalone build and static assets
+COPY --from=build /app/.next/standalone ./
+COPY --from=build /app/.next/static ./.next/static
 COPY --from=build /app/public ./public
-COPY --from=build /app/.next ./.next
-COPY --from=dependencies /app/node_modules ./node_modules
-COPY package.json ./
 
 EXPOSE 3000
-CMD ["npm", "start"]
+
+# Next.js standalone server
+CMD ["node", "server.js"]

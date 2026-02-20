@@ -34,7 +34,8 @@ export default function StockTable({ products, onAdjust }: StockTableProps) {
                 </div>
             </div>
 
-            <div className="overflow-x-auto relative z-10">
+            {/* Desktop Table View */}
+            <div className="hidden md:block overflow-x-auto relative z-10">
                 <table className="w-full text-left border-collapse">
                     <thead>
                         <tr className="bg-slate-50/50">
@@ -62,7 +63,7 @@ export default function StockTable({ products, onAdjust }: StockTableProps) {
                                     >
                                         <td className="px-8 py-6">
                                             <div className="flex flex-col">
-                                                <span className="text-sm font-black text-slate-900 uppercase tracking-tight group-hover:text-blue-600 transition-colors">{p.name}</span>
+                                                <span className="text-sm font-black text-slate-900 uppercase tracking-tight group-hover:text-blue-600 transition-colors uppercase italic">{p.name}</span>
                                                 <span className="text-[10px] text-slate-400 font-mono font-bold tracking-widest mt-0.5">{p.sku || 'SERIAL-PENDING'}</span>
                                             </div>
                                         </td>
@@ -80,15 +81,6 @@ export default function StockTable({ products, onAdjust }: StockTableProps) {
                                                             "bg-slate-50 text-slate-900 border border-slate-100"
                                                 )}>
                                                     {p.stock}
-                                                </div>
-                                                <div className="flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-all translate-x-2 group-hover:translate-x-0">
-                                                    <button
-                                                        onClick={() => onAdjust(p)}
-                                                        className="p-1.5 rounded-lg bg-slate-950 text-white hover:bg-blue-600 transition-all shadow-lg active:scale-90"
-                                                        title="Ajustar Inventario"
-                                                    >
-                                                        <Plus size={14} />
-                                                    </button>
                                                 </div>
                                             </div>
                                         </td>
@@ -117,8 +109,11 @@ export default function StockTable({ products, onAdjust }: StockTableProps) {
                                         </td>
                                         <td className="px-8 py-6">
                                             <div className="flex items-center justify-end gap-2">
-                                                <button className="p-2.5 rounded-xl bg-slate-50 text-slate-400 hover:bg-slate-950 hover:text-white transition-all shadow-sm">
-                                                    <History size={16} />
+                                                <button
+                                                    onClick={() => onAdjust(p)}
+                                                    className="p-2.5 rounded-xl bg-slate-950 text-white hover:bg-blue-600 transition-all shadow-sm active:scale-95"
+                                                >
+                                                    <Plus size={16} />
                                                 </button>
                                                 <button className="p-2.5 rounded-xl bg-slate-50 text-slate-400 hover:bg-blue-600 hover:text-white transition-all shadow-sm">
                                                     <Edit2 size={16} />
@@ -131,6 +126,44 @@ export default function StockTable({ products, onAdjust }: StockTableProps) {
                         </AnimatePresence>
                     </tbody>
                 </table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden divide-y divide-slate-100 relative z-10 px-4 pb-8">
+                {products.map((p) => (
+                    <div key={p.id} className="py-6 space-y-4">
+                        <div className="flex justify-between items-start">
+                            <div className="flex flex-col">
+                                <span className="text-sm font-black text-slate-950 uppercase italic">{p.name}</span>
+                                <span className="text-[9px] text-slate-400 font-mono tracking-widest">{p.sku}</span>
+                            </div>
+                            <div className={cn(
+                                "w-10 h-10 rounded-xl flex items-center justify-center font-mono font-black text-md",
+                                p.stock <= 0 ? "bg-rose-50 text-rose-600" :
+                                    p.stock <= 5 ? "bg-orange-50 text-orange-600" :
+                                        "bg-slate-50 text-slate-950"
+                            )}>
+                                {p.stock}
+                            </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                            <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
+                                {p.category?.name}
+                            </span>
+                            <span className="text-sm font-black text-slate-950 font-mono">
+                                {formatCurrency(p.price)}
+                            </span>
+                        </div>
+                        <div className="flex gap-2">
+                            <button
+                                onClick={() => onAdjust(p)}
+                                className="flex-1 py-3 bg-slate-950 text-white text-[10px] font-black uppercase tracking-widest rounded-xl"
+                            >
+                                Ajustar Stock
+                            </button>
+                        </div>
+                    </div>
+                ))}
             </div>
         </div>
     );

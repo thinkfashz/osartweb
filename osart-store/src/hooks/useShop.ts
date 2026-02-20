@@ -25,7 +25,14 @@ export const useProducts = (filter?: { name?: string; categoryId?: string }) => 
         const { data: products, error: prodError } = await query.order('created_at', { ascending: false });
 
         if (prodError) throw prodError;
-        setData({ products: products || [] });
+
+        // Format for UI compatibility (ProductCard expects images array)
+        const formatted = (products || []).map(p => ({
+          ...p,
+          images: p.image_url ? [{ url: p.image_url, position: 0 }] : []
+        }));
+
+        setData({ products: formatted });
       } catch (err) {
         console.error('Error fetching products:', err);
         setError(err);

@@ -1,11 +1,18 @@
 "use client";
 
 import React from 'react';
-import { Bell, Search, User, Zap } from 'lucide-react';
+import { Bell, Search, User, Zap, Menu } from 'lucide-react';
 
-export default function AdminTopbar() {
+export default function AdminTopbar({ onMenuClick }: { onMenuClick: () => void }) {
     return (
-        <header className="h-20 bg-white/80 backdrop-blur-md border-b border-zinc-100 px-8 flex items-center justify-between z-40 sticky top-0">
+        <header className="h-20 bg-white/80 backdrop-blur-md border-b border-zinc-100 px-4 md:px-8 flex items-center z-40 sticky top-0">
+            {/* Mobile Menu Trigger */}
+            <button
+                onClick={onMenuClick}
+                className="p-2 mr-4 text-zinc-500 hover:bg-zinc-50 rounded-xl lg:hidden active:scale-95 transition-transform"
+            >
+                <Menu size={24} />
+            </button>
             {/* Search Bar */}
             <div className="relative w-96 hidden md:block">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-400" size={18} />
