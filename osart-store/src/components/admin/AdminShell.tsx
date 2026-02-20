@@ -28,7 +28,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
 
     // Guard Logic
-    const { data: roleData, loading: roleLoading, error: roleError } = useQuery(GET_MY_ROLE, {
+    const { data: roleData, loading: roleLoading } = useQuery<{ me: { role: string } }>(GET_MY_ROLE, {
         skip: !user,
         fetchPolicy: 'network-only'
     });

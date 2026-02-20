@@ -27,7 +27,7 @@ export const useProducts = (filter?: { name?: string; categoryId?: string }) => 
         if (prodError) throw prodError;
 
         // Format for UI compatibility (ProductCard expects images array)
-        const formatted = (products || []).map(p => ({
+        const formatted = (products || []).map((p: any) => ({
           ...p,
           images: p.image_url ? [{ url: p.image_url, position: 0 }] : []
         }));
