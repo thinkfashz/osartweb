@@ -120,7 +120,7 @@ export default function StockPage() {
                                 Logística Pro v4.0
                             </span>
                         </div>
-                        <h1 className="text-6xl font-black text-slate-950 tracking-tighter uppercase italic leading-none">
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-slate-950 tracking-tighter uppercase italic leading-none">
                             Unidad de Stock
                         </h1>
                         <p className="text-slate-400 font-bold uppercase tracking-[0.2em] text-[10px] max-w-xl">
@@ -175,7 +175,7 @@ export default function StockPage() {
                             <RefreshCcw size={20} className={loading ? 'animate-spin' : ''} />
                         </button>
 
-                        <GlowButton onClick={() => toast.info('Protocolo ERP Sync no autorizado para este terminal')} className="py-4 px-8 h-[5.5rem] text-[10px] rounded-[1.5rem]">
+                        <GlowButton onClick={() => toast.info('Protocolo ERP Sync no autorizado para este terminal')} className="py-2 px-6 md:py-4 md:px-8 h-12 md:h-[5.5rem] text-[10px] rounded-[1.25rem] md:rounded-[1.5rem]">
                             MODO ANALÍTICO
                         </GlowButton>
                     </div>

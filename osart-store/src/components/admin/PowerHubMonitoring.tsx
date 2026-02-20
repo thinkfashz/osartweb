@@ -65,8 +65,8 @@ const MonitoringCard = ({ title, value, description, icon: Icon, trend, status, 
                             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">{title}</h3>
                         </div>
                         <div className="flex items-baseline gap-1">
-                            {prefix && <span className="text-2xl font-black text-slate-300 italic">{prefix}</span>}
-                            <span className="text-5xl font-black text-slate-950 tracking-tighter italic uppercase underline decoration-slate-100 decoration-8 underline-offset-8">
+                            {prefix && <span className="text-xl md:text-2xl font-black text-slate-300 italic">{prefix}</span>}
+                            <span className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-950 tracking-tighter italic uppercase underline decoration-slate-100 decoration-8 underline-offset-8">
                                 {value}
                             </span>
                         </div>
@@ -194,8 +194,8 @@ export default function PowerHubMonitoring({ summary, stockStats }: { summary: a
             </div>
 
             {/* Live Data Feed Overlay (Minimalist) */}
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 px-4">
-                <div className="xl:col-span-2 bg-slate-950 p-10 rounded-[4rem] relative overflow-hidden group border border-white/5">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 px-4">
+                <div className="lg:col-span-2 bg-slate-950 p-6 md:p-10 rounded-[2.5rem] md:rounded-[4rem] relative overflow-hidden group border border-white/5">
                     <div className="absolute top-0 right-0 p-8">
                         <Cpu className="text-blue-500/20 animate-spin-slow" size={120} />
                     </div>
@@ -225,7 +225,7 @@ export default function PowerHubMonitoring({ summary, stockStats }: { summary: a
                     </div>
                 </div>
 
-                <div className="bg-white border border-slate-100 p-10 rounded-[4rem] flex flex-col justify-between shadow-sm group">
+                <div className="bg-white border border-slate-100 p-6 md:p-10 rounded-[2.5rem] md:rounded-[4rem] flex flex-col justify-between shadow-sm group">
                     <div className="space-y-2">
                         <div className="flex items-center gap-2">
                             <Truck className="text-slate-950" size={20} />

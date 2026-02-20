@@ -39,7 +39,7 @@ export const DataTable = ({ headers, children, data, columns, loading, title, ac
                             {tableHeaders.map((header, i) => (
                                 <th
                                     key={i}
-                                    className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-zinc-400 border-b border-zinc-100"
+                                    className="px-4 md:px-6 py-4 text-[10px] font-black uppercase tracking-widest text-zinc-400 border-b border-zinc-100 min-w-[120px]"
                                 >
                                     {header}
                                 </th>
@@ -93,7 +93,7 @@ export const DataRow = ({ children, className = "" }: { children: React.ReactNod
 );
 
 export const DataCell = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
-    <td className={`px-6 py-4 text-sm text-zinc-600 ${className}`}>
+    <td className={`px-4 md:px-6 py-4 text-sm text-zinc-600 ${className}`}>
         {children}
     </td>
 );

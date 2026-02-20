@@ -16,7 +16,7 @@ export default function CategoriesPage() {
                             <Layers size={14} />
                             Jerarquía de Catálogo
                         </div>
-                        <h1 className="text-4xl font-black tracking-tighter uppercase italic text-zinc-950">Categorías</h1>
+                        <h1 className="text-2xl md:text-4xl font-black tracking-tighter uppercase italic text-zinc-950">Categorías</h1>
                     </div>
 
                     <GlowButton className="py-4 px-8 h-14 text-[10px] rounded-2xl">
@@ -40,8 +40,8 @@ export default function CategoriesPage() {
                     />
                 </div>
 
-                <div className="bg-white border border-zinc-100 rounded-[2.5rem] p-12 flex flex-col items-center justify-center text-center gap-6 shadow-sm min-h-[400px]">
-                    <div className="w-16 h-16 bg-zinc-50 border border-zinc-100 rounded-2xl flex items-center justify-center text-zinc-300">
+                <div className="bg-white border border-zinc-100 rounded-[1.5rem] md:rounded-[2.5rem] p-6 md:p-12 flex flex-col items-center justify-center text-center gap-6 shadow-sm min-h-[300px] md:min-h-[400px]">
+                    <div className="w-12 h-12 md:w-16 md:h-16 bg-zinc-50 border border-zinc-100 rounded-2xl flex items-center justify-center text-zinc-300">
                         <Layers size={32} />
                     </div>
                     <div className="max-w-md">

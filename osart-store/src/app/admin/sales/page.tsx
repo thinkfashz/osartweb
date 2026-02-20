@@ -73,26 +73,29 @@ export default function SalesPage() {
         <PageTransition>
             <div className="space-y-10 pb-20">
                 {/* Header Section */}
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-white p-8 rounded-[2.5rem] border border-zinc-100 shadow-sm">
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-white p-6 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] border border-zinc-100 shadow-sm transition-all duration-300">
                     <div className="space-y-1">
                         <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600">
                             <Activity size={14} className="animate-pulse" />
                             Module: Alpha-Revenue
                         </div>
-                        <h1 className="text-4xl font-black tracking-tighter uppercase italic text-zinc-950">Revenue & Analytics</h1>
+                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-black tracking-tighter uppercase italic text-zinc-950 leading-tight">Revenue & Analytics</h1>
                     </div>
 
-                    <div className="flex items-center gap-3">
-                        <button
-                            onClick={handleRefresh}
-                            className="p-4 rounded-2xl bg-zinc-50 border border-zinc-100 text-zinc-400 hover:text-zinc-950 hover:bg-white transition-all shadow-sm group"
-                        >
-                            <RefreshCcw size={20} className={summaryLoading ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-700'} />
-                        </button>
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                        <div className="flex items-center gap-3 flex-1 sm:flex-none">
+                            <button
+                                onClick={handleRefresh}
+                                className="flex-1 sm:flex-none p-4 rounded-xl md:rounded-2xl bg-zinc-50 border border-zinc-100 text-zinc-400 hover:text-zinc-950 hover:bg-white transition-all shadow-sm group"
+                            >
+                                <RefreshCcw size={20} className={summaryLoading ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-700'} />
+                            </button>
+                            <div className="h-8 w-[1px] bg-zinc-100 sm:hidden mx-1" />
+                        </div>
                         <select
                             value={dateRange}
                             onChange={(e) => setDateRange(e.target.value)}
-                            className="bg-zinc-950 text-white rounded-2xl px-6 py-4 font-black text-[10px] uppercase tracking-widest border-none outline-none focus:ring-4 focus:ring-zinc-900/10 transition-all cursor-pointer shadow-lg shadow-zinc-950/20"
+                            className="bg-zinc-950 text-white rounded-xl md:rounded-2xl px-5 md:px-6 py-3 md:py-4 font-black text-[9px] md:text-[10px] uppercase tracking-widest border-none outline-none focus:ring-4 focus:ring-zinc-900/10 transition-all cursor-pointer shadow-lg shadow-zinc-950/20"
                         >
                             <option value="7d">Últimos 7 Días</option>
                             <option value="30d">Últimos 30 Días</option>
@@ -132,24 +135,24 @@ export default function SalesPage() {
                     </div>
                 )}
 
-                {/* Empty State / Seed Action */}
                 <AnimatePresence>
                     {isEmpty && (
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, scale: 0.95 }}
-                            className="bg-white p-16 rounded-[3rem] border-2 border-dashed border-slate-100 flex flex-col items-center text-center gap-8 relative overflow-hidden"
+                            className="bg-white p-6 md:p-16 rounded-[2rem] md:rounded-[3rem] border-2 border-dashed border-slate-100 flex flex-col items-center text-center gap-6 md:gap-8 relative overflow-hidden transition-all"
                         >
-                            <div className="absolute top-0 right-0 w-64 h-64 bg-slate-50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
+                            <div className="absolute top-0 right-0 w-48 md:w-64 h-48 md:h-64 bg-slate-50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
 
-                            <div className="w-24 h-24 rounded-[2rem] bg-slate-950 flex items-center justify-center text-white shadow-2xl shadow-slate-900/20 relative z-10">
-                                <Database size={44} />
+                            <div className="w-16 h-16 md:w-24 md:h-24 rounded-2xl md:rounded-[2rem] bg-slate-950 flex items-center justify-center text-white shadow-2xl shadow-slate-900/20 relative z-10">
+                                <Database size={32} className="md:hidden" />
+                                <Database size={44} className="hidden md:block" />
                             </div>
 
                             <div className="max-w-md relative z-10">
-                                <h2 className="text-3xl font-black text-slate-950 tracking-tighter mb-3 uppercase italic">System Database Depleted</h2>
-                                <p className="text-slate-500 font-bold text-sm leading-relaxed uppercase">
+                                <h2 className="text-xl md:text-3xl font-black text-slate-950 tracking-tighter mb-2 md:mb-3 uppercase italic">System Database Depleted</h2>
+                                <p className="text-slate-500 font-bold text-[10px] md:text-sm leading-relaxed uppercase tracking-wide">
                                     No records found in the current temporal window. Initialize demo population to verify analytics engine.
                                 </p>
                             </div>
@@ -157,10 +160,10 @@ export default function SalesPage() {
                             <button
                                 onClick={() => seedDemoData()}
                                 disabled={seeding}
-                                className="group relative flex items-center gap-3 px-10 py-5 rounded-3xl bg-slate-950 text-white font-black uppercase tracking-[0.2em] text-xs hover:bg-slate-900 transition-all disabled:opacity-50 overflow-hidden"
+                                className="group relative w-full sm:w-auto flex items-center justify-center gap-3 px-8 md:px-10 py-4 md:py-5 rounded-2xl md:rounded-3xl bg-slate-950 text-white font-black uppercase tracking-[0.2em] text-[10px] md:text-xs hover:bg-slate-900 transition-all disabled:opacity-50 overflow-hidden"
                             >
                                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-shimmer" />
-                                {seeding ? <RefreshCcw className="animate-spin" /> : <Sparkles size={18} className="text-slate-400 group-hover:text-white transition-colors" />}
+                                {seeding ? <RefreshCcw className="animate-spin" size={16} /> : <Sparkles size={16} className="text-slate-400 group-hover:text-white transition-colors" />}
                                 <span>Populate Records</span>
                             </button>
                         </motion.div>

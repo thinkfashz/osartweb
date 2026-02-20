@@ -74,23 +74,23 @@ export default function CatalogPage() {
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div className="flex items-center gap-4 flex-1 max-w-2xl">
                         <div className="relative flex-1 group">
-                            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-slate-950 transition-colors" size={18} />
+                            <Search className="absolute left-4 md:left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-slate-950 transition-colors" size={16} />
                             <input
                                 type="text"
                                 placeholder="BUSCAR HARDWARE..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                className="w-full bg-white border border-zinc-100 rounded-3xl py-4 pl-14 pr-6 text-[10px] font-black uppercase tracking-widest outline-none focus:border-zinc-950 transition-all shadow-sm"
+                                className="w-full bg-white border border-zinc-100 rounded-[1.5rem] md:rounded-3xl py-3 md:py-4 pl-12 md:pl-14 pr-6 text-[9px] md:text-[10px] font-black uppercase tracking-widest outline-none focus:border-zinc-950 transition-all shadow-sm"
                             />
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
-                        <div className="flex p-1.5 bg-zinc-100/50 rounded-2xl border border-zinc-100">
+                    <div className="flex items-center gap-3 w-full md:w-auto">
+                        <div className="flex p-1 bg-zinc-100/50 rounded-xl md:rounded-2xl border border-zinc-100 shrink-0">
                             <button
                                 onClick={() => setView('table')}
                                 className={cn(
-                                    "p-2.5 rounded-xl transition-all",
+                                    "p-2 md:p-2.5 rounded-lg md:rounded-xl transition-all",
                                     view === 'table' ? 'bg-white text-zinc-950 shadow-sm' : 'text-zinc-400 hover:text-zinc-600'
                                 )}
                             >
@@ -99,7 +99,7 @@ export default function CatalogPage() {
                             <button
                                 onClick={() => setView('grid')}
                                 className={cn(
-                                    "p-2.5 rounded-xl transition-all",
+                                    "p-2 md:p-2.5 rounded-lg md:rounded-xl transition-all",
                                     view === 'grid' ? 'bg-white text-zinc-950 shadow-sm' : 'text-zinc-400 hover:text-zinc-600'
                                 )}
                             >
@@ -108,7 +108,7 @@ export default function CatalogPage() {
                         </div>
                         <Link
                             href="/admin/products/new"
-                            className="flex items-center gap-2 px-6 py-4 rounded-2xl bg-zinc-950 text-white font-black uppercase tracking-widest text-[10px] hover:bg-zinc-800 transition-all shadow-lg shadow-zinc-950/20"
+                            className="flex-1 md:flex-none flex items-center justify-center gap-2 px-6 py-3 md:py-4 rounded-xl md:rounded-2xl bg-zinc-950 text-white font-black uppercase tracking-widest text-[9px] md:text-[10px] hover:bg-zinc-800 transition-all shadow-lg shadow-zinc-950/20"
                         >
                             <Plus size={16} />
                             Enrolar Unidad
@@ -117,7 +117,7 @@ export default function CatalogPage() {
                 </div>
 
                 {/* Catalog Visualization */}
-                <div className="bg-white border border-zinc-100 rounded-[2.5rem] overflow-hidden shadow-sm">
+                <div className="bg-white border border-zinc-100 rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden shadow-sm">
                     <AdminCatalogTable products={filtered} view={view} />
                 </div>
             </div>

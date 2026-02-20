@@ -9,16 +9,16 @@ export default function SettingsPage() {
     return (
         <PageTransition>
             <div className="space-y-10 pb-20">
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-white p-8 rounded-[2.5rem] border border-zinc-100 shadow-sm">
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-white p-6 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] border border-zinc-100 shadow-sm transition-all duration-300">
                     <div className="space-y-1">
                         <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">
                             <Settings size={14} />
                             Configuración de Núcleo
                         </div>
-                        <h1 className="text-4xl font-black tracking-tighter uppercase italic text-zinc-950">Ajustes del Sistema</h1>
+                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-black tracking-tighter uppercase italic text-zinc-950 leading-tight">Ajustes del Sistema</h1>
                     </div>
 
-                    <GlowButton className="py-4 px-8 h-14 text-[10px] rounded-2xl">
+                    <GlowButton className="py-4 px-8 h-12 md:h-14 text-[9px] md:text-[10px] rounded-xl md:rounded-2xl w-full lg:w-auto">
                         <Save size={16} className="mr-3" />
                         GUARDAR CAMBIOS
                     </GlowButton>

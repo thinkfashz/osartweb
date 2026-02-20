@@ -90,40 +90,40 @@ export default function CustomersPage() {
                 </div>
 
                 {/* Controls Bar */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6">
                     <div className="flex items-center gap-4 flex-1 max-w-2xl">
                         <div className="relative flex-1 group">
-                            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-slate-950 transition-colors" size={18} />
+                            <Search className="absolute left-4 md:left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-slate-950 transition-colors" size={16} />
                             <input
                                 type="text"
                                 placeholder="IDENTIFICAR USUARIO..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                className="w-full bg-white border border-zinc-100 rounded-3xl py-4 pl-14 pr-6 text-[10px] font-black uppercase tracking-widest outline-none focus:border-zinc-950 transition-all shadow-sm"
+                                className="w-full bg-white border border-zinc-100 rounded-[1.5rem] md:rounded-3xl py-3 md:py-4 pl-12 md:pl-14 pr-6 text-[9px] md:text-[10px] font-black uppercase tracking-widest outline-none focus:border-zinc-950 transition-all shadow-sm"
                             />
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 w-full xl:w-auto">
                         <button
                             onClick={() => refetch()}
-                            className="p-4 rounded-2xl bg-zinc-50 border border-zinc-100 text-zinc-400 hover:text-zinc-950 hover:bg-white transition-all shadow-sm"
+                            className="p-3 md:p-4 rounded-xl md:rounded-2xl bg-zinc-50 border border-zinc-100 text-zinc-400 hover:text-zinc-950 hover:bg-white transition-all shadow-sm"
                         >
-                            <RefreshCcw size={20} className={loading ? 'animate-spin' : ''} />
+                            <RefreshCcw size={18} className={loading ? 'animate-spin' : ''} />
                         </button>
-                        <div className="h-10 w-[1px] bg-zinc-100 mx-2" />
+                        <div className="h-8 md:h-10 w-[1px] bg-zinc-100 mx-1 md:mx-2" />
                         <GlowButton
                             onClick={() => toast.info('Protocolo de Registro no autorizado')}
-                            className="py-4 px-8 h-14 text-[10px] rounded-2xl"
+                            className="flex-1 xl:flex-none py-3 md:py-4 px-6 md:px-8 h-12 md:h-14 text-[9px] md:text-[10px] rounded-xl md:rounded-2xl"
                         >
-                            <UserPlus size={16} className="mr-3" />
+                            <UserPlus size={14} className="mr-2 md:mr-3" />
                             ENROLAR NODO
                         </GlowButton>
                     </div>
                 </div>
 
                 {/* Main Table Area */}
-                <div className="bg-white border border-zinc-100 rounded-[2.5rem] overflow-hidden shadow-sm">
+                <div className="bg-white border border-zinc-100 rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden shadow-sm">
                     <CustomersTable customers={customers} onSelect={handleSelectCustomer} />
                 </div>
             </div>

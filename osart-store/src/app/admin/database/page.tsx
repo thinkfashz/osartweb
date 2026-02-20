@@ -65,19 +65,19 @@ const DatabasePage = () => {
         <PageTransition>
             <div className="space-y-10 pb-20">
                 {/* Header Section */}
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-white p-8 rounded-[2.5rem] border border-zinc-100 shadow-sm">
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-white p-6 md:p-8 rounded-[1.5rem] md:rounded-[2.5rem] border border-zinc-100 shadow-sm transition-all duration-300">
                     <div className="space-y-1">
                         <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-emerald-600">
                             <ShieldCheck size={14} />
                             Sistema de Control de Datos
                         </div>
-                        <h1 className="text-4xl font-black tracking-tighter uppercase italic text-zinc-950">Núcleo Base de Datos</h1>
+                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-black tracking-tighter uppercase italic text-zinc-950 leading-tight">Núcleo Base de Datos</h1>
                     </div>
 
                     <div className="flex flex-wrap gap-3">
                         <button
                             onClick={handleSync}
-                            className="flex items-center gap-2 px-6 py-3 bg-zinc-950 text-white rounded-2xl font-bold uppercase italic tracking-widest text-[10px] hover:bg-zinc-800 transition-all active:scale-95 shadow-lg shadow-zinc-950/20"
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 md:py-4 bg-zinc-950 text-white rounded-xl md:rounded-2xl font-bold uppercase italic tracking-widest text-[9px] md:text-[10px] hover:bg-zinc-800 transition-all active:scale-95 shadow-lg shadow-zinc-950/20"
                         >
                             <RefreshCcw size={14} className={loading ? "animate-spin" : ""} />
                             Sincronizar Esquema
@@ -85,7 +85,7 @@ const DatabasePage = () => {
                         <button
                             onClick={handleSeed}
                             disabled={seeding}
-                            className="flex items-center gap-2 px-6 py-3 bg-white border border-zinc-100 text-zinc-950 rounded-2xl font-bold uppercase italic tracking-widest text-[10px] hover:bg-zinc-50 transition-all disabled:opacity-50"
+                            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3 md:py-4 bg-white border border-zinc-100 text-zinc-950 rounded-xl md:rounded-2xl font-bold uppercase italic tracking-widest text-[9px] md:text-[10px] hover:bg-zinc-50 transition-all disabled:opacity-50"
                         >
                             <Zap size={14} className={seeding ? "animate-pulse" : ""} />
                             Inyectar Demo Data
@@ -126,20 +126,20 @@ const DatabasePage = () => {
                 <div className="grid lg:grid-cols-3 gap-8">
                     {/* Table List (2/3) */}
                     <div className="lg:col-span-2 space-y-6">
-                        <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
-                            <div className="p-8 border-b border-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                                <h2 className="text-xl font-black uppercase italic tracking-tighter flex items-center gap-3">
+                        <div className="bg-white rounded-[1.5rem] md:rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden">
+                            <div className="p-6 md:p-8 border-b border-slate-50 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                <h2 className="text-lg md:text-xl font-black uppercase italic tracking-tighter flex items-center gap-3">
                                     <HardDrive size={20} className="text-slate-400" />
                                     Diccionario de Datos
                                 </h2>
-                                <div className="relative group">
+                                <div className="relative group w-full sm:w-auto">
                                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-emerald-500 transition-colors" size={16} />
                                     <input
                                         type="text"
                                         value={search}
                                         onChange={(e) => setSearch(e.target.value)}
                                         placeholder="FILTRAR TABLAS..."
-                                        className="bg-slate-50 border-none rounded-2xl py-3 pl-12 pr-6 text-[10px] font-bold uppercase tracking-widest w-full sm:w-64 focus:ring-2 ring-emerald-500/10 outline-none"
+                                        className="bg-slate-50 border-none rounded-xl md:rounded-2xl py-3 pl-12 pr-6 text-[9px] md:text-[10px] font-bold uppercase tracking-widest w-full sm:w-64 focus:ring-2 ring-emerald-500/10 outline-none"
                                     />
                                 </div>
                             </div>
