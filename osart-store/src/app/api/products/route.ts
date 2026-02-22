@@ -3,35 +3,28 @@ import { supabase } from '@/lib/supabase';
 
 export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
-    const limit = Math.min(Number(searchParams.get('limit') || 20), 100);
-    const category = searchParams.get('category');
+    const categoryId = searchParams.get('categoryId');
     const search = searchParams.get('search');
+    const isAdmin = searchParams.get('admin') === 'true';
 
-    let query = supabase
-        .from('products')
-        .select('*', { count: 'exact' })
-        .eq('is_active', true);
+    let query = supabase.from('products').select('*, category:categories(name)');
 
-    if (category) {
-        query = query.eq('category_id', category);
-    }
+    if (categoryId) query = query.eq('category_id', categoryId);
+    if (search) query = query.ilike('name', `%${search}%`);
 
-    if (search) {
-        query = query.ilike('name', `%${search}%`);
-    }
+    const { data, error, count } = await query
+        .order('created_at', { ascending: false });
 
-    const { data, count, error } = await query
-        .order('created_at', { ascending: false })
-        .limit(limit);
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
-    if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
-    }
+    const formatted = (data || []).map(p => ({
+        ...p,
+        outOfStock: p.stock <= 0,
+        isLowStock: p.stock > 0 && p.stock < 10,
+        categoryName: p.category?.name || 'N/A'
+    }));
 
-    return NextResponse.json({
-        products: data,
-        total: count
-    });
+    return NextResponse.json({ products: formatted, total: count });
 }
 
 export async function POST(request: NextRequest) {

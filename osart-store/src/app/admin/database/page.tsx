@@ -23,9 +23,27 @@ import { PageTransition } from '@/components/admin/ui/PageTransition';
 import { StatCard } from '@/components/admin/ui/StatCard';
 
 const DatabasePage = () => {
-    const { data, loading, refetch } = useQuery<any>(ADMIN_DATABASE_STATUS);
-    const [seedDemoData, { loading: seeding }] = useMutation(ADMIN_SEED_DATA);
+    const [data, setData] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+    const [seeding, setSeeding] = useState(false);
     const [search, setSearch] = useState('');
+
+    const fetchStatus = React.useCallback(async () => {
+        setLoading(true);
+        try {
+            const res = await fetch('/api/system');
+            const result = await res.json();
+            setData({ adminDatabaseStatus: result });
+        } catch (err) {
+            toast.error('Error de enlace con la infraestructura central');
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    React.useEffect(() => {
+        fetchStatus();
+    }, [fetchStatus]);
 
     const status = data?.adminDatabaseStatus;
     const tables = status?.tables || [];
@@ -34,21 +52,29 @@ const DatabasePage = () => {
     );
 
     const handleSync = async () => {
-        try {
-            await refetch();
-            toast.success('Esquema de datos sincronizado con Supabase');
-        } catch (err) {
-            toast.error('Error de enlace con la infraestructura central');
-        }
+        toast.promise(fetchStatus(), {
+            loading: 'Sincronizando esquema...',
+            success: 'Esquema de datos sincronizado con Supabase',
+            error: 'Falla en la sincronía'
+        });
     };
 
     const handleSeed = async () => {
+        setSeeding(true);
         try {
-            await seedDemoData();
-            toast.success('Datos de simulación inyectados correctamente');
-            refetch();
-        } catch (err) {
-            toast.error('Falla en la inyección de datos de demo');
+            const res = await fetch('/api/system', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'seed' })
+            });
+            if (res.ok) {
+                toast.success('Datos de simulación inyectados correctamente');
+                fetchStatus();
+            } else {
+                toast.error('Falla en la inyección de datos de demo');
+            }
+        } finally {
+            setSeeding(false);
         }
     };
 

@@ -30,18 +30,40 @@ export default function CustomersPage() {
     const [search, setSearch] = useState('');
     const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null);
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [customers, setCustomers] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
 
-    const { data, loading, refetch } = useQuery<any>(ADMIN_CUSTOMERS, {
-        variables: { search },
-        notifyOnNetworkStatusChange: true
-    });
+    const fetchCustomers = React.useCallback(async () => {
+        setLoading(true);
+        try {
+            const res = await fetch(`/api/customers?search=${search}`);
+            const data = await res.json();
+            setCustomers(data);
+        } catch (err) {
+            toast.error('Falla en la sincronía de usuarios');
+        } finally {
+            setLoading(false);
+        }
+    }, [search]);
+
+    React.useEffect(() => {
+        fetchCustomers();
+    }, [fetchCustomers]);
 
     const handleSelectCustomer = (id: string) => {
         setSelectedCustomerId(id);
         setIsDrawerOpen(true);
     };
 
-    if (loading && !data) {
+    const handleRefresh = async () => {
+        toast.promise(fetchCustomers(), {
+            loading: 'Re-sincronizando nodos...',
+            success: 'Terminales verificadas.',
+            error: 'Falla en el enlace.'
+        });
+    };
+
+    if (loading && customers.length === 0) {
         return (
             <div className="space-y-12 p-8 animate-in fade-in duration-700">
                 <div className="flex justify-between items-end">
@@ -105,7 +127,7 @@ export default function CustomersPage() {
 
                     <div className="flex items-center gap-3 w-full lg:w-auto">
                         <button
-                            onClick={() => refetch()}
+                            onClick={handleRefresh}
                             className="p-4 rounded-2xl bg-zinc-50 border border-zinc-100 text-zinc-400 hover:text-zinc-950 hover:bg-white transition-all shadow-sm active:scale-95 touch-target"
                         >
                             <RefreshCcw size={20} className={loading ? 'animate-spin' : ''} />

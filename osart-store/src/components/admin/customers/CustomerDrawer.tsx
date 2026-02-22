@@ -34,12 +34,28 @@ interface AdminCustomerData {
 }
 
 export default function CustomerDrawer({ customerId, isOpen, onClose }: CustomerDrawerProps) {
-    const { data, loading } = useQuery<AdminCustomerData>(ADMIN_CUSTOMER_DETAIL, {
-        variables: { id: customerId },
-        skip: !customerId,
-    });
+    const [customer, setCustomer] = React.useState<any>(null);
+    const [loading, setLoading] = React.useState(false);
 
-    const customer = data?.adminCustomer;
+    const fetchDetail = React.useCallback(async () => {
+        if (!customerId) return;
+        setLoading(true);
+        try {
+            const res = await fetch(`/api/customers?id=${customerId}`);
+            const data = await res.json();
+            setCustomer(data);
+        } catch (err) {
+            toast.error('Error al recuperar perfil del nodo');
+        } finally {
+            setLoading(false);
+        }
+    }, [customerId]);
+
+    React.useEffect(() => {
+        if (isOpen && customerId) {
+            fetchDetail();
+        }
+    }, [isOpen, customerId, fetchDetail]);
 
     const formatCurrency = (val: number) =>
         new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(val || 0);
@@ -181,8 +197,8 @@ export default function CustomerDrawer({ customerId, isOpen, onClose }: Customer
                                             </button>
                                         </div>
                                         <div className="space-y-4">
-                                            {customer.orders?.length > 0 ? (
-                                                customer.orders.map((order: any) => (
+                                            {customer.lastOrders?.length > 0 ? (
+                                                customer.lastOrders.map((order: any) => (
                                                     <div key={order.id} className="group relative bg-white p-6 rounded-[2rem] border border-slate-100 hover:border-slate-300 hover:shadow-2xl hover:shadow-slate-900/5 transition-all">
                                                         <div className="flex items-center justify-between mb-4">
                                                             <div className="flex items-center gap-4">

@@ -23,14 +23,28 @@ import { DataTable } from '@/components/admin/ui/DataTable';
 import { AdminProduct } from '@/types/admin';
 
 export default function ProductsPage() {
-    const { data, loading, refetch } = useQuery<{ productsConnection: { edges: { node: AdminProduct }[] } }>(ADMIN_PRODUCTS);
+    const [products, setProducts] = useState<AdminProduct[]>([]);
+    const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
 
-    const products = data?.productsConnection?.edges?.map((e) => e.node) || [];
-    const filteredProducts = products.filter((p: AdminProduct) =>
-        p.name.toLowerCase().includes(search.toLowerCase()) ||
-        p.sku.toLowerCase().includes(search.toLowerCase())
-    );
+    const fetchProducts = React.useCallback(async () => {
+        setLoading(true);
+        try {
+            const res = await fetch(`/api/products?admin=true&search=${search}`);
+            const data = await res.json();
+            setProducts(data.products || []);
+        } catch (err) {
+            toast.error('Falla en la sincronía de inventario');
+        } finally {
+            setLoading(false);
+        }
+    }, [search]);
+
+    React.useEffect(() => {
+        fetchProducts();
+    }, [fetchProducts]);
+
+    const filteredProducts = products; // Search is handled server-side now
 
     const columns = [
         {
@@ -137,7 +151,7 @@ export default function ProductsPage() {
                     <div className="flex items-center justify-between sm:justify-end gap-3 w-full xl:w-auto">
                         <div className="flex items-center gap-3">
                             <button
-                                onClick={() => refetch()}
+                                onClick={fetchProducts}
                                 className="p-4 rounded-2xl bg-zinc-50 border border-zinc-100 text-zinc-400 hover:text-zinc-950 hover:bg-white transition-all shadow-sm touch-target"
                             >
                                 <RefreshCcw size={20} className={loading ? 'animate-spin' : ''} />

@@ -27,30 +27,61 @@ import { StatCard } from '@/components/admin/ui/StatCard';
 
 export default function SalesPage() {
     const [dateRange, setDateRange] = React.useState('30d');
-    const { data: summaryData, loading: summaryLoading, refetch: refetchSummary } = useQuery<any>(ADMIN_SALES_SUMMARY, {
-        variables: { dateRange }
-    });
-    const { data: ordersData, loading: ordersLoading, refetch: refetchOrders } = useQuery<any>(ADMIN_ORDERS);
+    const [summary, setSummary] = React.useState<any>(null);
+    const [orders, setOrders] = React.useState<any[]>([]);
+    const [loading, setLoading] = React.useState(true);
+    const [seeding, setSeeding] = React.useState(false);
 
-    const [seedDemoData, { loading: seeding }] = useMutation(ADMIN_SEED_DATA, {
-        onCompleted: () => {
-            toast.success('System database populated successfully.');
-            refetchSummary();
-            refetchOrders();
-        },
-        onError: (err) => toast.error(`Seeding critical failure: ${err.message}`)
-    });
+    const fetchData = React.useCallback(async () => {
+        setLoading(true);
+        try {
+            const [sRes, oRes] = await Promise.all([
+                fetch(`/api/orders?summary=true&startDate=${new Date(Date.now() - (dateRange === '7d' ? 7 : dateRange === '90d' ? 90 : 30) * 24 * 60 * 60 * 1000).toISOString()}`),
+                fetch('/api/orders')
+            ]);
+            const sData = await sRes.json();
+            const oData = await oRes.json();
+            setSummary(sData);
+            setOrders(oData);
+        } catch (err) {
+            toast.error('Failed to sync revenue data');
+        } finally {
+            setLoading(false);
+        }
+    }, [dateRange]);
+
+    React.useEffect(() => {
+        fetchData();
+    }, [fetchData]);
+
+    const seedDemoData = async () => {
+        setSeeding(true);
+        try {
+            const res = await fetch('/api/system', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'seed' })
+            });
+            if (res.ok) {
+                toast.success('System database populated successfully.');
+                fetchData();
+            } else {
+                toast.error('Seeding failure');
+            }
+        } finally {
+            setSeeding(false);
+        }
+    };
 
     const handleRefresh = async () => {
-        const refreshPromise = Promise.all([refetchSummary(), refetchOrders()]);
-        toast.promise(refreshPromise, {
+        toast.promise(fetchData(), {
             loading: 'Re-syncing transactional volumes...',
             success: 'System synchronized.',
             error: 'Sync failure.'
         });
     };
 
-    if (summaryLoading || ordersLoading) {
+    if (loading) {
         return (
             <div className="flex flex-col items-center justify-center h-[60vh] gap-8">
                 <div className="relative">
@@ -64,9 +95,6 @@ export default function SalesPage() {
             </div>
         );
     }
-
-    const summary = summaryData?.adminSalesSummary;
-    const orders = ordersData?.adminOrders || [];
     const isEmpty = !summary || summary.totalOrders === 0;
 
     return (
