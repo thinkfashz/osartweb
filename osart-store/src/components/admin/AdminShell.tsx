@@ -39,7 +39,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         }
     }, [user, authLoading, router]);
 
-    const isAdmin = roleData?.me?.role === 'admin';
+    const isAdmin = (roleData as any)?.me?.role === 'admin';
     const isVerifying = authLoading || roleLoading;
 
     if (isVerifying) {

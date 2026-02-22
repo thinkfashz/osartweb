@@ -104,69 +104,75 @@ export default function AdminCatalogTable({ products, view }: { products: any[],
     }
 
     return (
-        <div className="bg-white rounded-[3rem] border border-slate-100 shadow-sm overflow-hidden relative">
-            <div className="overflow-x-auto">
-                <table className="w-full text-left">
+        <div className="bg-white rounded-[2rem] md:rounded-[3rem] border border-slate-100 shadow-sm overflow-hidden relative group/table transition-all duration-500">
+            {/* Ambient Background Grid */}
+            <div className="absolute inset-0 opacity-[0.01] pointer-events-none group-hover/table:opacity-[0.02] transition-opacity" style={{ backgroundImage: 'radial-gradient(circle, #000 1px, transparent 1px)', backgroundSize: '24px 24px' }} />
+
+            <div className="overflow-x-auto custom-scrollbar relative z-10">
+                <table className="w-full text-left border-collapse min-w-[800px]">
                     <thead>
                         <tr className="bg-slate-50/50">
-                            <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Hardware / Identificador</th>
-                            <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">Estado de Red</th>
-                            <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 text-center">Inversión</th>
-                            <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 text-center">Inventario</th>
-                            <th className="px-8 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 text-right">Terminal</th>
+                            <th className="px-6 md:px-10 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 border-b border-slate-50">Hardware / Identificador</th>
+                            <th className="px-6 md:px-10 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 border-b border-slate-50">Estado de Red</th>
+                            <th className="px-6 md:px-10 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 border-b border-slate-50 text-center">Inversión</th>
+                            <th className="px-6 md:px-10 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 border-b border-slate-50 text-center">Inventario</th>
+                            <th className="px-6 md:px-10 py-6 text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 border-b border-slate-50 text-right">Terminal</th>
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-50">
+                    <tbody className="divide-y divide-slate-50/50">
                         {products.map((p) => (
-                            <tr key={p.id} className="hover:bg-slate-50/80 transition-all group">
-                                <td className="px-8 py-6">
-                                    <div className="flex items-center gap-5">
-                                        <div className="w-12 h-12 rounded-2xl bg-slate-100 flex items-center justify-center text-slate-400 group-hover:bg-slate-950 group-hover:text-white transition-all shadow-inner">
-                                            <Package size={20} />
+                            <tr key={p.id} className="hover:bg-slate-50/50 transition-all group/row">
+                                <td className="px-6 md:px-10 py-6">
+                                    <div className="flex items-center gap-4 md:gap-6">
+                                        <div className="w-10 h-10 md:w-14 md:h-14 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover/row:bg-slate-950 group-hover/row:text-white transition-all shadow-inner relative overflow-hidden">
+                                            <Package size={20} className="relative z-10" />
+                                            <div className="absolute inset-0 bg-blue-500 opacity-0 group-hover/row:opacity-10 transition-opacity" />
                                         </div>
-                                        <div className="flex flex-col">
-                                            <span className="text-sm font-black text-slate-900 uppercase italic tracking-tight group-hover:text-blue-600 transition-colors">{p.name}</span>
+                                        <div className="flex flex-col min-w-0">
+                                            <span className="text-sm md:text-base font-black text-slate-900 uppercase italic tracking-tight group-hover/row:text-blue-600 transition-colors truncate">{p.name}</span>
                                             <div className="flex items-center gap-2">
                                                 <span className="text-[10px] text-slate-400 font-black uppercase tracking-widest">{p.sku}</span>
-                                                <span className="w-1 h-1 rounded-full bg-slate-200" />
-                                                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest opacity-50">{p.category?.name}</span>
+                                                <span className="w-1 h-1 rounded-full bg-slate-200 hidden sm:block" />
+                                                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest opacity-50 hidden sm:block">{p.category?.name}</span>
                                             </div>
                                         </div>
                                     </div>
                                 </td>
-                                <td className="px-8 py-6">
+                                <td className="px-6 md:px-10 py-6">
                                     <div className="flex items-center gap-3">
                                         <div className={cn(
                                             "w-2.5 h-2.5 rounded-full ring-4 transition-all",
                                             p.isActive ? 'bg-emerald-500 ring-emerald-50 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-slate-300 ring-slate-50'
                                         )} />
-                                        <span className="text-[10px] font-black uppercase text-slate-950 tracking-wider font-mono">
-                                            {p.isActive ? 'ACTIVO' : 'BORRADOR'}
-                                        </span>
-                                        {p.isFeatured && (
-                                            <span className="text-[8px] font-black uppercase bg-amber-50 text-amber-500 border border-amber-100 px-2 py-0.5 rounded-lg shadow-sm">Destacado</span>
-                                        )}
+                                        <div className="flex flex-col">
+                                            <span className="text-[9px] font-black uppercase text-slate-950 tracking-wider font-mono leading-none">
+                                                {p.isActive ? 'ACTIVO' : 'BORRADOR'}
+                                            </span>
+                                            {p.isFeatured && (
+                                                <span className="text-[8px] font-black uppercase text-amber-500 tracking-tighter mt-1">SISTEMA DESTACADO</span>
+                                            )}
+                                        </div>
                                     </div>
                                 </td>
-                                <td className="px-8 py-6 text-center">
-                                    <span className="text-sm font-black text-slate-950 tracking-tighter italic">{formatPrice(p.price)}</span>
+                                <td className="px-6 md:px-10 py-6 text-center">
+                                    <span className="text-sm md:text-base font-black text-slate-950 tracking-tighter italic font-mono">{formatPrice(p.price)}</span>
                                 </td>
-                                <td className="px-8 py-6 text-center">
+                                <td className="px-6 md:px-10 py-6 text-center">
                                     <div className={cn(
-                                        "inline-flex items-center gap-2 px-3 py-1.5 rounded-xl font-mono text-[10px] font-black",
-                                        p.outOfStock ? "bg-rose-50 text-rose-600" :
-                                            p.isLowStock ? "bg-orange-50 text-orange-600" :
-                                                "bg-slate-50 text-slate-600"
+                                        "inline-flex items-center gap-2 px-3 py-1.5 rounded-xl font-mono text-[10px] font-black border transition-colors",
+                                        p.outOfStock ? "bg-rose-50 text-rose-600 border-rose-100" :
+                                            p.isLowStock ? "bg-orange-50 text-orange-600 border-orange-100" :
+                                                "bg-slate-50 text-slate-600 border-slate-100 group-hover/row:bg-white"
                                     )}>
-                                        <span className="opacity-40">QTY:</span> {p.stock}
+                                        <span className="opacity-40">STORAGE:</span> {p.stock}
                                     </div>
                                 </td>
-                                <td className="px-8 py-6 text-right">
-                                    <div className="flex items-center justify-end gap-3 opacity-0 group-hover:opacity-100 transition-all">
-                                        <button className="p-3 rounded-2xl bg-white border border-slate-100 text-slate-400 hover:text-slate-950 hover:border-slate-300 hover:shadow-lg transition-all active:scale-90">
+                                <td className="px-6 md:px-10 py-6 text-right">
+                                    <div className="flex items-center justify-end gap-2 md:gap-3 opacity-0 group-hover/row:opacity-100 transition-all">
+                                        <button className="p-3 rounded-2xl bg-white border border-slate-100 text-slate-400 hover:text-slate-950 hover:border-slate-300 hover:shadow-xl hover:-translate-y-0.5 transition-all active:scale-95 touch-target">
                                             <Edit2 size={18} />
                                         </button>
-                                        <button className="p-3 rounded-2xl bg-white border border-slate-100 text-slate-400 hover:text-rose-500 hover:border-rose-200 hover:shadow-lg transition-all active:scale-90">
+                                        <button className="p-3 rounded-2xl bg-white border border-slate-100 text-slate-400 hover:text-rose-500 hover:border-rose-200 hover:shadow-xl hover:-translate-y-0.5 transition-all active:scale-95 touch-target">
                                             <Trash2 size={18} />
                                         </button>
                                     </div>
@@ -176,9 +182,6 @@ export default function AdminCatalogTable({ products, view }: { products: any[],
                     </tbody>
                 </table>
             </div>
-
-            {/* Ambient Background Grid */}
-            <div className="absolute inset-0 opacity-[0.02] pointer-events-none -z-10" style={{ backgroundImage: 'radial-gradient(circle, #000 1px, transparent 1px)', backgroundSize: '20px 20px' }} />
         </div>
     );
 }

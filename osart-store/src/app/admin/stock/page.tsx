@@ -105,10 +105,10 @@ export default function StockPage() {
 
     return (
         <PageTransition>
-            <div className="space-y-12 relative">
+            <div className="space-y-6 md:space-y-12 pb-20 relative">
 
                 {/* Header Area */}
-                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8 relative z-10">
+                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 md:gap-8 relative z-10">
                     <div className="space-y-2">
                         <div className="flex items-center gap-3 mb-2">
                             <span className="px-3 py-1 bg-slate-950 text-white text-[8px] font-black uppercase tracking-[0.3em] rounded-full flex items-center gap-2 shadow-xl shadow-slate-950/20">
@@ -123,86 +123,85 @@ export default function StockPage() {
                         <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-slate-950 tracking-tighter uppercase italic leading-none">
                             Unidad de Stock
                         </h1>
-                        <p className="text-slate-400 font-bold uppercase tracking-[0.2em] text-[10px] max-w-xl">
+                        <p className="text-slate-400 font-bold uppercase tracking-[0.2em] text-[10px] max-w-xl leading-relaxed">
                             Gestión de activos críticos para la red de hardware OSART.
                             Monitoreo forense de inventario y optimización de flujo entrante.
                         </p>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-4">
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
                         {/* View Switcher */}
-                        <div className="flex bg-slate-100 p-1.5 rounded-[1.5rem] border border-slate-200/50 shadow-inner">
+                        <div className="flex bg-slate-100 p-1 rounded-2xl border border-slate-200/50 shadow-inner w-full sm:w-auto">
                             <button
                                 onClick={() => setViewMode('inventory')}
                                 className={cn(
-                                    "flex items-center gap-2 px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
-                                    viewMode === 'inventory' ? "bg-white text-slate-950 shadow-xl shadow-slate-900/5" : "text-slate-400 hover:text-slate-600"
+                                    "flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 md:px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                                    viewMode === 'inventory' ? "bg-white text-slate-950 shadow-lg" : "text-slate-400 hover:text-slate-600"
                                 )}
                             >
                                 <Package size={14} />
-                                Dashboard
+                                <span className="hidden xs:inline">Dashboard</span>
                             </button>
                             <button
                                 onClick={() => setViewMode('movements')}
                                 className={cn(
-                                    "flex items-center gap-2 px-8 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
-                                    viewMode === 'movements' ? "bg-white text-slate-950 shadow-xl shadow-slate-900/5" : "text-slate-400 hover:text-slate-600"
+                                    "flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 md:px-8 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all duration-300",
+                                    viewMode === 'movements' ? "bg-white text-slate-950 shadow-lg" : "text-slate-400 hover:text-slate-600"
                                 )}
                             >
                                 <History size={14} />
-                                Auditoría
+                                <span className="hidden xs:inline">Auditoría</span>
                             </button>
                         </div>
 
-                        <div className="h-10 w-[1px] bg-slate-200 mx-2 hidden xl:block" />
+                        <div className="flex items-center gap-3 w-full sm:w-auto">
+                            {/* Search Terminal */}
+                            <div className="relative flex-1 sm:w-64 group">
+                                <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-slate-950 transition-colors" size={16} />
+                                <input
+                                    type="text"
+                                    placeholder="BUSCAR..."
+                                    value={search}
+                                    onChange={(e) => setSearch(e.target.value)}
+                                    className="w-full bg-white border border-slate-200 rounded-2xl py-4 pl-14 pr-6 text-[10px] font-black uppercase tracking-widest outline-none focus:border-slate-950 transition-all text-slate-950 placeholder:text-slate-300 shadow-sm"
+                                />
+                            </div>
 
-                        {/* Search Terminal */}
-                        <div className="relative w-full sm:w-80 group">
-                            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-300 group-focus-within:text-slate-950 transition-colors" size={16} />
-                            <input
-                                type="text"
-                                placeholder="Buscar Hardware..."
-                                value={search}
-                                onChange={(e) => setSearch(e.target.value)}
-                                className="w-full bg-white border-2 border-slate-100 rounded-[1.5rem] py-4 pl-14 pr-6 text-[10px] font-black uppercase tracking-widest outline-none focus:border-slate-950 focus:ring-4 focus:ring-slate-950/5 transition-all text-slate-950 placeholder:text-slate-300 shadow-sm"
-                            />
+                            <button
+                                onClick={() => refetch()}
+                                className="p-4 rounded-2xl bg-white border border-slate-200 text-slate-300 hover:text-slate-950 hover:border-slate-950 transition-all active:scale-95 shadow-sm touch-target"
+                            >
+                                <RefreshCcw size={20} className={loading ? 'animate-spin' : ''} />
+                            </button>
                         </div>
-
-                        <button
-                            onClick={() => refetch()}
-                            className="p-4 rounded-[1.5rem] bg-white border-2 border-slate-100 text-slate-300 hover:text-slate-950 hover:border-slate-950 transition-all active:scale-90 shadow-sm"
-                        >
-                            <RefreshCcw size={20} className={loading ? 'animate-spin' : ''} />
-                        </button>
-
-                        <GlowButton onClick={() => toast.info('Protocolo ERP Sync no autorizado para este terminal')} className="py-2 px-6 md:py-4 md:px-8 h-12 md:h-[5.5rem] text-[10px] rounded-[1.25rem] md:rounded-[1.5rem]">
-                            MODO ANALÍTICO
-                        </GlowButton>
                     </div>
                 </div>
 
                 {/* Layout Grid */}
-                <div className="grid grid-cols-1 xl:grid-cols-12 gap-12 relative z-10">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 relative z-10">
                     {/* Main Content */}
-                    <div className="xl:col-span-9 space-y-12">
+                    <div className="lg:col-span-8 xl:col-span-9 space-y-8 md:space-y-12">
                         <StockKpis stats={stats} />
 
                         <motion.div
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: 0.2 }}
+                            className="bg-white border border-slate-100 rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-sm"
                         >
-                            {viewMode === 'inventory' ? (
-                                <StockTable products={filtered} onAdjust={handleOpenAdjust} />
-                            ) : (
-                                <StockMovementsTable movements={movements} isLoading={moveLoading} />
-                            )}
+                            <div className="overflow-x-auto custom-scrollbar">
+                                {viewMode === 'inventory' ? (
+                                    <StockTable products={filtered} onAdjust={handleOpenAdjust} />
+                                ) : (
+                                    <StockMovementsTable movements={movements} isLoading={moveLoading} />
+                                )}
+                            </div>
                         </motion.div>
                     </div>
 
                     {/* Sidebar Alert Panel */}
-                    <div className="xl:col-span-3">
-                        <div className="sticky top-12">
+                    <div className="lg:col-span-4 xl:col-span-3">
+                        <div className="lg:sticky lg:top-24">
                             <LowStockPanel products={products} onAdjust={handleOpenAdjust} />
                         </div>
                     </div>

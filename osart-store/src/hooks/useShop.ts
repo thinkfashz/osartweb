@@ -12,7 +12,11 @@ export const useProducts = (filter?: { name?: string; categoryId?: string }) => 
       try {
         let query = supabase
           .from('products')
-          .select('*, categoryData:categories(name, slug)')
+          .select(`
+            *,
+            categoryData:categories(name, slug),
+            product_images(id, url, position)
+          `)
           .eq('is_active', true);
 
         if (filter?.name) {
@@ -27,10 +31,18 @@ export const useProducts = (filter?: { name?: string; categoryId?: string }) => 
         if (prodError) throw prodError;
 
         // Format for UI compatibility (ProductCard expects images array)
-        const formatted = (products || []).map((p: any) => ({
-          ...p,
-          images: p.image_url ? [{ url: p.image_url, position: 0 }] : []
-        }));
+        const formatted = (products || []).map((p: any) => {
+          // Flatten images from multiple sources if they exist
+          const images = [
+            ...(p.image_url ? [{ url: p.image_url, position: 0 }] : []),
+            ...(p.product_images || [])
+          ].sort((a, b) => (a.position || 0) - (b.position || 0));
+
+          return {
+            ...p,
+            images: images.length > 0 ? images : []
+          };
+        });
 
         setData({ products: formatted });
       } catch (err) {

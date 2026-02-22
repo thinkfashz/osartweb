@@ -75,6 +75,15 @@
     padding-right: env(safe-area-inset-right);
   }
 
+  /* High-precision interactive targets */
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px] flex items-center justify-center;
+  }
+
+  .interactive-focus {
+    @apply outline-none focus-visible:ring-2 focus-visible:ring-electric-blue focus-visible:ring-offset-2 focus-visible:ring-offset-background transition-all;
+  }
+
   .light-admin {
     --background: 0 0% 98%;
     --foreground: 240 10% 3.9%;

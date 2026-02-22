@@ -39,23 +39,28 @@ export default function AdminSidebar({ isOpen, setIsOpen }: { isOpen: boolean, s
     const pathname = usePathname();
     const [isCollapsed, setIsCollapsed] = React.useState(false);
 
+    // Auto-close on mobile when route changes
+    React.useEffect(() => {
+        setIsOpen(false);
+    }, [pathname, setIsOpen]);
+
     return (
         <motion.aside
             initial={false}
             animate={{
                 width: isCollapsed ? 80 : 280,
-                x: 0
+                x: isOpen ? 0 : (typeof window !== 'undefined' && window.innerWidth < 1024 ? -280 : 0)
             }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
             className={`
-                fixed inset-y-0 left-0 z-50 lg:relative lg:translate-x-0 transition-all duration-300 ease-in-out
-                ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+                fixed inset-y-0 left-0 z-50 lg:relative lg:translate-x-0
                 h-full bg-zinc-950 border-r border-zinc-900/50 flex flex-col shadow-[20px_0_40px_rgba(0,0,0,0.4)] lg:shadow-none
             `}
         >
             {/* Mobile Close Button */}
             <button
                 onClick={() => setIsOpen(false)}
-                className="absolute right-4 top-6 p-2 text-zinc-500 hover:text-white lg:hidden active:scale-95 transition-colors"
+                className="absolute right-4 top-6 p-2 text-zinc-500 hover:text-white lg:hidden active:scale-95 transition-colors touch-target"
             >
                 <X size={24} />
             </button>
@@ -63,7 +68,7 @@ export default function AdminSidebar({ isOpen, setIsOpen }: { isOpen: boolean, s
             {/* Sidebar Toggle (Desktop Only) */}
             <button
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className="absolute -right-3 top-20 bg-zinc-900 border border-zinc-800 rounded-full p-1.5 shadow-xl hover:bg-zinc-800 hover:border-zinc-700 transition-all hidden lg:flex items-center justify-center z-50 group"
+                className="absolute -right-3 top-20 bg-zinc-900 border border-zinc-800 rounded-full p-1.5 shadow-xl hover:bg-zinc-800 hover:border-zinc-700 transition-all hidden lg:flex items-center justify-center z-50 group interactive-focus"
             >
                 {isCollapsed ?
                     <Menu size={11} className="text-zinc-400 group-hover:text-electric-blue transition-colors" /> :

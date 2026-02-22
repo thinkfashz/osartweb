@@ -9,6 +9,7 @@ export const ADMIN_PRODUCTS = gql`
                     name
                     sku
                     stock
+                    image_url
                     outOfStock
                     isLowStock
                     category {

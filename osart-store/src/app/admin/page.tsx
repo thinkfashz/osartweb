@@ -69,9 +69,9 @@ export default function AdminPage() {
 
     return (
         <PageTransition>
-            <div className="space-y-10 pb-20">
+            <div className="space-y-6 md:space-y-10 pb-20 px-4 md:px-0">
                 {/* System Stats Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
                     <StatCard
                         title="Revenue Total"
                         value={`$${summary?.totalRevenue?.toLocaleString() || '0'}`}
@@ -101,15 +101,15 @@ export default function AdminPage() {
                 </div>
 
                 {/* Main Content Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
                     {/* Activity Feed */}
-                    <div className="lg:col-span-2 space-y-8">
-                        <section className="bg-white border border-zinc-100 rounded-3xl p-8">
-                            <h3 className="text-xs font-black uppercase tracking-widest text-zinc-950 mb-8 flex items-center gap-3">
-                                <Activity size={16} className="text-electric-blue" />
+                    <div className="lg:col-span-2 space-y-6 md:space-y-8">
+                        <section className="bg-white border border-zinc-100 rounded-[2rem] p-6 md:p-8 shadow-sm">
+                            <h3 className="text-[10px] md:text-xs font-black uppercase tracking-widest text-zinc-950 mb-6 md:mb-8 flex items-center gap-3">
+                                <Activity size={16} className="text-blue-500" />
                                 Curva de Rendimiento Operativo
                             </h3>
-                            <div className="h-[300px]">
+                            <div className="h-[250px] md:h-[300px] -mx-2 md:mx-0">
                                 <SalesCharts data={summary} />
                             </div>
                         </section>
@@ -117,29 +117,40 @@ export default function AdminPage() {
 
                     {/* Stock Overrides */}
                     <div className="space-y-6">
-                        <section className="bg-zinc-950 text-white rounded-3xl p-8 border border-white/5 shadow-2xl relative overflow-hidden">
-                            <div className="absolute top-0 right-0 p-8 opacity-10">
+                        <section className="bg-zinc-950 text-white rounded-[2rem] p-6 md:p-8 border border-white/5 shadow-2xl relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-8 opacity-10 pointer-events-none">
                                 <Radio size={120} className="text-blue-500 animate-pulse" />
                             </div>
-                            <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 mb-6 flex items-center gap-3 relative z-10">
+                            <h3 className="text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 mb-6 flex items-center gap-3 relative z-10">
                                 <Terminal size={14} />
                                 Protocolos de Stock
                             </h3>
-                            <div className="space-y-4 relative z-10">
-                                {lowStock.slice(0, 3).map((p: any) => (
-                                    <div key={p.id} className="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center justify-between">
-                                        <div>
-                                            <p className="text-[10px] font-bold text-white uppercase tracking-tighter">{p.name}</p>
-                                            <p className="text-[9px] text-zinc-500 uppercase tracking-widest">Q:{p.stock}</p>
+                            <div className="space-y-3 relative z-10">
+                                {lowStock.length > 0 ? (
+                                    lowStock.slice(0, 4).map((p: any) => (
+                                        <div key={p.id} className="bg-white/5 border border-white/10 rounded-2xl p-4 flex items-center justify-between group hover:bg-white/10 transition-colors">
+                                            <div className="min-w-0 flex-1 mr-4">
+                                                <p className="text-[10px] font-black text-white uppercase tracking-tighter truncate">{p.name}</p>
+                                                <p className="text-[9px] text-zinc-500 uppercase tracking-widest mt-1">NIVEL: {p.stock} UNIDADES</p>
+                                            </div>
+                                            <div className={cn(
+                                                "w-2 h-2 rounded-full shrink-0",
+                                                p.outOfStock ? 'bg-red-500 animate-pulse' : 'bg-orange-500'
+                                            )} />
                                         </div>
-                                        <div className={`w-2 h-2 rounded-full ${p.outOfStock ? 'bg-red-500 animate-pulse' : 'bg-orange-500'}`} />
+                                    ))
+                                ) : (
+                                    <div className="py-8 text-center bg-white/5 border border-white/5 rounded-2xl">
+                                        <p className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">Sistemas Estables</p>
                                     </div>
-                                ))}
+                                )}
+
                                 <Link
                                     href="/admin/stock"
-                                    className="block w-full text-center py-3 bg-white text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-zinc-200 transition-colors"
+                                    className="flex items-center justify-center gap-2 w-full py-4 mt-2 bg-white text-black text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-zinc-200 transition-all active:scale-[0.98] shadow-lg shadow-black/20 touch-target"
                                 >
                                     Abrir Consola de Stock
+                                    <ArrowUpRight size={14} />
                                 </Link>
                             </div>
                         </section>
