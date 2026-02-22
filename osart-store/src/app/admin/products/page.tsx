@@ -20,13 +20,14 @@ import { GlowButton } from '@/components/admin/ui/GlowButton';
 import { toast } from 'sonner';
 import ProductImage from '@/components/admin/ProductImage';
 import { DataTable } from '@/components/admin/ui/DataTable';
+import { AdminProduct } from '@/types/admin';
 
 export default function ProductsPage() {
-    const { data, loading, refetch } = useQuery<any>(ADMIN_PRODUCTS);
+    const { data, loading, refetch } = useQuery<{ productsConnection: { edges: { node: AdminProduct }[] } }>(ADMIN_PRODUCTS);
     const [search, setSearch] = useState('');
 
-    const products = data?.productsConnection?.edges?.map((e: any) => e.node) || [];
-    const filteredProducts = products.filter((p: any) =>
+    const products = data?.productsConnection?.edges?.map((e) => e.node) || [];
+    const filteredProducts = products.filter((p: AdminProduct) =>
         p.name.toLowerCase().includes(search.toLowerCase()) ||
         p.sku.toLowerCase().includes(search.toLowerCase())
     );
@@ -35,7 +36,7 @@ export default function ProductsPage() {
         {
             header: 'PRODUCTO',
             accessorKey: 'name',
-            cell: ({ row }: any) => (
+            cell: ({ row }: { row: { original: AdminProduct } }) => (
                 <div className="flex items-center gap-3 min-w-[200px]">
                     <ProductImage
                         src={row.original.image_url}
@@ -52,7 +53,7 @@ export default function ProductsPage() {
         {
             header: 'CATEGORÍA',
             accessorKey: 'category.name',
-            cell: ({ row }: any) => (
+            cell: ({ row }: { row: { original: AdminProduct } }) => (
                 <span className="px-3 py-1 bg-zinc-50 border border-zinc-100 rounded-lg text-[10px] font-black uppercase tracking-widest text-zinc-500 whitespace-nowrap">
                     {row.original.category?.name || 'SIN ASIGNAR'}
                 </span>
@@ -61,7 +62,7 @@ export default function ProductsPage() {
         {
             header: 'INVENTARIO',
             accessorKey: 'stock',
-            cell: ({ row }: any) => (
+            cell: ({ row }: { row: { original: AdminProduct } }) => (
                 <div className="flex items-center gap-2">
                     <div className={`w-2 h-2 rounded-full shrink-0 ${row.original.outOfStock ? 'bg-red-500' : row.original.isLowStock ? 'bg-orange-500' : 'bg-emerald-500'}`} />
                     <span className="font-mono font-bold text-zinc-950">{row.original.stock}</span>
@@ -71,7 +72,7 @@ export default function ProductsPage() {
         {
             header: 'ESTADO',
             accessorKey: 'status',
-            cell: ({ row }: any) => (
+            cell: ({ row }: { row: { original: AdminProduct } }) => (
                 <div className={cn(
                     "inline-flex items-center px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest border whitespace-nowrap",
                     row.original.outOfStock

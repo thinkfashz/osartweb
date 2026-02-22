@@ -10,16 +10,24 @@ export type NavKey =
     | "scripts"
     | "settings";
 
+export interface AdminCategory {
+    id: string;
+    name: string;
+    slug?: string;
+}
+
 export interface AdminProduct {
     id: string;
     name: string;
-    description: string;
-    price: number;
+    description?: string;
+    price?: number;
     stock: number;
-    category?: any;
+    category?: AdminCategory;
     category_id?: string;
     image_url?: string;
     is_active?: boolean;
-    metadata?: any;
-    sku?: string;
+    metadata?: Record<string, any>;
+    sku: string;
+    outOfStock?: boolean;
+    isLowStock?: boolean;
 }
