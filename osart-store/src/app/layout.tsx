@@ -11,7 +11,6 @@ export const metadata: Metadata = {
   generator: 'Next.js',
   manifest: "/manifest.json",
   keywords: ['repuestos', 'electrónica', 'pwa', 'osart', 'precisión'],
-  themeColor: '#050505',
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
