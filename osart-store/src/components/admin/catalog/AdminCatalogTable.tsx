@@ -18,9 +18,9 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
-import Link from 'next/link';
+import { AdminProduct } from '@/types/admin';
 
-export default function AdminCatalogTable({ products, view }: { products: any[], view: 'table' | 'grid' }) {
+export default function AdminCatalogTable({ products, view }: { products: AdminProduct[], view: 'table' | 'grid' }) {
     const formatPrice = (val: number) =>
         new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(val || 0);
 

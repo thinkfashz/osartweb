@@ -3,21 +3,21 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-interface DataTableProps {
+interface DataTableProps<T = any> {
     headers?: string[];
     children?: React.ReactNode;
-    data?: any[];
+    data?: T[];
     columns?: {
         header: string;
         accessorKey?: string;
-        cell?: (props: { row: { original: any } }) => React.ReactNode;
+        cell?: (props: { row: { original: T } }) => React.ReactNode;
     }[];
     loading?: boolean;
     title?: string;
     actions?: React.ReactNode;
 }
 
-export const DataTable = ({ headers, children, data, columns, loading, title, actions }: DataTableProps) => {
+export const DataTable = <T,>({ headers, children, data, columns, loading, title, actions }: DataTableProps<T>) => {
     const tableHeaders = headers || columns?.map(c => c.header) || [];
 
     return (
