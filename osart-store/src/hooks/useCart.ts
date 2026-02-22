@@ -1,117 +1,112 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
-import { gql } from '@apollo/client';
-import { useQuery, useMutation } from '@apollo/client/react';
 import { supabase } from '@/lib/supabase-auth';
-
-// GraphQL Queries/Mutations
-const GET_CART = gql`
-  query GetCart {
-    cart {
-      id
-      items {
-        id
-        quantity
-        unitPrice
-        product {
-          id
-          name
-          price
-          stock
-        }
-      }
-      subtotal
-    }
-  }
-`;
-
-const ADD_TO_CART = gql`
-  mutation AddToCart($input: AddToCartInput!) {
-    addToCart(input: $input) {
-      id
-      items {
-        id
-        quantity
-        product {
-          id
-          name
-          price
-          stock
-        }
-      }
-      subtotal
-    }
-  }
-`;
-
-const MERGE_CART = gql`
-  mutation MergeCart($items: [GuestCartItemInput!]!) {
-    mergeCart(input: { items: $items }) {
-      id
-    }
-  }
-`;
 
 export function useCart() {
   const [user, setUser] = useState<any>(null);
   const [guestCart, setGuestCart] = useState<any[]>([]);
+  const [dbCart, setDbCart] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const { data, loading, refetch } = useQuery<any>(GET_CART, {
-    skip: !user,
-  });
-
-  const [addToCartMutation] = useMutation(ADD_TO_CART);
-  const [mergeCartMutation] = useMutation(MERGE_CART);
+  const fetchDbCart = useCallback(async (userId: string) => {
+    try {
+      const res = await fetch(`/api/cart?userId=${userId}`);
+      if (res.ok) {
+        const data = await res.json();
+        setDbCart(data);
+      }
+    } catch (e) {
+      console.error('Error fetching cart:', e);
+    }
+  }, []);
 
   // Initial Load
   useEffect(() => {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      setUser(session?.user ?? null);
+      const currentUser = session?.user ?? null;
+      setUser(currentUser);
 
       const saved = localStorage.getItem('osart_guest_cart');
       if (saved) setGuestCart(JSON.parse(saved));
+
+      if (currentUser) {
+        await fetchDbCart(currentUser.id);
+      }
+
       setIsLoaded(true);
+      setLoading(false);
     };
     checkUser();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      const currentUser = session?.user ?? null;
+      setUser(currentUser);
+      if (currentUser) {
+        await fetchDbCart(currentUser.id);
+      } else {
+        setDbCart(null);
+      }
     });
 
     return () => subscription.unsubscribe();
-  }, []);
+  }, [fetchDbCart]);
 
   // Sync Guest Cart to DB when user signs in
   useEffect(() => {
     if (user && guestCart.length > 0) {
       const merge = async () => {
-        const items = guestCart.map(it => ({ productId: it.productId, quantity: it.quantity }));
-        await mergeCartMutation({ variables: { items } });
-        localStorage.removeItem('osart_guest_cart');
-        setGuestCart([]);
-        refetch();
+        try {
+          const res = await fetch('/api/cart', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              userId: user.id,
+              action: 'merge',
+              items: guestCart.map(it => ({ productId: it.productId, quantity: it.quantity }))
+            }),
+          });
+          if (res.ok) {
+            const data = await res.json();
+            setDbCart(data);
+            localStorage.removeItem('osart_guest_cart');
+            setGuestCart([]);
+          }
+        } catch (e) {
+          console.error('Merge error:', e);
+        }
       };
       merge();
     }
-  }, [user, guestCart, mergeCartMutation, refetch]);
+  }, [user, guestCart]);
 
   const addToCart = useCallback(async (product: any, quantity: number = 1) => {
     if (user) {
-      await addToCartMutation({
-        variables: {
-          input: {
+      setLoading(true);
+      try {
+        const res = await fetch('/api/cart', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: user.id,
             productId: product.id,
             quantity
-          }
+          }),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          setDbCart(data);
         }
-      });
-      refetch();
+      } catch (e) {
+        console.error('Add to cart error:', e);
+      } finally {
+        setLoading(false);
+      }
     } else {
       const updated = [...guestCart];
-      const idx = updated.findIndex(it => it.productId === product.id);
+      const idx = updated.findIndex(it => it.productId === (product.id || product.productId));
       if (idx > -1) {
         updated[idx].quantity += quantity;
       } else {
@@ -120,9 +115,9 @@ export function useCart() {
       setGuestCart(updated);
       localStorage.setItem('osart_guest_cart', JSON.stringify(updated));
     }
-  }, [user, guestCart, addToCartMutation, refetch]);
+  }, [user, guestCart]);
 
-  const items = user ? (data as any)?.cart?.items ?? [] : guestCart;
+  const items = user ? dbCart?.items ?? [] : guestCart;
   const subtotal = items.reduce((acc: number, it: any) => acc + (it.product.price * it.quantity), 0);
   const itemCount = items.reduce((acc: number, it: any) => acc + it.quantity, 0);
 
@@ -132,6 +127,6 @@ export function useCart() {
     itemCount,
     loading: loading || !isLoaded,
     addToCart,
-    refetch,
+    refetch: () => user && fetchDbCart(user.id),
   };
 }

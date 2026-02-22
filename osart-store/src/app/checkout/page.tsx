@@ -2,22 +2,12 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronRight, CreditCard, Truck, CheckCircle, Package, Globe } from 'lucide-react';
+import { Truck, CreditCard, CheckCircle, Package } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
-import { useMutation } from '@apollo/client/react';
-import { gql } from '@apollo/client';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { SatelliteLink } from '@/components/checkout/SatelliteLink';
-
-const CREATE_ORDER = gql`
-  mutation CreateOrder($shippingAddress: JSONObject!, $couponCode: String) {
-    createOrderFromCart(shippingAddress: $shippingAddress, couponCode: $couponCode) {
-      id
-      total
-    }
-  }
-`;
+import { useAuth } from '@/context/AuthContext';
 
 const steps = [
     { id: 'shipping', title: 'Envío', icon: Truck },
@@ -27,10 +17,12 @@ const steps = [
 
 export default function CheckoutPage() {
     const { items, subtotal, refetch } = useCart();
+    const { user } = useAuth();
     const router = useRouter();
     const [currentStep, setCurrentStep] = useState(0);
     const [couponCode, setCouponCode] = useState('');
     const [orderId, setOrderId] = useState<string | null>(null);
+    const [orderLoading, setOrderLoading] = useState(false);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -39,23 +31,34 @@ export default function CheckoutPage() {
         country: 'Chile',
     });
 
-    const [createOrder, { loading: orderLoading }] = useMutation(CREATE_ORDER);
-
     const handleNext = async () => {
         if (currentStep === 1) {
-            // Place Order
+            // Place Order via REST API
+            setOrderLoading(true);
             try {
-                const { data }: any = await createOrder({
-                    variables: {
+                const response = await fetch('/api/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: user?.id,
                         shippingAddress: formData,
                         couponCode: couponCode || null,
-                    }
+                    }),
                 });
-                setOrderId(data.createOrderFromCart.id);
+
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.error || 'Fallo al procesar la orden');
+                }
+
+                const data = await response.json();
+                setOrderId(data.orderId);
                 setCurrentStep(2);
                 refetch();
             } catch (e: any) {
                 alert('Error al procesar la orden: ' + e.message);
+            } finally {
+                setOrderLoading(false);
             }
         } else {
             setCurrentStep(currentStep + 1);
@@ -217,7 +220,7 @@ export default function CheckoutPage() {
                                     <h2 className="text-3xl font-black uppercase tracking-wider text-white mb-2">Orden Confirmada</h2>
                                     <p className="text-zinc-400 mb-8 font-mono">Nº de Seguimiento: {orderId?.slice(0, 12)}</p>
                                     <Link
-                                        href="/profile"
+                                        href="/admin"
                                         className="px-10 py-4 border border-zinc-700 hover:bg-zinc-800 transition-colors uppercase font-bold text-sm tracking-widest inline-block"
                                     >
                                         Ver Mis Pedidos

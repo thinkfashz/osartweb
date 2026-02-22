@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { supabase } from '@/lib/supabase-auth';
 import { AdminProduct, AdminCategory } from '@/types/admin';
 
 export const useProducts = (filter?: { name?: string; categoryId?: string }) => {
@@ -11,28 +10,17 @@ export const useProducts = (filter?: { name?: string; categoryId?: string }) => 
     const fetchProducts = async () => {
       setLoading(true);
       try {
-        let query = supabase
-          .from('products')
-          .select(`
-            *,
-            categoryData:categories(name, slug),
-            product_images(id, url, position)
-          `)
-          .eq('is_active', true);
+        const params = new URLSearchParams();
+        if (filter?.name) params.append('search', filter.name);
+        if (filter?.categoryId) params.append('category', filter.categoryId);
 
-        if (filter?.name) {
-          query = query.ilike('name', `%${filter.name}%`);
-        }
-        if (filter?.categoryId) {
-          query = query.eq('category_id', filter.categoryId);
-        }
+        const res = await fetch(`/api/products?${params.toString()}`);
+        if (!res.ok) throw new Error('Failed to fetch products');
 
-        const { data: products, error: prodError } = await query.order('created_at', { ascending: false });
-
-        if (prodError) throw prodError;
+        const json = await res.json();
 
         // Format for UI compatibility (ProductCard expects images array)
-        const formatted = (products || []).map((p: any) => {
+        const formatted = (json.products || []).map((p: any) => {
           // Flatten images from multiple sources if they exist
           const images = [
             ...(p.image_url ? [{ url: p.image_url, position: 0 }] : []),
@@ -69,13 +57,11 @@ export const useCategories = () => {
     const fetchCategories = async () => {
       setLoading(true);
       try {
-        const { data: categories, error: catError } = await supabase
-          .from('categories')
-          .select('*')
-          .order('name');
+        const res = await fetch('/api/categories');
+        if (!res.ok) throw new Error('Failed to fetch categories');
 
-        if (catError) throw catError;
-        setData({ categories: (categories || []) as AdminCategory[] });
+        const json = await res.json();
+        setData({ categories: (json || []) as AdminCategory[] });
       } catch (err: any) {
         console.error('Error fetching categories:', err);
         setError(err);
