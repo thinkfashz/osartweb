@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase-auth';
+import { AdminProduct, AdminCategory } from '@/types/admin';
 
 export const useProducts = (filter?: { name?: string; categoryId?: string }) => {
-  const [data, setData] = useState<{ products: any[] } | null>(null);
+  const [data, setData] = useState<{ products: AdminProduct[] } | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<any>(null);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -41,11 +42,11 @@ export const useProducts = (filter?: { name?: string; categoryId?: string }) => 
           return {
             ...p,
             images: images.length > 0 ? images : []
-          };
+          } as AdminProduct & { images: any[] };
         });
 
-        setData({ products: formatted });
-      } catch (err) {
+        setData({ products: formatted as AdminProduct[] });
+      } catch (err: any) {
         console.error('Error fetching products:', err);
         setError(err);
       } finally {
@@ -60,9 +61,9 @@ export const useProducts = (filter?: { name?: string; categoryId?: string }) => 
 };
 
 export const useCategories = () => {
-  const [data, setData] = useState<{ categories: any[] } | null>(null);
+  const [data, setData] = useState<{ categories: AdminCategory[] } | null>(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<any>(null);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -74,8 +75,8 @@ export const useCategories = () => {
           .order('name');
 
         if (catError) throw catError;
-        setData({ categories: categories || [] });
-      } catch (err) {
+        setData({ categories: (categories || []) as AdminCategory[] });
+      } catch (err: any) {
         console.error('Error fetching categories:', err);
         setError(err);
       } finally {
