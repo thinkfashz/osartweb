@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "Osart Repuestos Electrónicos | La energía que mueve tus reparaciones",
   description: "Venta de repuestos electrónicos de alta precisión.",
   generator: 'Next.js',
-  manifest: "/manifest.json",
+  // manifest: "/manifest.json",
   keywords: ['repuestos', 'electrónica', 'pwa', 'osart', 'precisión'],
   appleWebApp: {
     capable: true,
@@ -48,7 +48,8 @@ export default function RootLayout({
           </main>
           <Footer />
         </Providers>
-        <script
+        {/* Temporarily disabled PWA Service Worker to resolve permission prompt issues */}
+        {/* <script
           dangerouslySetInnerHTML={{
             __html: `
               if ('serviceWorker' in navigator) {
@@ -65,7 +66,7 @@ export default function RootLayout({
               }
             `,
           }}
-        />
+        /> */}
       </body>
     </html>
   );
