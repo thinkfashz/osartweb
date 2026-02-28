@@ -1,43 +1,55 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useQuery } from '@apollo/client/react';
-import { ChevronRight, ArrowLeft, Loader2, RefreshCcw, Home, Terminal, Share2, Activity } from 'lucide-react';
+import { ChevronRight, Loader2, RefreshCcw, Home, Share2, Activity } from 'lucide-react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { GET_PRODUCT_BY_SLUG, GET_PRODUCTS } from '@/lib/graphql/queries';
 import { Product } from '@/lib/graphql/types';
 import { ProductGallery } from '@/components/product/ProductGallery';
 import { PurchasePanel } from '@/components/product/PurchasePanel';
 import { ProductTabs } from '@/components/product/ProductTabs';
 import { RelatedCarousel } from '@/components/product/RelatedCarousel';
 import { useCart } from '@/hooks/useCart';
-import { toast } from 'sonner';
 
 export default function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = React.use(params);
     const { refetch: refetchGlobalCart } = useCart();
 
-    // 1. Fetch Product (Keeping GraphQL for read, as it's already set up and works well for detailed product data)
-    const { data, loading, error, refetch } = useQuery<{ productBySlug: Product }>(GET_PRODUCT_BY_SLUG, {
-        variables: { slug },
-        skip: !slug,
-    });
+    const [product, setProduct] = useState<Product | null>(null);
+    const [related, setRelated] = useState<Product[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<any>(null);
 
-    const product = data?.productBySlug || null;
+    const fetchData = async () => {
+        setLoading(true);
+        setError(null);
+        try {
+            // 1. Fetch Product by Slug using internal API proxy
+            const res = await fetch(`/api/products/slug/${slug}`);
+            if (!res.ok) throw new Error('Failed to fetch product');
+            const productData = await res.json();
+            setProduct(productData);
 
-    // 2. Related Products
-    const { data: relatedData } = useQuery<{ products: Product[] }>(GET_PRODUCTS, {
-        variables: {
-            filter: {
-                limit: 10
+            // 2. Fetch Related Products using internal API proxy
+            if (productData) {
+                const relatedRes = await fetch(`/api/products?limit=10`);
+                if (relatedRes.ok) {
+                    const { products: allProducts } = await relatedRes.json();
+                    setRelated(allProducts.filter((p: Product) => p.id !== productData.id));
+                }
             }
-        },
-        skip: !product
-    });
+        } catch (err) {
+            console.error('[ProductDetail] Fetch Error:', err);
+            setError(err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    const related = (relatedData?.products ?? [])
-        .filter((p: Product) => p.id !== product?.id);
+    useEffect(() => {
+        if (slug) {
+            fetchData();
+        }
+    }, [slug]);
 
     if (loading) return (
         <div className="min-h-screen bg-zinc-950 pt-32 pb-20 flex items-center justify-center">
@@ -67,7 +79,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
             </p>
             <div className="flex gap-4">
                 <button
-                    onClick={() => refetch()}
+                    onClick={() => fetchData()}
                     className="px-8 py-4 bg-white text-black font-black uppercase italic tracking-widest hover:bg-electric-blue hover:text-white transition-all rounded-xl"
                 >
                     Reintentar Protocolo
@@ -121,8 +133,6 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
                     <div className="space-y-12">
                         <ProductGallery images={product.images || []} />
 
-                        {/* Mobile Buy Panel (appears here on medium and smaller screens if needed, 
-                           but we'll keep the grid for consistency) */}
                         <div className="hidden lg:block">
                             <ProductTabs product={product} />
                         </div>
@@ -156,10 +166,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
                         </div>
                         <RelatedCarousel
                             products={related}
-                            onAddToCart={(p) => {
-                                // This callback would need to be updated in RelatedCarousel too if we want full REST,
-                                // but the ProductCard with addToCart handle already exists.
-                            }}
+                            onAddToCart={() => refetchGlobalCart()}
                         />
                     </div>
                 )}

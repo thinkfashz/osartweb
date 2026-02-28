@@ -7,7 +7,7 @@ import { ShoppingCart, ArrowRight } from 'lucide-react';
 
 interface RelatedCarouselProps {
     products: Product[];
-    onAddToCart: (p: Product) => void;
+    onAddToCart: (p?: any) => void;
 }
 
 export function RelatedCarousel({ products, onAddToCart }: RelatedCarouselProps) {
