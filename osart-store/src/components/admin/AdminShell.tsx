@@ -51,7 +51,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                 .from('profiles')
                 .select('role')
                 .eq('id', user.id)
-                .single();
+                .single() as unknown as { data: { role: string } | null; error: unknown };
 
             if (cancelled) return;
 

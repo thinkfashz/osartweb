@@ -2,9 +2,16 @@ import { Controller, Get } from '@nestjs/common';
 
 @Controller()
 export class AppController {
-  @Get()
-  getHello(): string {
-    return `
+    @Get('health')
+    health() {
+        return { ok: true, timestamp: new Date().toISOString(), version: '1.0.0' };
+    }
+
+
+
+    @Get()
+    getHello(): string {
+        return `
       <!DOCTYPE html>
       <html lang="es">
       <head>
@@ -131,10 +138,10 @@ export class AppController {
       </body>
       </html>
     `;
-  }
+    }
 
-  @Get('admin')
-  getAdminRedirect(): string {
-    return this.getHello();
-  }
+    @Get('admin')
+    getAdminRedirect(): string {
+        return this.getHello();
+    }
 }

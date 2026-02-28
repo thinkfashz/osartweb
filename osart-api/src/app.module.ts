@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { ApolloServerPluginLandingPageLocalDefault } from '@apollo/server/plugin/landingPage/default';
 import { join } from 'path';
 
 import { ProductsModule } from './modules/products/products.module';
@@ -25,8 +26,12 @@ import { SystemModule } from './modules/system/system.module';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
-      playground: true,
+      // playground: true is removed — deprecated in Apollo Server 4.
+      // Use the Apollo Sandbox landing page instead (works in development).
       introspection: true,
+      plugins: [
+        ApolloServerPluginLandingPageLocalDefault({ embed: true }),
+      ],
     }),
     ProductsModule,
     CategoriesModule,

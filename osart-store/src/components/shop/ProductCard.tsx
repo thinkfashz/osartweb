@@ -1,16 +1,16 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import { ShoppingCart, Eye, Zap, ArrowUpRight, ShieldCheck, Heart } from 'lucide-react';
+import { ShoppingCart, Heart, Zap, Star, Package } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/hooks/useCart';
 import { useToggleWishlist, useWishlist } from '@/hooks/useWishlist';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
-
 import { Product } from '@/lib/graphql/types';
+import { toast } from 'sonner';
 
 interface ProductCardProps {
     product: Product;
@@ -22,154 +22,171 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     const { addToCart } = useCart();
     const [toggleWishlist] = useToggleWishlist();
     const { wishlist } = useWishlist();
+    const [adding, setAdding] = useState(false);
 
     const isFavorited = wishlist.some((item: any) => item.productId === product.id);
 
+    const categoryName =
+        product.categoryData?.name ||
+        (typeof product.category === 'string' ? product.category : product.category?.name) ||
+        'General';
+
+    const imgSrc = product.images?.[0]?.url ?? (product as any).image_url ?? null;
+    const isLowStock = product.stock !== undefined && product.stock < 5 && product.stock > 0;
+    const isOutOfStock = product.stock === 0;
+
     const handleAddToCart = async (e: React.MouseEvent) => {
         e.preventDefault();
+        e.stopPropagation();
+        if (isOutOfStock) { toast.error('Sin stock disponible'); return; }
+        setAdding(true);
         try {
-            // Updated to pass product as any to avoid strict interface mismatches if needed, 
-            // but the hook should handle the new Product type.
             await addToCart(product as any, 1);
-        } catch (err: any) {
-            console.error('Error adding to cart:', err);
+            toast.success(`${product.name} añadido al carrito`);
+        } catch {
+            toast.error('Error al añadir al carrito');
+        } finally {
+            setAdding(false);
         }
     };
 
     const handleToggleWishlist = async (e: React.MouseEvent) => {
         e.preventDefault();
-        if (!user) {
-            router.push('/login');
-            return;
-        }
+        e.stopPropagation();
+        if (!user) { router.push('/login'); return; }
         try {
-            await toggleWishlist({
-                input: {
-                    productId: product.id
-                }
-            });
-        } catch (err) {
-            console.error('Error toggling wishlist:', err);
-        }
+            await toggleWishlist({ input: { productId: product.id } });
+        } catch { /* ignore */ }
     };
 
     return (
-        <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            whileHover={{ y: -4 }}
-            className="group relative flex flex-col bg-zinc-950 border border-white/5 hover:border-electric-blue/40 transition-all duration-300 overflow-hidden"
+        <motion.article
+            whileHover={{ y: -6 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className="group relative flex flex-col bg-zinc-950 border border-white/5 hover:border-electric-blue/30 rounded-2xl overflow-hidden transition-colors duration-300 shadow-lg hover:shadow-[0_8px_40px_rgba(0,229,255,0.08)]"
         >
-            {/* Structural Accents */}
-            <div className="absolute top-0 right-0 w-8 h-[1px] bg-electric-blue/40 opacity-0 group-hover:opacity-100 transition-opacity" />
-            <div className="absolute top-0 right-0 w-[1px] h-8 bg-electric-blue/40 opacity-0 group-hover:opacity-100 transition-opacity" />
+            {/* ── Corner accent lines ── */}
+            <div className="absolute top-0 left-0 w-5 h-[1px] bg-electric-blue/50 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute top-0 left-0 w-[1px] h-5 bg-electric-blue/50 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute bottom-0 right-0 w-5 h-[1px] bg-electric-blue/30 opacity-0 group-hover:opacity-100 transition-opacity" />
+            <div className="absolute bottom-0 right-0 w-[1px] h-5 bg-electric-blue/30 opacity-0 group-hover:opacity-100 transition-opacity" />
 
-            {/* Image Stage */}
-            <div className="aspect-[4/5] relative bg-[#0a0a0a] overflow-hidden">
-                <div className="absolute inset-0 bg-gradient-to-b from-white/[0.02] to-transparent pointer-events-none" />
-
-                {/* Crosshair Decor */}
-                <div className="absolute top-4 left-4 w-4 h-4 border-t border-l border-white/10 pointer-events-none" />
-                <div className="absolute bottom-4 right-4 w-4 h-4 border-b border-r border-white/10 pointer-events-none" />
-
-                {product.images && product.images.length > 0 ? (
-                    <img
-                        src={product.images[0].url}
-                        alt={product.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-80 group-hover:opacity-100 grayscale-[40%] group-hover:grayscale-0"
-                    />
-                ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-zinc-900/30">
-                        <Zap size={40} className="text-zinc-800 group-hover:text-electric-blue/40 transition-colors" />
-                    </div>
+            {/* ── Wishlist button (top-right) ── */}
+            <button
+                onClick={handleToggleWishlist}
+                aria-label="Añadir a favoritos"
+                className={cn(
+                    'absolute top-3 right-3 z-30 p-2 rounded-xl border transition-all duration-200 backdrop-blur-md',
+                    isFavorited
+                        ? 'bg-rose-500/20 border-rose-500/40 text-rose-400'
+                        : 'bg-zinc-950/70 border-white/10 text-zinc-600 opacity-0 group-hover:opacity-100 hover:text-rose-400'
                 )}
+            >
+                <Heart size={14} fill={isFavorited ? 'currentColor' : 'none'} />
+            </button>
 
-                {/* Technical Overlay */}
-                <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end z-20">
-                    <div className="space-y-1">
-                        <div className="text-[7px] font-mono text-electric-blue/60 uppercase tracking-[0.2em] bg-background/80 px-1.5 py-0.5 rounded-sm backdrop-blur-md">
-                            Revision: 1.0.4
+            {/* ── Stock badge ── */}
+            {(isLowStock || isOutOfStock) && (
+                <div className={cn(
+                    'absolute top-3 left-3 z-30 flex items-center gap-1.5 px-2.5 py-1 rounded-xl border backdrop-blur-md text-[8px] font-black uppercase tracking-widest',
+                    isOutOfStock
+                        ? 'bg-zinc-900/80 border-zinc-700 text-zinc-500'
+                        : 'bg-rose-500/10 border-rose-500/25 text-rose-400'
+                )}>
+                    <div className={cn('w-1 h-1 rounded-full', isOutOfStock ? 'bg-zinc-600' : 'bg-rose-500 animate-pulse')} />
+                    {isOutOfStock ? 'Sin Stock' : `Últimas ${product.stock}`}
+                </div>
+            )}
+
+            {/* ── Image ── */}
+            <Link href={`/product/${product.slug}`} className="block">
+                <div className="aspect-[4/3] relative bg-zinc-900 overflow-hidden">
+                    {/* Subtle scanline overlay */}
+                    <div className="absolute inset-0 retro-scanlines opacity-20 pointer-events-none z-10" />
+
+                    {imgSrc ? (
+                        <img
+                            src={imgSrc}
+                            alt={product.name}
+                            className={cn(
+                                'w-full h-full object-cover transition-all duration-700',
+                                'group-hover:scale-105',
+                                isOutOfStock ? 'grayscale opacity-40' : 'grayscale-[20%] group-hover:grayscale-0 opacity-85 group-hover:opacity-100'
+                            )}
+                        />
+                    ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center gap-3 bg-zinc-900/60">
+                            <Package size={40} className="text-zinc-700 group-hover:text-electric-blue/50 transition-colors" />
+                            <span className="text-[9px] font-mono text-zinc-700 uppercase tracking-widest">Sin imagen</span>
                         </div>
-                        <div className="text-[7px] font-mono text-white/40 uppercase tracking-[0.2em] px-1.5">
-                            SKU-{(product.sku || product.id.slice(0, 8)).toUpperCase()}
-                        </div>
+                    )}
+
+                    {/* Bottom gradient */}
+                    <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-zinc-950/80 to-transparent pointer-events-none z-10" />
+
+                    {/* SKU chip */}
+                    <div className="absolute bottom-2 left-3 z-20 text-[7px] font-mono text-electric-blue/50 bg-zinc-950/60 px-1.5 py-0.5 rounded-sm backdrop-blur-sm">
+                        {(product.sku || product.id.slice(0, 8)).toUpperCase()}
                     </div>
                 </div>
+            </Link>
 
-                {/* Low Stock Beacon */}
-                {product.stock && product.stock < 5 && (
-                    <div className="absolute top-4 right-4 z-20">
-                        <div className="flex items-center gap-1.5 bg-rose-500/10 text-rose-500 px-2 py-1 rounded-sm border border-rose-500/20 backdrop-blur-md">
-                            <div className="w-1 h-1 rounded-full bg-rose-500 animate-pulse" />
-                            <span className="text-[8px] font-black uppercase tracking-widest">Alerta Stock</span>
-                        </div>
-                    </div>
-                )}
-
-                {/* Hover Quick Actions */}
-                <div className="absolute inset-0 bg-zinc-950/60 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3 z-30">
-                    <Link
-                        href={`/product/${product.slug}`}
-                        className="p-3 bg-white text-black hover:bg-electric-blue hover:text-white transition-all transform translate-y-2 group-hover:translate-y-0 duration-300"
-                    >
-                        <Eye size={18} />
-                    </Link>
-                    <button
-                        onClick={handleToggleWishlist}
-                        className={cn(
-                            "p-3 transition-all transform translate-y-2 group-hover:translate-y-0 delay-75 duration-300",
-                            isFavorited ? "bg-rose-500 text-white shadow-[0_0_20px_rgba(244,63,94,0.3)]" : "bg-white text-black hover:bg-rose-100"
-                        )}
-                    >
-                        <Heart size={18} fill={isFavorited ? "currentColor" : "none"} />
-                    </button>
-                    <button
-                        onClick={handleAddToCart}
-                        className="p-3 bg-electric-blue text-white hover:bg-white hover:text-black transition-all transform translate-y-2 group-hover:translate-y-0 delay-100 duration-300 shadow-[0_0_20px_rgba(0,240,255,0.3)]"
-                    >
-                        <ShoppingCart size={18} />
-                    </button>
-                </div>
-            </div>
-
-            {/* Data Sheet */}
-            <div className="p-5 flex flex-col flex-grow border-t border-white/5 relative bg-zinc-950">
-                <div className="flex items-center justify-between mb-3">
-                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-electric-blue/80">
-                        {product.categoryData?.name || (typeof product.category === 'string' ? product.category : product.category?.name) || 'Standard'}
+            {/* ── Info ── */}
+            <div className="flex flex-col flex-1 p-4 gap-3">
+                {/* Category */}
+                <div className="flex items-center justify-between">
+                    <span className="text-[9px] font-black uppercase tracking-[0.2em] text-electric-blue/70 bg-electric-blue/8 px-2 py-0.5 rounded-full border border-electric-blue/10">
+                        {categoryName}
                     </span>
-                    <ShieldCheck size={12} className="text-zinc-800" />
+                    {product.stock !== undefined && product.stock >= 5 && (
+                        <div className="flex items-center gap-1 text-[9px] text-zinc-600">
+                            <Star size={9} className="fill-zinc-700 text-zinc-700" />
+                            <span className="font-mono">{product.stock} uds</span>
+                        </div>
+                    )}
                 </div>
 
-                <Link href={`/product/${product.slug}`} className="block mb-6">
-                    <h3 className="text-sm font-bold uppercase italic tracking-tighter text-white group-hover:text-electric-blue transition-colors line-clamp-1">
+                {/* Product name */}
+                <Link href={`/product/${product.slug}`}>
+                    <h3 className="text-sm font-bold uppercase italic tracking-tighter text-white group-hover:text-electric-blue transition-colors line-clamp-2 leading-tight">
                         {product.name}
                     </h3>
-                    <div className="h-px w-0 group-hover:w-full bg-electric-blue/30 transition-all duration-500 mt-1" />
                 </Link>
 
-                <div className="mt-auto flex items-center justify-between">
+                {/* Price + CTA */}
+                <div className="mt-auto pt-2 flex items-center justify-between gap-2 border-t border-white/5">
                     <div>
-                        <div className="text-[8px] text-zinc-500 font-mono uppercase mb-0.5">Precio de Unidad</div>
-                        <div className="text-xl font-black text-white tracking-tighter">
+                        <p className="text-[8px] text-zinc-600 font-mono uppercase mb-0.5">Precio unit.</p>
+                        <p className="text-lg font-black text-white tracking-tighter leading-none">
                             ${(product.price || 0).toLocaleString('es-CL')}
-                        </div>
+                        </p>
                     </div>
 
-                    <Link
-                        href={`/product/${product.slug}`}
-                        className="flex items-center gap-1 text-zinc-500 hover:text-white transition-colors group/link"
+                    <button
+                        onClick={handleAddToCart}
+                        disabled={adding || isOutOfStock}
+                        aria-label="Añadir al carrito"
+                        className={cn(
+                            'flex items-center gap-2 px-4 py-2.5 rounded-xl font-black uppercase text-[9px] tracking-widest transition-all duration-200 border shrink-0',
+                            isOutOfStock
+                                ? 'border-zinc-800 text-zinc-700 cursor-not-allowed bg-transparent'
+                                : adding
+                                    ? 'bg-electric-blue/20 border-electric-blue/30 text-electric-blue'
+                                    : 'bg-electric-blue text-black border-transparent hover:bg-electric-blue/90 shadow-[0_0_15px_rgba(0,229,255,0.2)] hover:shadow-[0_0_25px_rgba(0,229,255,0.35)] active:scale-95'
+                        )}
                     >
-                        <span className="text-[9px] font-black uppercase tracking-widest">Detail</span>
-                        <ArrowUpRight size={12} className="group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-transform" />
-                    </Link>
+                        {adding ? (
+                            <Zap size={13} className="animate-pulse" />
+                        ) : (
+                            <ShoppingCart size={13} />
+                        )}
+                        <span className="hidden sm:inline">
+                            {isOutOfStock ? 'Agotado' : adding ? 'Añadiendo' : 'Añadir'}
+                        </span>
+                    </button>
                 </div>
             </div>
-
-            {/* Visual Divider Bottom */}
-            <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
-        </motion.div>
+        </motion.article>
     );
 };
 
