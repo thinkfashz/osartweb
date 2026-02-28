@@ -2,12 +2,12 @@
     "version": 2,
     "rewrites": [
         {
-            "source": "/api/(.*)",
-            "destination": "https://osartweb-ltg8-git-main-think-fastzs-projects.vercel.app/api/$1"
+            "source": "/graphql",
+            "destination": "/api/graphql"
         },
         {
-            "source": "/graphql",
-            "destination": "https://osartweb-ltg8-git-main-think-fastzs-projects.vercel.app/graphql"
+            "source": "/api/(.*)",
+            "destination": "https://osartweb-ltg8-git-main-think-fastzs-projects.vercel.app/api/$1"
         },
         {
             "source": "/health",
