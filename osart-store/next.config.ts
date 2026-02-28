@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const nextConfig = {
+const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
@@ -26,6 +26,22 @@ const nextConfig = {
   },
   typescript: {
     ignoreBuildErrors: true,
+  },
+  async rewrites() {
+    return [
+      {
+        source: '/graphql',
+        destination: '/api/graphql',
+      },
+      {
+        source: '/health',
+        destination: 'https://osartweb-ltg8-git-main-think-fastzs-projects.vercel.app/health',
+      },
+      {
+        source: '/api/backend/:path*',
+        destination: 'https://osartweb-ltg8-git-main-think-fastzs-projects.vercel.app/api/:path*',
+      },
+    ];
   },
 };
 

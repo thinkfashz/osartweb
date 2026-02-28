@@ -5,7 +5,7 @@ import { createClient } from 'graphql-ws';
 import { getMainDefinition } from '@apollo/client/utilities';
 import { supabase } from './supabase-auth';
 
-const httpUri = process.env.NEXT_PUBLIC_GRAPHQL_URL || (typeof window !== 'undefined' ? '/api/graphql' : 'http://localhost:3001/graphql');
+const httpUri = process.env.NEXT_PUBLIC_GRAPHQL_URL || '/graphql';
 const wsUri = httpUri.startsWith('/')
     ? (typeof window !== 'undefined' ? `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}${httpUri}` : httpUri)
     : httpUri.replace(/^http/, 'ws');

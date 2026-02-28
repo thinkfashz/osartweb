@@ -1,17 +1,9 @@
 {
     "version": 2,
-    "rewrites": [
+    "builds": [
         {
-            "source": "/graphql",
-            "destination": "/api/graphql"
-        },
-        {
-            "source": "/api/(.*)",
-            "destination": "https://osartweb-ltg8-git-main-think-fastzs-projects.vercel.app/api/$1"
-        },
-        {
-            "source": "/health",
-            "destination": "https://osartweb-ltg8-git-main-think-fastzs-projects.vercel.app/health"
+            "src": "package.json",
+            "use": "@vercel/next"
         }
     ]
 }
