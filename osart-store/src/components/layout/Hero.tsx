@@ -8,7 +8,12 @@ import { motion } from 'framer-motion';
 const floatVariants = (delay = 0, amplitude = 20) => ({
     animate: {
         y: [0, -amplitude, 0],
-        transition: { duration: 4 + delay, repeat: Infinity, ease: 'easeInOut', delay },
+        transition: {
+            duration: 4 + delay,
+            repeat: Infinity,
+            ease: 'easeInOut' as const,
+            delay
+        },
     },
 });
 
