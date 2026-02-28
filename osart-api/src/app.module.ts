@@ -24,7 +24,10 @@ import { SystemModule } from './modules/system/system.module';
     ConfigModule.forRoot({ isGlobal: true }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: process.env.VERCEL ? true : join(process.cwd(), 'src/schema.gql'),
+      // In Vercel/Production, write to /tmp or use true for in-memory to avoid EROFS
+      autoSchemaFile: (process.env.VERCEL || process.env.NODE_ENV === 'production')
+        ? join('/tmp', 'schema.gql')
+        : join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
       introspection: true,
       plugins: [
