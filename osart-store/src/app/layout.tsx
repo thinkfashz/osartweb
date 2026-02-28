@@ -4,6 +4,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Providers } from "./providers";
 import { PageWrapper } from "@/components/layout/PageWrapper";
+import { ThemeProvider } from "@/context/ThemeContext";
 
 export const metadata: Metadata = {
   title: "Osart Repuestos Electrónicos | La energía que mueve tus reparaciones",
@@ -40,13 +41,15 @@ export default function RootLayout({
     <html lang="es" className="bg-black">
       <body className="flex flex-col min-h-screen safe-area-pb overflow-x-hidden bg-[#050505] text-white">
         <Providers>
-          <Navbar />
-          <main className="flex-grow pt-20 md:pt-24 safe-area-pt">
-            <PageWrapper>
-              {children}
-            </PageWrapper>
-          </main>
-          <Footer />
+          <ThemeProvider>
+            <Navbar />
+            <main className="flex-grow pt-20 md:pt-24 safe-area-pt">
+              <PageWrapper>
+                {children}
+              </PageWrapper>
+            </main>
+            <Footer />
+          </ThemeProvider>
         </Providers>
         <script
           dangerouslySetInnerHTML={{

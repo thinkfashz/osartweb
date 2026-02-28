@@ -2,11 +2,12 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ShoppingCart, User, Menu, X, Zap, LogOut, Terminal, Package } from 'lucide-react';
+import { ShoppingCart, User, Menu, X, Zap, LogOut, Terminal, Package, Sun, Moon } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/hooks/useCart';
 import { CartDrawer } from '../cart/CartDrawer';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTheme } from '@/context/ThemeContext';
 
 const MobileNavLink = ({ href, onClick, children, variant = 'default' }: { href: string, onClick: () => void, children: React.ReactNode, variant?: 'default' | 'accent' }) => (
     <Link
@@ -24,6 +25,7 @@ const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
     const { user, signOut } = useAuth();
     const { itemCount } = useCart();
+    const { theme, toggleTheme, isDark } = useTheme();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -63,6 +65,25 @@ const Navbar = () => {
                                     {itemCount}
                                 </span>
                             )}
+                        </button>
+
+                        {/* Theme Toggle */}
+                        <button
+                            onClick={toggleTheme}
+                            aria-label="Cambiar tema"
+                            className="relative p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors active:scale-90"
+                        >
+                            <AnimatePresence mode="wait" initial={false}>
+                                {isDark ? (
+                                    <motion.span key="sun" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }}>
+                                        <Sun size={18} />
+                                    </motion.span>
+                                ) : (
+                                    <motion.span key="moon" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}>
+                                        <Moon size={18} />
+                                    </motion.span>
+                                )}
+                            </AnimatePresence>
                         </button>
 
                         {user ? (
