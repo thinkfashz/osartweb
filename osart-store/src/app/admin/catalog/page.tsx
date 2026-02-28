@@ -1,8 +1,7 @@
 "use client";
 
 import React from 'react';
-import { useQuery } from '@apollo/client/react';
-import { ADMIN_PRODUCTS } from '@/lib/graphql/stockQueries';
+import { toast } from 'sonner';
 import AdminCatalogTable from '@/components/admin/catalog/AdminCatalogTable';
 import { LayoutGrid, List, Plus, Search, SlidersHorizontal, Cpu, Box } from 'lucide-react';
 import Link from 'next/link';

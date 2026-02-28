@@ -35,14 +35,13 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                         transition={{ type: 'spring', damping: 25, stiffness: 200 }}
                         className="fixed right-0 top-0 h-full w-full max-w-md bg-[#18181b] border-l border-[#27272a] shadow-2xl z-[101] flex flex-col"
                     >
-                        {/* Header */}
-                        <div className="p-6 border-b border-[#27272a] flex items-center justify-between">
+                        <div className="flex items-center justify-between p-6 border-b border-white/5">
                             <div className="flex items-center gap-3">
-                                <ShoppingBag className="text-cyan-400 w-5 h-5" />
-                                <h2 className="text-lg font-bold tracking-tight uppercase font-mono">Tu Carrito</h2>
+                                <ShoppingBag className="text-electric-blue w-5 h-5" />
+                                <h2 className="text-lg font-bold tracking-tight uppercase font-mono italic">Protocolo_Carga</h2>
                             </div>
-                            <button onClick={onClose} className="p-2 hover:bg-[#27272a] rounded-full transition-colors">
-                                <X className="w-5 h-5 text-zinc-400" />
+                            <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full transition-colors">
+                                <X className="w-5 h-5 text-zinc-500" />
                             </button>
                         </div>
 
@@ -88,25 +87,25 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                                 </p>
                                             </div>
                                             <div className="flex items-center justify-between mt-2">
-                                                <div className="flex items-center border border-zinc-800 rounded">
+                                                <div className="flex items-center border border-white/5 rounded-lg bg-zinc-900/50">
                                                     <button
                                                         onClick={() => addToCart(item.product, -1)}
-                                                        className="p-1 hover:bg-zinc-800 text-zinc-400"
+                                                        className="p-1 hover:text-white text-zinc-600 transition-colors"
                                                     >
                                                         <Minus className="w-3 h-3" />
                                                     </button>
-                                                    <span className="px-3 text-xs font-mono font-bold text-zinc-200">
+                                                    <span className="px-3 text-xs font-mono font-black text-white">
                                                         {item.quantity}
                                                     </span>
                                                     <button
                                                         onClick={() => addToCart(item.product, 1)}
-                                                        className="p-1 hover:bg-zinc-800 text-zinc-400"
+                                                        className="p-1 hover:text-white text-zinc-600 transition-colors"
                                                     >
                                                         <Plus className="w-3 h-3" />
                                                     </button>
                                                 </div>
-                                                <p className="text-sm font-bold font-mono text-cyan-400">
-                                                    ${(item.product.price * item.quantity).toLocaleString()}
+                                                <p className="text-sm font-black font-mono text-electric-blue italic">
+                                                    ${((item.product?.price || 0) * (item.quantity || 0)).toLocaleString('es-CL')}
                                                 </p>
                                             </div>
                                         </div>
@@ -117,22 +116,27 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
 
                         {/* Footer */}
                         {items.length > 0 && (
-                            <div className="p-6 border-t border-[#27272a] bg-zinc-900/50 space-y-4">
+                            <div className="p-6 border-t border-white/5 bg-zinc-900/30 space-y-5">
                                 <div className="flex items-center justify-between">
-                                    <span className="text-zinc-400 text-sm uppercase tracking-widest font-mono">Subtotal</span>
-                                    <span className="text-xl font-bold font-mono text-white">
-                                        ${subtotal.toLocaleString()}
+                                    <span className="text-zinc-500 text-xs font-black uppercase tracking-[.3em]">Subtotal_Neto</span>
+                                    <span className="text-2xl font-black italic tracking-tighter text-white">
+                                        ${(subtotal || 0).toLocaleString('es-CL')}
                                     </span>
                                 </div>
-                                <p className="text-[10px] text-zinc-500 uppercase tracking-tighter">
-                                    * Envío calculado en el checkout. Impuestos incluidos.
-                                </p>
+                                <div className="p-3 bg-white/5 border border-white/5 rounded-lg">
+                                    <p className="text-[10px] text-zinc-600 font-mono uppercase tracking-tighter leading-relaxed">
+                                        * Logística de última milla calculada en terminal de pago. Protocolo de impuestos incluido.
+                                    </p>
+                                </div>
                                 <Link
                                     href="/checkout"
                                     onClick={onClose}
-                                    className="block w-full py-4 bg-cyan-500 hover:bg-cyan-400 text-black text-center font-black uppercase tracking-[0.2em] transition-all shadow-[0_0_20px_rgba(34,211,238,0.3)] hover:shadow-[0_0_30px_rgba(34,211,238,0.5)] active:scale-[0.98]"
+                                    className="relative group block w-full py-5 bg-electric-blue text-black text-center font-black uppercase italic tracking-[.3em] overflow-hidden transition-all hover:scale-[1.02] active:scale-[0.98]"
                                 >
-                                    Pagar Ahora <ArrowRight className="inline ml-2 w-5 h-5" />
+                                    <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity" />
+                                    <span className="relative z-10 flex items-center justify-center gap-3">
+                                        Ejecutar Transacción <ArrowRight size={18} />
+                                    </span>
                                 </Link>
                             </div>
                         )}

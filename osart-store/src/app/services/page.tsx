@@ -63,7 +63,7 @@ export default function ServicesPage() {
                             </span>
                             <h1 className="text-5xl lg:text-8xl font-black tracking-tighter uppercase italic leading-none text-white">
                                 Servicios de <br />
-                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-blue to-cyan-400">Alta Precisión</span>
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-blue to-white/60">Alta Precisión</span>
                             </h1>
                         </motion.div>
 

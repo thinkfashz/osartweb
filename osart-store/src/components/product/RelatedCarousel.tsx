@@ -18,13 +18,18 @@ export function RelatedCarousel({ products, onAddToCart }: RelatedCarouselProps)
 
     return (
         <div className="space-y-10 py-20 overflow-hidden">
-            <div className="max-w-[1400px] mx-auto px-6 flex items-center justify-between">
-                <h2 className="text-3xl font-black uppercase italic tracking-tighter text-slate-900">
-                    Componentes Relacionados
-                </h2>
-                <Link href="/catalog" className="text-[10px] font-black uppercase tracking-widest text-emerald-600 hover:text-emerald-700 flex items-center gap-2">
-                    Ver Todo el Catálogo
-                    <ArrowRight size={14} />
+            <div className="max-w-[1400px] mx-auto px-6 flex items-end justify-between">
+                <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 bg-electric-blue rounded-full animate-pulse" />
+                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-electric-blue">Sistemas Sincronizados</span>
+                    </div>
+                    <h2 className="text-3xl font-black uppercase italic tracking-tighter text-white">
+                        Componentes Relacionados
+                    </h2>
+                </div>
+                <Link href="/catalog" className="text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-white flex items-center gap-2 transition-colors group">
+                    VER TODO <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                 </Link>
             </div>
 
@@ -41,35 +46,38 @@ export function RelatedCarousel({ products, onAddToCart }: RelatedCarouselProps)
                     {displayProducts.map((p, i) => (
                         <div
                             key={`${p.id}-${i}`}
-                            className="w-80 flex-shrink-0 bg-white border border-slate-100 rounded-3xl p-6 group transition-all hover:border-emerald-200 hover:shadow-xl hover:shadow-emerald-500/5"
+                            className="w-80 flex-shrink-0 bg-zinc-900 border border-white/5 rounded-3xl p-6 group transition-all hover:border-electric-blue/40 relative overflow-hidden"
                         >
-                            <div className="aspect-square bg-slate-50 rounded-2xl mb-6 flex items-center justify-center p-8 transition-transform group-hover:scale-105">
+                            <div className="aspect-square bg-[#0a0a0a] rounded-2xl mb-6 flex items-center justify-center p-8 transition-transform group-hover:scale-105 border border-white/5 relative">
+                                <div className="absolute top-2 left-2 w-3 h-3 border-t border-l border-white/10" />
+                                <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-white/10" />
+
                                 {p.images?.[0]?.url ? (
-                                    <img src={p.images[0].url} alt={p.name} className="w-full h-full object-contain" />
+                                    <img src={p.images[0].url} alt={p.name} className="w-full h-full object-contain relative z-10" />
                                 ) : (
-                                    <div className="text-slate-200"><ShoppingCart size={64} /></div>
+                                    <div className="text-zinc-800"><ShoppingCart size={64} /></div>
                                 )}
                             </div>
 
                             <div className="space-y-4">
-                                <div className="text-[9px] font-black text-slate-400 uppercase tracking-widest">
-                                    {p.brand || 'Osart Grade'}
+                                <div className="text-[9px] font-black text-white/30 uppercase tracking-[0.2em]">
+                                    {p.brand || 'OSART_GRADE'}
                                 </div>
-                                <h3 className="text-lg font-black uppercase italic tracking-tighter text-slate-900 line-clamp-1">
+                                <h3 className="text-lg font-black uppercase italic tracking-tighter text-white line-clamp-1 group-hover:text-electric-blue transition-colors">
                                     {p.name}
                                 </h3>
-                                <div className="flex items-center justify-between">
-                                    <span className="text-xl font-black text-slate-900 italic">${p.price.toLocaleString()}</span>
+                                <div className="flex items-center justify-between pt-2">
+                                    <span className="text-xl font-black text-white italic tracking-tighter">${(p.price || 0).toLocaleString('es-CL')}</span>
                                     <div className="flex gap-2">
                                         <button
                                             onClick={() => onAddToCart(p)}
-                                            className="p-3 rounded-xl bg-emerald-100 text-emerald-600 hover:bg-emerald-500 hover:text-white transition-all shadow-lg shadow-emerald-500/10"
+                                            className="p-3 rounded-xl bg-electric-blue text-black hover:bg-white transition-all shadow-lg shadow-electric-blue/20"
                                         >
                                             <ShoppingCart size={18} />
                                         </button>
                                         <Link
                                             href={`/product/${p.slug}`}
-                                            className="p-3 rounded-xl border border-slate-200 text-slate-400 hover:text-slate-900 hover:bg-slate-50 transition-all"
+                                            className="p-3 rounded-xl border border-white/10 text-white/40 hover:text-white hover:bg-white/5 transition-all"
                                         >
                                             <ArrowRight size={18} />
                                         </Link>
@@ -81,8 +89,8 @@ export function RelatedCarousel({ products, onAddToCart }: RelatedCarouselProps)
                 </motion.div>
 
                 {/* Gradient overlays for polish */}
-                <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-slate-50 to-transparent z-10" />
-                <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-slate-50 to-transparent z-10" />
+                <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-zinc-950 to-transparent z-10" />
+                <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-zinc-950 to-transparent z-10" />
             </div>
         </div>
     );

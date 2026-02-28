@@ -1,205 +1,141 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
+import { ShoppingCart, Loader2, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
-import { ShoppingCart, Trash2, ArrowRight, ShieldCheck, Truck, Loader2 } from 'lucide-react';
-import { gql } from '@apollo/client';
-import { useQuery, useMutation } from '@apollo/client/react';
-import { useAuth } from '@/context/AuthContext';
+import { motion, AnimatePresence } from 'framer-motion';
 
-const GET_CART = gql`
-  query GetCart {
-    cart {
-      id
-      items {
-        id
-        productId
-        product {
-          name
-          price
-          slug
-        }
-        quantity
-      }
-    }
-  }
-`;
-
-const UPDATE_CART_QTY = gql`
-  mutation UpdateCartItem($productId: String!, $quantity: Int!) {
-    addToCart(productId: $productId, quantity: $quantity) {
-      id
-      items {
-        id
-        quantity
-      }
-    }
-  }
-`;
-
-const REMOVE_FROM_CART = gql`
-  mutation RemoveFromCart($productId: String!) {
-    removeFromCart(productId: $productId) {
-      id
-    }
-  }
-`;
+import { useCart } from '@/hooks/useCart';
+import CartItemCard from '@/components/cart/CartItemCard';
+import CartSummary from '@/components/cart/CartSummary';
+import CouponBox from '@/components/cart/CouponBox';
+import StickyCheckoutBar from '@/components/cart/StickyCheckoutBar';
+import EmptyCartState from '@/components/cart/EmptyCartState';
 
 const CartPage = () => {
-    const { user, loading: authLoading } = useAuth();
-    const { data, loading, error, refetch } = useQuery<any>(GET_CART, {
-        skip: !user
-    });
-    const [updateQty] = useMutation(UPDATE_CART_QTY);
-    const [removeItem] = useMutation(REMOVE_FROM_CART);
+    const router = useRouter();
+    const {
+        items,
+        subtotal,
+        discount,
+        total,
+        itemCount,
+        loading,
+        updatingId,
+        coupon,
+        updateQuantity,
+        removeFromCart,
+        applyCoupon
+    } = useCart();
 
-    const cart = (data as any)?.cart;
-    const items = cart?.items || [];
-
-    const subtotal = items.reduce((acc: number, item: any) => acc + item.product.price * item.quantity, 0);
-    const shipping = subtotal > 50000 ? 0 : 5000;
-    const total = subtotal + shipping;
-
-    const handleUpdateQty = async (productId: string, delta: number, currentQty: number) => {
-        const newQty = currentQty + delta;
-        if (newQty < 1) return;
-        await updateQty({ variables: { productId, quantity: delta } });
-        refetch();
+    const handleCheckout = () => {
+        router.push('/checkout');
     };
 
-    const handleRemove = async (productId: string) => {
-        await removeItem({ variables: { productId } });
-        refetch();
-    };
-
-    if (authLoading || loading) return (
-        <div className="max-w-[1200px] mx-auto px-5 py-20 flex justify-center">
-            <Loader2 className="animate-spin text-electric-blue" size={48} />
-        </div>
-    );
-
-    if (!user) return (
-        <div className="max-w-[1200px] mx-auto px-5 py-20 text-center">
-            <h1 className="text-3xl font-bold mb-6">Debes iniciar sesión</h1>
-            <p className="text-muted-foreground mb-10">Ingresa a tu cuenta para ver tu carrito de compras.</p>
-            <Link href="/login" className="neon-button inline-flex">Iniciar Sesión</Link>
-        </div>
-    );
-
-    if (items.length === 0) {
+    if (loading && items.length === 0) {
         return (
-            <div className="max-w-[1200px] mx-auto px-5 py-20 text-center">
-                <div className="w-20 h-20 bg-zinc-900 rounded-full flex items-center justify-center mx-auto mb-6 border border-white/5">
-                    <ShoppingCart size={40} className="text-muted-foreground" />
-                </div>
-                <h1 className="text-3xl font-bold mb-4">Tu carrito está vacío</h1>
-                <p className="text-muted-foreground mb-10 max-w-sm mx-auto">Parece que aún no has añadido ningún repuesto a tu compra.</p>
-                <Link href="/catalog" className="neon-button inline-flex">
-                    Ir al Catálogo
-                </Link>
+            <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
+                <Loader2 className="animate-spin text-electric-blue" size={48} />
+                <p className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground animate-pulse">
+                    Sincronizando Inventario...
+                </p>
             </div>
         );
     }
 
+    if (items.length === 0) {
+        return <EmptyCartState />;
+    }
+
     return (
-        <div className="max-w-[1200px] mx-auto px-5 py-12">
-            <h1 className="text-3xl font-black mb-10 flex items-center gap-4 uppercase italic tracking-tighter">
-                <ShoppingCart size={32} className="text-electric-blue" />
-                Tu Carrito <span className="text-sm font-bold text-muted-foreground not-italic ml-2">({items.length} productos)</span>
-            </h1>
+        <div className="relative min-h-screen pb-32 lg:pb-12">
+            <div className="max-w-[1200px] mx-auto px-5 pt-8 sm:pt-12">
+                {/* Header */}
+                <div className="mb-10 sm:mb-12">
+                    <Link
+                        href="/catalog"
+                        className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-electric-blue transition-colors mb-6 group"
+                    >
+                        <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
+                        Volver al Catálogo
+                    </Link>
 
-            <div className="grid lg:grid-cols-3 gap-12">
-
-                {/* Items List */}
-                <div className="lg:col-span-2 space-y-4">
-                    {items.map((item: any) => (
-                        <div key={item.id} className="glass p-4 sm:p-6 flex gap-4 sm:gap-6 border-white/5 bg-zinc-900/40">
-                            <div className="w-24 h-24 bg-zinc-950 rounded-xl flex-shrink-0 flex items-center justify-center border border-white/5">
-                                <ShoppingCart size={32} className="text-electric-blue opacity-20" />
-                            </div>
-
-                            <div className="flex-grow flex flex-col justify-between">
-                                <div className="flex justify-between gap-4">
-                                    <div>
-                                        <h3 className="font-bold hover:text-electric-blue transition-colors leading-tight">
-                                            <Link href={`/product/${item.product.slug}`}>{item.product.name}</Link>
-                                        </h3>
-                                    </div>
-                                    <button
-                                        onClick={() => handleRemove(item.productId)}
-                                        className="text-muted-foreground hover:text-red-500 transition-colors self-start"
-                                    >
-                                        <Trash2 size={20} />
-                                    </button>
-                                </div>
-
-                                <div className="flex justify-between items-end mt-4">
-                                    <div className="flex items-center bg-zinc-950 border border-white/10 rounded-lg p-0.5">
-                                        <button
-                                            onClick={() => handleUpdateQty(item.productId, -1, item.quantity)}
-                                            className="w-10 h-10 flex items-center justify-center text-muted-foreground hover:text-white"
-                                        >
-                                            -
-                                        </button>
-                                        <span className="w-8 text-center text-sm font-black">{item.quantity}</span>
-                                        <button
-                                            onClick={() => handleUpdateQty(item.productId, 1, item.quantity)}
-                                            className="w-10 h-10 flex items-center justify-center text-muted-foreground hover:text-white"
-                                        >
-                                            +
-                                        </button>
-                                    </div>
-                                    <div className="text-right">
-                                        <span className="text-xl font-black text-white">${(item.product.price * item.quantity).toLocaleString('es-CL')}</span>
-                                        <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest mt-1">${item.product.price.toLocaleString('es-CL')} c/u</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+                    <h1 className="text-4xl sm:text-6xl font-black flex flex-wrap items-baseline gap-x-4 uppercase italic tracking-tighter leading-none">
+                        <span className="text-white">Tu</span>
+                        <span className="text-electric-blue">Carrito</span>
+                        <span className="text-sm not-italic font-bold text-muted-foreground tracking-widest mt-2 sm:mt-0 font-mono">
+                            [LVL:01_QTY:{itemCount}]
+                        </span>
+                    </h1>
                 </div>
 
-                {/* Summary */}
-                <div className="lg:col-span-1">
-                    <div className="glass p-8 sticky top-24 border-electric-blue/20 bg-zinc-950/80 backdrop-blur-xl">
-                        <h2 className="text-xl font-black mb-6 pb-4 border-b border-white/5 uppercase italic tracking-tighter">Resumen de Compra</h2>
-
-                        <div className="space-y-4 mb-8">
-                            <div className="flex justify-between text-muted-foreground">
-                                <span className="text-xs font-bold uppercase tracking-widest">Subtotal</span>
-                                <span className="font-bold">${subtotal.toLocaleString('es-CL')}</span>
-                            </div>
-                            <div className="flex justify-between text-muted-foreground">
-                                <span className="text-xs font-bold uppercase tracking-widest">Envío estimado</span>
-                                <span className={`font-bold ${shipping === 0 ? 'text-green-500' : ''}`}>
-                                    {shipping === 0 ? 'GRATIS' : `$${shipping.toLocaleString('es-CL')}`}
-                                </span>
-                            </div>
-                            <hr className="border-white/5" />
-                            <div className="flex justify-between text-white text-2xl font-black">
-                                <span className="uppercase italic tracking-tighter">Total</span>
-                                <span className="text-electric-blue">${total.toLocaleString('es-CL')}</span>
-                            </div>
+                <div className="grid lg:grid-cols-12 gap-8 sm:gap-12">
+                    {/* Left Column: Items */}
+                    <div className="lg:col-span-8 space-y-6">
+                        <div className="flex flex-col gap-4">
+                            <AnimatePresence initial={false}>
+                                {items.map((item, index) => (
+                                    <motion.div
+                                        key={item.id}
+                                        initial={{ opacity: 0, x: -20 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        exit={{ opacity: 0, x: 20 }}
+                                        transition={{ duration: 0.3, delay: index * 0.05 }}
+                                    >
+                                        <CartItemCard
+                                            item={item}
+                                            onUpdateQty={updateQuantity}
+                                            onRemove={removeFromCart}
+                                            isUpdating={updatingId === item.productId}
+                                        />
+                                    </motion.div>
+                                ))}
+                            </AnimatePresence>
                         </div>
 
-                        <Link href="/checkout" className="neon-button w-full flex items-center justify-center gap-2 py-4 mb-6">
-                            Finalizar Pedido
-                            <ArrowRight size={20} />
-                        </Link>
+                        {/* Tablet/Mobile Additional Content */}
+                        <div className="lg:hidden space-y-4">
+                            <CouponBox onApply={applyCoupon} appliedCoupon={coupon} />
+                        </div>
+                    </div>
 
-                        <div className="space-y-4">
-                            <div className="flex items-center gap-3 text-[10px] text-muted-foreground uppercase font-bold tracking-widest">
-                                <ShieldCheck size={16} className="text-electric-blue" />
-                                <span>Transacción Protegida OSART</span>
+                    {/* Right Column: Summary */}
+                    <div className="lg:col-span-4 lg:relative">
+                        <div className="lg:sticky lg:top-28 space-y-6">
+                            <div className="hidden lg:block">
+                                <CartSummary
+                                    subtotal={subtotal}
+                                    discount={discount}
+                                    total={total}
+                                    onCheckout={handleCheckout}
+                                />
                             </div>
-                            <div className="flex items-center gap-3 text-[10px] text-muted-foreground uppercase font-bold tracking-widest">
-                                <Truck size={16} className="text-electric-blue" />
-                                <span>Despacho a nivel nacional</span>
+
+                            <div className="hidden lg:block">
+                                <CouponBox onApply={applyCoupon} appliedCoupon={coupon} />
+                            </div>
+
+                            {/* Mobile Info Card (Prices only) */}
+                            <div className="lg:hidden pt-4">
+                                <CartSummary
+                                    subtotal={subtotal}
+                                    discount={discount}
+                                    total={total}
+                                    onCheckout={handleCheckout}
+                                />
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+            {/* Mobile Bottom Bar */}
+            <StickyCheckoutBar
+                total={total + (subtotal > 50000 ? 0 : 5000)}
+                itemCount={itemCount}
+                onCheckout={handleCheckout}
+            />
         </div>
     );
 };

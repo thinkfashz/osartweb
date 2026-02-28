@@ -9,6 +9,19 @@ const nextConfig = {
         port: '',
         pathname: '/storage/v1/object/public/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+      {
+        protocol: 'https',
+        hostname: '**.unsplash.com',
+      },
+      {
+        // Allow any https image source (covers CDN-hosted product images)
+        protocol: 'https',
+        hostname: '**',
+      },
     ],
   },
   typescript: {

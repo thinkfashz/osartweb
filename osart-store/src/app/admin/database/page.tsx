@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useQuery, useMutation } from '@apollo/client/react';
 import {
     Database,
     Zap,
@@ -17,7 +16,6 @@ import {
     Cloud
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ADMIN_DATABASE_STATUS, ADMIN_SEED_DATA } from '@/lib/graphql/adminQueries';
 import { toast } from 'sonner';
 import { PageTransition } from '@/components/admin/ui/PageTransition';
 import { StatCard } from '@/components/admin/ui/StatCard';

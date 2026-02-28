@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   title: "Osart Repuestos Electrónicos | La energía que mueve tus reparaciones",
   description: "Venta de repuestos electrónicos de alta precisión.",
   generator: 'Next.js',
-  // manifest: "/manifest.json",
+  manifest: "/manifest.json",
   keywords: ['repuestos', 'electrónica', 'pwa', 'osart', 'precisión'],
   appleWebApp: {
     capable: true,
@@ -48,25 +48,30 @@ export default function RootLayout({
           </main>
           <Footer />
         </Providers>
-        {/* Temporarily disabled PWA Service Worker to resolve permission prompt issues */}
-        {/* <script
+        <script
           dangerouslySetInnerHTML={{
             __html: `
               if ('serviceWorker' in navigator) {
                 window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js').then(
-                    function(registration) {
-                      console.log('ServiceWorker registration successful with scope: ', registration.scope);
-                    },
-                    function(err) {
-                      console.log('ServiceWorker registration failed: ', err);
+                  // Force unregister then register for clean development cycle
+                  navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for(let registration of registrations) {
+                      registration.unregister();
                     }
-                  );
+                    navigator.serviceWorker.register('/sw.js?v=6').then(
+                      function(registration) {
+                        console.log('ServiceWorker v6 registration successful with scope: ', registration.scope);
+                        registration.update();
+                      }
+                    ).catch(function(err) {
+                      console.error('ServiceWorker registration failed: ', err);
+                    });
+                  });
                 });
               }
             `,
           }}
-        /> */}
+        />
       </body>
     </html>
   );

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Mail, Lock, User, UserPlus, ChevronLeft, Loader2 } from 'lucide-react';
+import { Mail, Lock, User, UserPlus, ChevronLeft, Loader2, ShieldCheck, Cpu, Terminal } from 'lucide-react';
 import { supabase } from '@/lib/supabase-auth';
 import { useRouter } from 'next/navigation';
 
@@ -33,7 +33,7 @@ const RegisterPage = () => {
             if (error) throw error;
             router.push('/login?message=check-email');
         } catch (err: any) {
-            setError(err.message || 'Error al registrarse');
+            setError(err.message || 'Fallo en la Creación de Operario');
         } finally {
             setLoading(false);
         }
@@ -41,105 +41,138 @@ const RegisterPage = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center py-20 bg-background relative overflow-hidden">
-            {/* Background Decor */}
-            <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-electric-blue/5 blur-[100px] -z-10" />
-            <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-blue-600/5 blur-[80px] -z-10" />
+            {/* Background Decor - Industrial Grid */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+                style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '60px 60px' }} />
 
-            <div className="max-w-md w-full px-5 animate-fade">
-                <div className="text-center mb-10">
-                    <h1 className="text-3xl font-extrabold mb-3">Únete a <span className="neon-text">OSART</span></h1>
-                    <p className="text-muted-foreground text-sm">Crea tu cuenta para acceder a seguimiento de pedidos, historial y beneficios exclusivos.</p>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-electric-blue/5 blur-[160px] -z-10" />
+
+            <div className="max-w-[440px] w-full px-5 relative z-10">
+                <div className="mb-12 space-y-4 text-center">
+                    <div className="flex items-center justify-center gap-3 mb-6">
+                        <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center">
+                            <UserPlus size={24} className="text-electric-blue" />
+                        </div>
+                    </div>
+                    <h1 className="text-4xl sm:text-5xl font-black uppercase italic tracking-tighter text-white">
+                        Protocolo <span className="text-electric-blue">Registro</span>
+                    </h1>
+                    <div className="flex items-center justify-center gap-4">
+                        <div className="h-px w-8 bg-zinc-800" />
+                        <span className="text-[9px] font-black uppercase tracking-[0.5em] text-zinc-600">Task: NEW_OPERARIO_INIT</span>
+                        <div className="h-px w-8 bg-zinc-800" />
+                    </div>
                 </div>
 
-                <div className="glass p-8 border-white/10 ring-1 ring-white/5">
+                <div className="bg-zinc-900/50 border border-white/5 p-8 relative overflow-hidden group">
+                    {/* Structural Accents */}
+                    <div className="absolute top-0 right-0 w-16 h-[1px] bg-electric-blue/30" />
+                    <div className="absolute top-0 right-0 w-[1px] h-16 bg-electric-blue/30" />
+
+                    <div className="flex items-center gap-3 mb-10 opacity-60">
+                        <Terminal size={12} className="text-electric-blue" />
+                        <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-zinc-400">Node_Provisioning_V1.0</span>
+                    </div>
+
                     {error && (
-                        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-bold uppercase tracking-wider rounded-lg">
-                            {error}
+                        <div className="mb-8 p-5 bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] font-black uppercase tracking-[0.2em] italic">
+                            [ALERT]: {error}
                         </div>
                     )}
 
-                    <form className="space-y-5" onSubmit={handleRegister}>
-                        <div className="space-y-2">
-                            <label htmlFor="fullName" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Nombre Completo</label>
-                            <div className="relative">
-                                <User className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+                    <form className="space-y-6" onSubmit={handleRegister}>
+                        <div className="space-y-3">
+                            <label htmlFor="fullName" className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-500 pl-1 flex items-center gap-2">
+                                <div className="w-1 h-1 bg-zinc-700" /> Identidad_Operario
+                            </label>
+                            <div className="relative group/input">
+                                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within/input:text-electric-blue transition-colors" size={16} />
                                 <input
                                     id="fullName"
                                     name="fullName"
                                     type="text"
                                     value={fullName}
                                     onChange={(e) => setFullName(e.target.value)}
-                                    placeholder="Juan Pérez"
+                                    placeholder="NOMBRE_REFERENCIAL"
                                     required
-                                    className="w-full bg-zinc-950 border border-white/5 rounded-lg py-3 pl-10 pr-4 text-sm focus:border-electric-blue/40 outline-none transition-all"
+                                    className="w-full bg-zinc-950 border border-white/5 rounded-none py-4 pl-12 pr-4 text-xs font-mono text-white placeholder:text-zinc-800 focus:border-electric-blue/50 outline-none transition-all"
                                 />
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <label htmlFor="email" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Email</label>
-                            <div className="relative">
-                                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+                        <div className="space-y-3">
+                            <label htmlFor="email" className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-500 pl-1 flex items-center gap-2">
+                                <div className="w-1 h-1 bg-zinc-700" /> Enlace_Comunicación
+                            </label>
+                            <div className="relative group/input">
+                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within/input:text-electric-blue transition-colors" size={16} />
                                 <input
                                     id="email"
                                     name="email"
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    placeholder="juan@ejemplo.com"
+                                    placeholder="EMAIL@SISTEMA.CL"
                                     required
-                                    className="w-full bg-zinc-950 border border-white/5 rounded-lg py-3 pl-10 pr-4 text-sm focus:border-electric-blue/40 outline-none transition-all"
+                                    className="w-full bg-zinc-950 border border-white/5 rounded-none py-4 pl-12 pr-4 text-xs font-mono text-white placeholder:text-zinc-800 focus:border-electric-blue/50 outline-none transition-all"
                                 />
                             </div>
                         </div>
 
-                        <div className="space-y-2">
-                            <label htmlFor="password" className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Contraseña</label>
-                            <div className="relative">
-                                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
+                        <div className="space-y-3">
+                            <label htmlFor="password" className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-500 pl-1 flex items-center gap-2">
+                                <div className="w-1 h-1 bg-zinc-700" /> Hash_Protección
+                            </label>
+                            <div className="relative group/input">
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-zinc-600 group-focus-within/input:text-electric-blue transition-colors" size={16} />
                                 <input
                                     id="password"
                                     name="password"
                                     type="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    placeholder="••••••••"
+                                    placeholder="MIN_8_CARACTERES"
                                     required
-                                    className="w-full bg-zinc-950 border border-white/5 rounded-lg py-3 pl-10 pr-4 text-sm focus:border-electric-blue/40 outline-none transition-all"
+                                    className="w-full bg-zinc-950 border border-white/5 rounded-none py-4 pl-12 pr-4 text-xs font-mono text-white placeholder:text-zinc-800 focus:border-electric-blue/50 outline-none transition-all"
                                 />
                             </div>
                         </div>
 
-                        <div className="pt-2">
+                        <div className="pt-4">
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="neon-button w-full flex items-center justify-center gap-2 py-3 mt-4 disabled:opacity-50"
+                                className="w-full relative py-4 bg-zinc-100 text-black font-black text-[10px] uppercase italic tracking-[0.3em] hover:bg-electric-blue transition-all active:scale-[0.98] disabled:opacity-50 group/btn"
                             >
-                                {loading ? <Loader2 className="animate-spin" size={18} /> : (
-                                    <>
-                                        Crear Cuenta
-                                        <UserPlus size={18} />
-                                    </>
-                                )}
+                                <div className="absolute inset-0 bg-electric-blue opacity-0 group-hover/btn:opacity-20 blur-xl transition-opacity" />
+                                <span className="relative z-10 flex items-center justify-center gap-3">
+                                    {loading ? <Loader2 className="animate-spin" size={16} /> : (
+                                        <>
+                                            Iniciar Registro
+                                            <UserPlus size={16} />
+                                        </>
+                                    )}
+                                </span>
                             </button>
                         </div>
                     </form>
 
-                    <div className="mt-8 pt-8 border-t border-white/5 text-center">
-                        <p className="text-sm text-muted-foreground flex items-center justify-center gap-2">
-                            ¿Ya tienes una cuenta?
-                            <Link href="/login" className="text-electric-blue font-bold hover:underline flex items-center">
-                                <ChevronLeft size={14} />
-                                Inicia Sesión
-                            </Link>
-                        </p>
+                    <div className="mt-10 pt-8 border-t border-white/5 text-center">
+                        <Link href="/login" className="text-[10px] text-zinc-500 hover:text-white font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-colors">
+                            <ChevronLeft size={14} />
+                            Regresar a Terminal de Acceso
+                        </Link>
                     </div>
                 </div>
 
-                <p className="mt-8 text-[10px] text-muted-foreground text-center uppercase tracking-widest">
-                    Al registrarte, aceptas nuestros Términos de Servicio y Políticas de Privacidad.
-                </p>
+                <div className="mt-8 flex flex-col items-center gap-4 opacity-30 pointer-events-none">
+                    <p className="text-[8px] text-zinc-600 text-center uppercase font-mono tracking-widest leading-loose">
+                        Al ejecutar registro, usted acepta los protocolos de datos y términos de operación OSART-PRO-V1.
+                    </p>
+                    <div className="flex gap-1">
+                        {[1, 2, 3, 4, 5, 6].map(i => <div key={i} className="w-1 h-2 bg-zinc-700" />)}
+                    </div>
+                </div>
             </div>
         </div>
     );

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useQuery } from '@apollo/client/react';
+import { useRouter } from 'next/navigation';
 import {
     Search,
     Plus,
@@ -13,9 +13,10 @@ import {
     ArrowUpRight,
     Search as SearchIcon
 } from 'lucide-react';
-import { ADMIN_PRODUCTS } from '@/lib/graphql/stockQueries';
+import { cn } from '@/lib/utils';
 import { PageTransition } from '@/components/admin/ui/PageTransition';
 import { StatCard } from '@/components/admin/ui/StatCard';
+import { StatCardSkeleton, TableSkeleton } from '@/components/admin/ui/Skeleton';
 import { GlowButton } from '@/components/admin/ui/GlowButton';
 import { toast } from 'sonner';
 import ProductImage from '@/components/admin/ProductImage';
@@ -23,14 +24,23 @@ import { DataTable } from '@/components/admin/ui/DataTable';
 import { AdminProduct } from '@/types/admin';
 
 export default function ProductsPage() {
+    const router = useRouter();
     const [products, setProducts] = useState<AdminProduct[]>([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
 
+    const [debouncedSearch, setDebouncedSearch] = React.useState('');
+
+    // Debounce: only update debouncedSearch 300ms after user stops typing
+    React.useEffect(() => {
+        const timer = setTimeout(() => setDebouncedSearch(search), 300);
+        return () => clearTimeout(timer);
+    }, [search]);
+
     const fetchProducts = React.useCallback(async () => {
         setLoading(true);
         try {
-            const res = await fetch(`/api/products?admin=true&search=${search}`);
+            const res = await fetch(`/api/products?admin=true&search=${debouncedSearch}`);
             const data = await res.json();
             setProducts(data.products || []);
         } catch (err) {
@@ -38,7 +48,7 @@ export default function ProductsPage() {
         } finally {
             setLoading(false);
         }
-    }, [search]);
+    }, [debouncedSearch]);
 
     React.useEffect(() => {
         fetchProducts();
@@ -105,32 +115,43 @@ export default function ProductsPage() {
         <PageTransition>
             <div className="space-y-6 md:space-y-10 pb-20">
                 {/* Stats Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                    <StatCard
-                        title="Total Unidades"
-                        value={products.length}
-                        icon={Package}
-                        description="SKUs registrados"
-                    />
-                    <StatCard
-                        title="Stock Crítico"
-                        value={products.filter((p: any) => p.isLowStock).length}
-                        icon={Layers}
-                        color="orange-500"
-                        description="Requiere reposición"
-                    />
-                    <StatCard
-                        title="Categorías"
-                        value="..."
-                        icon={Tag}
-                        description="Segmentos activos"
-                    />
-                    <StatCard
-                        title="Market Health"
-                        value="98.2%"
-                        icon={ArrowUpRight}
-                        description="Sincronización total"
-                    />
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+                    {loading && products.length === 0 ? (
+                        <>
+                            <StatCardSkeleton />
+                            <StatCardSkeleton />
+                            <StatCardSkeleton />
+                            <StatCardSkeleton />
+                        </>
+                    ) : (
+                        <>
+                            <StatCard
+                                title="Total Unidades"
+                                value={products.length}
+                                icon={Package}
+                                description="SKUs registrados"
+                            />
+                            <StatCard
+                                title="Stock Crítico"
+                                value={products.filter((p: any) => p.isLowStock).length}
+                                icon={Layers}
+                                color="orange-500"
+                                description="Requiere reposición"
+                            />
+                            <StatCard
+                                title="Categorías"
+                                value="..."
+                                icon={Tag}
+                                description="Segmentos activos"
+                            />
+                            <StatCard
+                                title="Market Health"
+                                value="98.2%"
+                                icon={ArrowUpRight}
+                                description="Sincronización total"
+                            />
+                        </>
+                    )}
                 </div>
 
                 {/* Controls Bar */}
@@ -159,7 +180,7 @@ export default function ProductsPage() {
                             <div className="h-10 w-[1px] bg-zinc-100 mx-1 hidden sm:block" />
                         </div>
                         <GlowButton
-                            onClick={() => toast.info('Protocolo de Creación no implementado')}
+                            onClick={() => router.push('/admin/products/new')}
                             className="py-4 px-6 md:px-8 h-14 text-[10px] rounded-2xl flex-1 sm:flex-none"
                         >
                             <Plus size={16} className="mr-2 md:mr-3" />
@@ -168,17 +189,16 @@ export default function ProductsPage() {
                     </div>
                 </div>
 
-                <DataTable
-                    data={filteredProducts}
-                    columns={columns}
-                    loading={loading}
-                />
+                {loading && products.length === 0 ? (
+                    <TableSkeleton rows={6} />
+                ) : (
+                    <DataTable
+                        data={filteredProducts}
+                        columns={columns}
+                        loading={loading && products.length > 0}
+                    />
+                )}
             </div>
         </PageTransition>
     );
-}
-
-// Helper function for class merging (already available via cn but here for safety if missing)
-function cn(...inputs: any[]) {
-    return inputs.filter(Boolean).join(' ');
 }

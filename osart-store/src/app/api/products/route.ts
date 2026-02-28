@@ -3,11 +3,11 @@ import { supabase } from '@/lib/supabase';
 
 export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
-    const categoryId = searchParams.get('categoryId');
+    const categoryId = searchParams.get('categoryId') || searchParams.get('category');
     const search = searchParams.get('search');
     const isAdmin = searchParams.get('admin') === 'true';
 
-    let query = supabase.from('products').select('*, category:categories(name)');
+    let query = supabase.from('products').select('*, category:categories(name)', { count: 'exact' });
 
     if (categoryId) query = query.eq('category_id', categoryId);
     if (search) query = query.ilike('name', `%${search}%`);

@@ -44,10 +44,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         }
         try {
             await toggleWishlist({
-                variables: {
-                    input: {
-                        productId: product.id
-                    }
+                input: {
+                    productId: product.id
                 }
             });
         } catch (err) {
@@ -155,7 +153,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     <div>
                         <div className="text-[8px] text-zinc-500 font-mono uppercase mb-0.5">Precio de Unidad</div>
                         <div className="text-xl font-black text-white tracking-tighter">
-                            ${product.price.toLocaleString('es-CL')}
+                            ${(product.price || 0).toLocaleString('es-CL')}
                         </div>
                     </div>
 

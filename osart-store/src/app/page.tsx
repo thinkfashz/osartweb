@@ -25,15 +25,26 @@ export default function Home() {
           .eq('is_active', true)
           .order('created_at', { ascending: false });
 
+        const formattedData = (featuredData || []).map((p: any) => {
+          // Map single image_url to images array for ProductCard
+          const images = p.image_url ? [{ url: p.image_url, position: 0 }] : [];
+          return {
+            ...p,
+            images,
+            image_url: p.image_url || null,
+            title: p.name
+          };
+        });
+
         // In a real scenario, we might have a specific flag for is_featured in metadata
         // For now, we take products that have 'featured' in metadata or just the latest ones
         const featured = (featuredData || []).filter((p: any) => p.metadata?.is_featured === true);
 
         // If no products are explicitly featured, take the 3 latest ones
-        setFeaturedProducts(featured.length > 0 ? featured : (featuredData || []).slice(0, 3));
+        setFeaturedProducts(featured.length > 0 ? featured : formattedData.slice(0, 3));
 
         // Fetch products for the grid (latest 8)
-        setProducts(featuredData || []);
+        setProducts(formattedData || []);
       } catch (err) {
         console.error("Error fetching homepage data:", err);
       } finally {
@@ -113,30 +124,48 @@ export default function Home() {
       </section>
 
       {/* Categories Highlights Section */}
-      <section className="py-20 bg-zinc-950 border-y border-white/5">
-        <div className="max-w-[1200px] mx-auto px-5">
+      <section className="py-24 bg-zinc-950 border-y border-white/5 relative overflow-hidden">
+        {/* Decorative Grid Overlay */}
+        <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }} />
+
+        <div className="max-w-[1200px] mx-auto px-5 relative z-10">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <div className="glass p-8 hover:border-electric-blue/30 transition-all group">
-              <h3 className="text-xl font-bold mb-4 uppercase italic tracking-tight text-white">Pantallas Originales</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed mb-6">Máxima resolución y respuesta táctil garantizada para dispositivos de gama alta.</p>
-              <Link href="/catalog?category=pantallas" className="text-xs font-bold uppercase tracking-widest text-electric-blue flex items-center gap-2">
-                Ver Selección <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
-            <div className="glass p-8 hover:border-electric-blue/30 transition-all group">
-              <h3 className="text-xl font-bold mb-4 uppercase italic tracking-tight text-white">Micro-Soldadura</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed mb-6">Circuitos integrados y componentes SMD para reparaciones críticas de placa madre.</p>
-              <Link href="/catalog?category=micro-soldadura" className="text-xs font-bold uppercase tracking-widest text-electric-blue flex items-center gap-2">
-                Ver Selección <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
-            <div className="glass p-8 hover:border-electric-blue/30 transition-all group">
-              <h3 className="text-xl font-bold mb-4 uppercase italic tracking-tight text-white">Baterías High-Caps</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed mb-6">Celdas de alta densidad para restaurar la autonomía original de cualquier equipo.</p>
-              <Link href="/catalog?category=baterias" className="text-xs font-bold uppercase tracking-widest text-electric-blue flex items-center gap-2">
-                Ver Selección <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
+            {[
+              {
+                title: "Pantallas Originales",
+                desc: "Máxima resolución y respuesta táctil garantizada para dispositivos de gama alta.",
+                href: "/catalog?category=pantallas",
+                tag: "LCD_PRO_LEVEL"
+              },
+              {
+                title: "Micro-Soldadura",
+                desc: "Circuitos integrados y componentes SMD para reparaciones críticas de placa madre.",
+                href: "/catalog?category=micro-soldadura",
+                tag: "SMD_INFRA"
+              },
+              {
+                title: "Baterías High-Caps",
+                desc: "Celdas de alta densidad para restaurar la autonomía original de cualquier equipo.",
+                href: "/catalog?category=baterias",
+                tag: "PWR_CELL_V2"
+              }
+            ].map((cat, i) => (
+              <div key={i} className="glass p-10 hover:border-electric-blue/30 transition-all group relative overflow-hidden">
+                <div className="absolute top-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="text-[7px] font-mono text-electric-blue/40 uppercase tracking-[0.3em] rotate-90 origin-right whitespace-nowrap">
+                    SEC_ZONE_{i + 1}
+                  </div>
+                </div>
+                <span className="text-[9px] font-black uppercase tracking-[0.3em] text-electric-blue/60 mb-4 block">{cat.tag}</span>
+                <h3 className="text-2xl font-black mb-4 uppercase italic tracking-tighter text-white group-hover:text-electric-blue transition-colors">{cat.title}</h3>
+                <p className="text-sm text-zinc-500 leading-relaxed mb-8">{cat.desc}</p>
+                <Link href={cat.href} className="text-[10px] font-black uppercase tracking-[0.2em] text-white flex items-center gap-3 group/link">
+                  Acceder a Nodo <ChevronRight size={14} className="text-electric-blue group-hover/link:translate-x-1 transition-transform" />
+                </Link>
+                {/* Structural line */}
+                <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+              </div>
+            ))}
           </div>
         </div>
       </section>

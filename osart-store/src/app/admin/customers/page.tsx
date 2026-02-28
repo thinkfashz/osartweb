@@ -1,8 +1,6 @@
 "use client";
 
 import React, { useState } from 'react';
-import { useQuery } from '@apollo/client/react';
-import { ADMIN_CUSTOMERS } from '@/lib/graphql/adminQueries';
 import CustomersTable from '@/components/admin/customers/CustomersTable';
 import CustomerDrawer from '@/components/admin/customers/CustomerDrawer';
 import {
@@ -17,8 +15,8 @@ import {
     History,
     BarChart3
 } from 'lucide-react';
-import { TableSkeleton } from '@/components/ui/Skeletons';
-import { GlowButton } from '@/components/ui/GlowButton';
+import { TableSkeleton } from '@/components/admin/ui/Skeleton';
+import { GlowButton } from '@/components/admin/ui/GlowButton';
 
 import { toast } from 'sonner';
 import { motion } from 'framer-motion';
@@ -32,19 +30,25 @@ export default function CustomersPage() {
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [customers, setCustomers] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const [debouncedSearch, setDebouncedSearch] = useState('');
+
+    React.useEffect(() => {
+        const t = setTimeout(() => setDebouncedSearch(search), 300);
+        return () => clearTimeout(t);
+    }, [search]);
 
     const fetchCustomers = React.useCallback(async () => {
         setLoading(true);
         try {
-            const res = await fetch(`/api/customers?search=${search}`);
+            const res = await fetch(`/api/customers?search=${debouncedSearch}`);
             const data = await res.json();
-            setCustomers(data);
+            setCustomers(Array.isArray(data) ? data : []);
         } catch (err) {
             toast.error('Falla en la sincronía de usuarios');
         } finally {
             setLoading(false);
         }
-    }, [search]);
+    }, [debouncedSearch]);
 
     React.useEffect(() => {
         fetchCustomers();
@@ -77,7 +81,7 @@ export default function CustomersPage() {
         );
     }
 
-    const customers = data?.adminCustomers || [];
+
 
     return (
         <PageTransition>

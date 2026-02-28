@@ -3,6 +3,8 @@ import { supabaseAdmin } from '@/lib/supabase';
 
 // Helper to get or create active cart
 async function getOrCreateActiveCart(userId: string) {
+    if (!supabaseAdmin) throw new Error('Supabase client not configured');
+
     const { data: cart } = await supabaseAdmin
         .from('carts')
         .select('*')
@@ -25,10 +27,22 @@ async function getOrCreateActiveCart(userId: string) {
 // Helper to get formatted cart
 async function getCart(userId: string) {
     const cart = await getOrCreateActiveCart(userId);
+    if (!supabaseAdmin) throw new Error('Supabase client not configured');
 
     const { data: items, error } = await supabaseAdmin
         .from('cart_items')
-        .select('id, quantity, unit_price, product:products(*)')
+        .select(`
+            id, 
+            quantity, 
+            unit_price, 
+            product:products(
+                id, 
+                name, 
+                price, 
+                stock,
+                image_url
+            )
+        `)
         .eq('cart_id', cart.id);
 
     if (error) throw error;
@@ -50,6 +64,7 @@ async function getCart(userId: string) {
                 name: it.product?.name,
                 price: Number(it.product?.price || 0),
                 stock: Number(it.product?.stock || 0),
+                imageUrl: it.product?.image_url || null,
             },
         })),
         subtotal,
@@ -57,6 +72,10 @@ async function getCart(userId: string) {
 }
 
 export async function GET(request: NextRequest) {
+    if (!supabaseAdmin) {
+        return NextResponse.json({ error: 'Supabase client not configured' }, { status: 501 });
+    }
+
     const { searchParams } = new URL(request.url);
     const userId = searchParams.get('userId');
 
@@ -77,12 +96,32 @@ export async function POST(request: NextRequest) {
         const body = await request.json();
         const { userId, productId, quantity, action, items } = body;
 
+        if (!supabaseAdmin) {
+            return NextResponse.json({ error: 'Supabase client not configured' }, { status: 501 });
+        }
+
         if (!userId) {
             return NextResponse.json({ error: 'User ID is required' }, { status: 400 });
         }
 
+        if (action === 'update' && productId && quantity) {
+            const cart = await getOrCreateActiveCart(userId);
+            if (!supabaseAdmin) throw new Error('Supabase client not configured');
+
+            const { error: updateError } = await supabaseAdmin
+                .from('cart_items')
+                .update({ quantity: Number(quantity) })
+                .eq('cart_id', cart.id)
+                .eq('product_id', productId);
+
+            if (updateError) throw updateError;
+            return NextResponse.json(await getCart(userId));
+        }
+
         if (action === 'merge' && items) {
             // Handle guest cart merge
+            if (!supabaseAdmin) throw new Error('Supabase client not configured');
+
             for (const item of items) {
                 try {
                     const cart = await getOrCreateActiveCart(userId);
@@ -114,6 +153,8 @@ export async function POST(request: NextRequest) {
         }
 
         const cart = await getOrCreateActiveCart(userId);
+        if (!supabaseAdmin) throw new Error('Supabase client not configured');
+
         const { data: product } = await supabaseAdmin.from('products').select('price, stock').eq('id', productId).single();
 
         if (!product) return NextResponse.json({ error: 'Product not found' }, { status: 404 });
@@ -126,15 +167,46 @@ export async function POST(request: NextRequest) {
             .maybeSingle();
 
         if (existing) {
-            await supabaseAdmin.from('cart_items').update({ quantity: existing.quantity + quantity }).eq('id', existing.id);
+            await supabaseAdmin.from('cart_items').update({ quantity: existing.quantity + Number(quantity) }).eq('id', existing.id);
         } else {
             await supabaseAdmin.from('cart_items').insert({
                 cart_id: cart.id,
                 product_id: productId,
-                quantity,
+                quantity: Number(quantity),
                 unit_price: product.price
             });
         }
+
+        return NextResponse.json(await getCart(userId));
+    } catch (error: any) {
+        return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+}
+
+export async function DELETE(request: NextRequest) {
+    if (!supabaseAdmin) {
+        return NextResponse.json({ error: 'Supabase client not configured' }, { status: 501 });
+    }
+
+    const { searchParams } = new URL(request.url);
+    const userId = searchParams.get('userId');
+    const productId = searchParams.get('productId');
+
+    if (!userId || !productId) {
+        return NextResponse.json({ error: 'User ID and Product ID are required' }, { status: 400 });
+    }
+
+    try {
+        const cart = await getOrCreateActiveCart(userId);
+        if (!supabaseAdmin) throw new Error('Supabase client not configured');
+
+        const { error } = await supabaseAdmin
+            .from('cart_items')
+            .delete()
+            .eq('cart_id', cart.id)
+            .eq('product_id', productId);
+
+        if (error) throw error;
 
         return NextResponse.json(await getCart(userId));
     } catch (error: any) {

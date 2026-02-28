@@ -19,6 +19,8 @@ import {
     Layers
 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
 
 const NAV_ITEMS = [
     { name: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
@@ -38,6 +40,13 @@ const SYSTEM_ITEMS = [
 export default function AdminSidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: boolean) => void }) {
     const pathname = usePathname();
     const [isCollapsed, setIsCollapsed] = React.useState(false);
+    const { signOut } = useAuth();
+    const router = useRouter();
+
+    const handleLogout = async () => {
+        await signOut();
+        router.push('/login');
+    };
 
     // Auto-close on mobile when route changes
     React.useEffect(() => {
@@ -129,7 +138,7 @@ export default function AdminSidebar({ isOpen, setIsOpen }: { isOpen: boolean, s
                         <span className="text-[9px] font-mono text-zinc-400 uppercase tracking-widest">Sistema Operativo</span>
                     </div>
                 )}
-                <button className={`flex items-center gap-3 px-4 py-3 w-full text-zinc-500 hover:text-red-400 hover:bg-red-950/20 rounded-xl transition-all group ${isCollapsed ? 'justify-center' : ''}`}>
+                <button onClick={handleLogout} className={`flex items-center gap-3 px-4 py-3 w-full text-zinc-500 hover:text-red-400 hover:bg-red-950/20 rounded-xl transition-all group ${isCollapsed ? 'justify-center' : ''}`}>
                     <LogOut size={18} className="group-hover:-translate-x-1 transition-transform" />
                     {!isCollapsed && <span className="font-black text-[10px] uppercase tracking-widest">Cerrar Sesión</span>}
                 </button>

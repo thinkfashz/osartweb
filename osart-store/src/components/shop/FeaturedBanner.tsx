@@ -73,7 +73,7 @@ const FeaturedBanner: React.FC<FeaturedBannerProps> = ({ products }) => {
                                 transition={{ delay: 0.3 }}
                                 className="text-4xl md:text-6xl lg:text-8xl font-black tracking-tighter uppercase italic leading-[0.9] text-white"
                             >
-                                {currentProduct.title}
+                                {currentProduct.title || (currentProduct as any).name}
                             </motion.h2>
 
                             <motion.p
@@ -94,20 +94,16 @@ const FeaturedBanner: React.FC<FeaturedBannerProps> = ({ products }) => {
                                 <div className="flex flex-col items-center lg:items-start">
                                     <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Precio Especial</span>
                                     <span className="text-4xl font-black text-white italic tracking-tighter">
-                                        ${currentProduct.price.toLocaleString('es-CL')}
+                                        ${(currentProduct.price || 0).toLocaleString('es-CL')}
                                     </span>
                                 </div>
 
                                 <Link
                                     href={`/product/${currentProduct.id}`}
-                                    className="relative group overflow-hidden px-10 py-5 bg-electric-blue rounded-2xl transition-all hover:scale-105 active:scale-95"
+                                    className="relative group overflow-hidden px-10 py-5 bg-electric-blue rounded-2xl transition-all hover:scale-105 active:scale-95 shadow-[0_0_30px_rgba(0,229,255,0.2)] hover:shadow-[0_0_40px_rgba(0,229,255,0.4)]"
                                 >
-                                    {/* Neon Button Background Glow */}
-                                    <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-600 opacity-100 group-hover:blur-md transition-all duration-300" />
-                                    <div className="absolute -inset-1 bg-cyan-400/50 blur-xl opacity-0 group-hover:opacity-100 transition-all duration-300 animate-pulse" />
-
-                                    <div className="relative flex items-center gap-3 text-white font-black uppercase tracking-widest text-xs z-10">
-                                        Explorar Ahora
+                                    <div className="relative flex items-center gap-3 text-black font-black uppercase tracking-[.3em] text-[10px] z-10 italic">
+                                        Explorar Nodo
                                         <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" />
                                     </div>
                                 </Link>

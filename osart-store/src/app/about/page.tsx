@@ -23,7 +23,7 @@ export default function AboutPage() {
                         <span className="text-xs font-bold uppercase tracking-[0.5em] text-electric-blue">Trayectoria Industrial</span>
                         <h1 className="text-5xl lg:text-8xl font-black tracking-tighter uppercase italic leading-none text-white">
                             7+ Años de <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-blue to-cyan-400">Excelencia</span>
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-blue to-white/60">Excelencia</span>
                         </h1>
                         <p className="text-muted-foreground text-lg lg:text-xl max-w-2xl leading-relaxed">
                             Desde nuestros inicios hasta convertirnos en un referente global, OSART ha sido el motor de miles de reparaciones exitosas.

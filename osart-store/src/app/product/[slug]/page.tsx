@@ -1,194 +1,172 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { useQuery, useMutation } from '@apollo/client/react';
-import { ChevronRight, ArrowLeft, Loader2, RefreshCcw, Home } from 'lucide-react';
+import { useQuery } from '@apollo/client/react';
+import { ChevronRight, ArrowLeft, Loader2, RefreshCcw, Home, Terminal, Share2, Activity } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { GET_PRODUCT_BY_SLUG, GET_PRODUCTS } from '@/lib/graphql/queries';
-import { ADD_TO_CART } from '@/lib/graphql/mutations';
 import { Product } from '@/lib/graphql/types';
 import { ProductGallery } from '@/components/product/ProductGallery';
 import { PurchasePanel } from '@/components/product/PurchasePanel';
 import { ProductTabs } from '@/components/product/ProductTabs';
 import { RelatedCarousel } from '@/components/product/RelatedCarousel';
-import { Toast, ToastType } from '@/components/ui/Toast';
 import { useCart } from '@/hooks/useCart';
+import { toast } from 'sonner';
 
 export default function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = React.use(params);
     const { refetch: refetchGlobalCart } = useCart();
 
-    useEffect(() => {
-        console.log('[ProductDetail] Sincronizando con slug:', slug);
-    }, [slug]);
-
-    const [toast, setToast] = useState<{ message: string; type: ToastType; isVisible: boolean }>({
-        message: '',
-        type: 'success',
-        isVisible: false
-    });
-
-    // 1. Fetch Product
+    // 1. Fetch Product (Keeping GraphQL for read, as it's already set up and works well for detailed product data)
     const { data, loading, error, refetch } = useQuery<{ productBySlug: Product }>(GET_PRODUCT_BY_SLUG, {
         variables: { slug },
         skip: !slug,
     });
 
-    useEffect(() => {
-        if (data) console.log('[ProductDetail] Datos recibidos:', data);
-        if (error) console.error('[ProductDetail] Error de conexión GraphQL:', JSON.stringify(error, null, 2));
-    }, [data, error]);
+    const product = data?.productBySlug || null;
 
-    // 2. Add to Cart Mutation
-    const [addToCartMutation, { loading: addingToCart }] = useMutation(ADD_TO_CART);
-
-    // 3. Related Products
+    // 2. Related Products
     const { data: relatedData } = useQuery<{ products: Product[] }>(GET_PRODUCTS, {
         variables: {
             filter: {
                 limit: 10
             }
         },
-        skip: !data?.productBySlug
+        skip: !product
     });
-
-    const product = data?.productBySlug || null;
 
     const related = (relatedData?.products ?? [])
         .filter((p: Product) => p.id !== product?.id);
 
-    const showToast = (message: string, type: ToastType = 'success') => {
-        setToast({ message, type, isVisible: true });
-    };
-
-    const handleAddToCart = async (quantity: number) => {
-        if (!product) return;
-        try {
-            await addToCartMutation({
-                variables: {
-                    input: {
-                        productId: product.id,
-                        quantity
-                    }
-                }
-            });
-            showToast('Componente añadido con éxito al inventario', 'success');
-            refetchGlobalCart();
-        } catch (err: any) {
-            console.error(err);
-            if (err.message.includes('stock')) {
-                showToast(`Error: ${err.message}`, 'error');
-            } else {
-                showToast('Error de conexión con la infraestructura central', 'error');
-            }
-        }
-    };
-
-    const handleAddRelatedToCart = async (p: any) => {
-        try {
-            await addToCartMutation({
-                variables: {
-                    input: {
-                        productId: p.id,
-                        quantity: 1
-                    }
-                }
-            });
-            showToast('Componente añadido con éxito al inventario', 'success');
-            refetchGlobalCart();
-        } catch (err: any) {
-            console.error(err);
-            showToast('Error de conexión con la infraestructura central', 'error');
-        }
-    };
-
     if (loading) return (
-        <div className="min-h-screen bg-slate-50 pt-32 pb-20">
-            <div className="max-w-[1400px] mx-auto px-6">
-                <div className="grid lg:grid-cols-2 gap-20">
-                    <div className="aspect-square bg-white rounded-[3rem] animate-pulse border border-slate-200" />
-                    <div className="space-y-8 py-10">
-                        <div className="h-4 w-32 bg-slate-200 rounded animate-pulse" />
-                        <div className="h-16 w-full bg-slate-200 rounded animate-pulse" />
-                        <div className="h-10 w-48 bg-slate-200 rounded animate-pulse" />
-                        <div className="h-40 w-full bg-slate-200 rounded animate-pulse" />
-                    </div>
+        <div className="min-h-screen bg-zinc-950 pt-32 pb-20 flex items-center justify-center">
+            <div className="flex flex-col items-center gap-6">
+                <div className="relative">
+                    <Loader2 className="animate-spin text-electric-blue" size={48} />
+                    <div className="absolute inset-0 bg-electric-blue/20 blur-xl animate-pulse" />
+                </div>
+                <div className="text-center">
+                    <p className="text-[10px] font-black text-white uppercase tracking-[0.3em] mb-2">Protocolo de Enlace Activo</p>
+                    <p className="text-[8px] font-mono text-zinc-500 animate-pulse uppercase">Descargando parámetros de hardware...</p>
                 </div>
             </div>
         </div>
     );
 
     if (error || !product) return (
-        <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 text-center">
-            <div className="w-24 h-24 bg-rose-50 rounded-full flex items-center justify-center text-rose-500 mb-8">
+        <div className="min-h-screen bg-zinc-950 flex flex-col items-center justify-center p-6 text-center">
+            <div className="w-24 h-24 bg-rose-500/10 rounded-full flex items-center justify-center text-rose-500 mb-8 border border-rose-500/20">
                 <RefreshCcw size={48} />
             </div>
-            <h2 className="text-4xl font-black uppercase italic tracking-tighter text-slate-900 mb-4">
-                Error de Enlace de Datos
+            <h2 className="text-4xl font-black uppercase italic tracking-tighter text-white mb-4">
+                Error de Sincronización
             </h2>
-            <p className="text-slate-500 max-w-sm mb-10 font-bold">
-                No pudimos sincronizar con el componente solicitado. Es posible que el ID sea inválido o la conexión haya fallado.
+            <p className="text-zinc-500 max-w-sm mb-10 font-bold uppercase text-[10px] tracking-widest">
+                No se pudo establecer conexión con el componente especificado. El registro podría estar corrupto o fuera de rango.
             </p>
             <div className="flex gap-4">
                 <button
                     onClick={() => refetch()}
-                    className="px-8 py-4 bg-slate-900 text-white rounded-2xl font-black uppercase italic tracking-widest hover:bg-slate-800 transition-all"
+                    className="px-8 py-4 bg-white text-black font-black uppercase italic tracking-widest hover:bg-electric-blue hover:text-white transition-all rounded-xl"
                 >
-                    Reintentar Sincronización
+                    Reintentar Protocolo
                 </button>
                 <Link
                     href="/catalog"
-                    className="px-8 py-4 border-2 border-slate-200 text-slate-900 rounded-2xl font-black uppercase italic tracking-widest hover:bg-slate-50 transition-all"
+                    className="px-8 py-4 border border-white/10 text-white rounded-xl font-black uppercase italic tracking-widest hover:bg-white/5 transition-all"
                 >
-                    Volver al Catálogo
+                    Volver al Nodo Central
                 </Link>
             </div>
         </div>
     );
 
     return (
-        <div className="min-h-screen bg-slate-50 pt-28 pb-20">
-            <div className="max-w-[1400px] mx-auto px-6">
-                {/* Breadcrumbs */}
-                <nav className="flex items-center gap-2 mb-12 text-[10px] font-black uppercase tracking-widest text-slate-400">
-                    <Link href="/" className="hover:text-emerald-600 flex items-center gap-1">
-                        <Home size={12} />
-                        Terminal
-                    </Link>
-                    <ChevronRight size={12} />
-                    <Link href="/catalog" className="hover:text-emerald-600">Catálogo</Link>
-                    <ChevronRight size={12} />
-                    <span className="text-slate-300">Infraestructura</span>
-                    <ChevronRight size={12} />
-                    <span className="text-emerald-600 truncate max-w-[150px]">{product.name}</span>
-                </nav>
+        <div className="min-h-screen bg-zinc-950 pt-28 pb-20 overflow-hidden relative">
+            {/* Ambient Lighting */}
+            <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-electric-blue/5 blur-[120px] -z-10 pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-blue-600/5 blur-[100px] -z-10 pointer-events-none" />
 
-                <div className="grid lg:grid-cols-2 gap-20 xl:gap-32 items-start">
-                    <ProductGallery images={product.images || []} />
-                    <PurchasePanel
-                        product={product}
-                        onAddToCart={handleAddToCart}
-                        isAdding={addingToCart}
-                    />
+            <div className="max-w-[1400px] mx-auto px-5 md:px-10">
+                {/* Header / Breadcrumbs */}
+                <div className="flex flex-wrap items-center justify-between gap-6 mb-16">
+                    <nav className="flex items-center gap-2 text-[8px] font-black uppercase tracking-[0.2em] text-white/30">
+                        <Link href="/" className="hover:text-electric-blue flex items-center gap-1 transition-colors">
+                            <Home size={10} />
+                            RAIZ
+                        </Link>
+                        <ChevronRight size={10} />
+                        <Link href="/catalog" className="hover:text-electric-blue transition-colors">INVENTARIO</Link>
+                        <ChevronRight size={10} />
+                        <span className="text-electric-blue/80 italic">{product.name}</span>
+                    </nav>
+
+                    <div className="flex items-center gap-4">
+                        <div className="hidden sm:flex flex-col items-end">
+                            <div className="text-[10px] font-black uppercase text-white/90">ID_REF: {(product.id.slice(0, 10)).toUpperCase()}</div>
+                            <div className="flex items-center gap-1.5 text-[8px] font-mono text-emerald-500 uppercase tracking-tighter">
+                                <Activity size={8} />
+                                <span>Canal de datos seguro</span>
+                            </div>
+                        </div>
+                        <button className="p-3 bg-white/5 border border-white/10 rounded-lg text-white/40 hover:text-white hover:border-white/20 transition-all">
+                            <Share2 size={16} />
+                        </button>
+                    </div>
                 </div>
 
-                <div className="mt-32">
-                    <ProductTabs product={product} />
+                <div className="grid lg:grid-cols-[1.2fr,1fr] xl:grid-cols-[1.5fr,1fr] gap-16 lg:gap-24 items-start">
+                    {/* Left: Gallery Stage */}
+                    <div className="space-y-12">
+                        <ProductGallery images={product.images || []} />
+
+                        {/* Mobile Buy Panel (appears here on medium and smaller screens if needed, 
+                           but we'll keep the grid for consistency) */}
+                        <div className="hidden lg:block">
+                            <ProductTabs product={product} />
+                        </div>
+                    </div>
+
+                    {/* Right: Operational Panel */}
+                    <div className="sticky top-32 space-y-12">
+                        <PurchasePanel product={product} />
+
+                        {/* Mobile Tabs */}
+                        <div className="lg:hidden">
+                            <ProductTabs product={product} />
+                        </div>
+                    </div>
                 </div>
+
+                {/* Related Systems Section */}
+                {related.length > 0 && (
+                    <div className="mt-32 pt-20 border-t border-white/5">
+                        <div className="flex items-end justify-between mb-12">
+                            <div className="space-y-2">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-1.5 h-1.5 bg-electric-blue rounded-full animate-pulse" />
+                                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-electric-blue">Sistemas Compatibles</span>
+                                </div>
+                                <h2 className="text-3xl font-black uppercase italic tracking-tighter text-white">Componentes Relacionados</h2>
+                            </div>
+                            <Link href="/catalog" className="text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-white flex items-center gap-2 transition-colors group">
+                                VER TODO <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                            </Link>
+                        </div>
+                        <RelatedCarousel
+                            products={related}
+                            onAddToCart={(p) => {
+                                // This callback would need to be updated in RelatedCarousel too if we want full REST,
+                                // but the ProductCard with addToCart handle already exists.
+                            }}
+                        />
+                    </div>
+                )}
             </div>
 
-            <div className="mt-32 border-t border-slate-200 bg-white">
-                <RelatedCarousel
-                    products={related}
-                    onAddToCart={handleAddRelatedToCart}
-                />
-            </div>
-
-            <Toast
-                {...toast}
-                onClose={() => setToast(prev => ({ ...prev, isVisible: false }))}
-            />
+            {/* Bottom Guard Line */}
+            <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-electric-blue/10 to-transparent" />
         </div>
     );
 }

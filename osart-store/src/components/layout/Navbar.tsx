@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ShoppingCart, User, Menu, X, Zap, LogOut } from 'lucide-react';
+import { ShoppingCart, User, Menu, X, Zap, LogOut, Terminal, Package } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/hooks/useCart';
 import { CartDrawer } from '../cart/CartDrawer';
@@ -67,7 +67,18 @@ const Navbar = () => {
 
                         {user ? (
                             <div className="flex items-center gap-4 border-l border-white/10 pl-6">
-                                <span className="text-[10px] font-bold uppercase tracking-widest text-electric-blue truncate max-w-[120px]">{user.email?.split('@')[0]}</span>
+                                <Link
+                                    href="/profile"
+                                    className="flex items-center gap-2 group/user"
+                                >
+                                    <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-electric-blue group-hover/user:bg-electric-blue/10 group-hover/user:border-electric-blue/30 transition-all">
+                                        <User size={14} />
+                                    </div>
+                                    <div className="flex flex-col">
+                                        <span className="text-[8px] font-black uppercase tracking-[0.2em] text-zinc-500 group-hover/user:text-white transition-colors">OPERARIO_ACTIVO</span>
+                                        <span className="text-[10px] font-black uppercase tracking-widest text-white truncate max-w-[100px]">{user.email?.split('@')[0]}</span>
+                                    </div>
+                                </Link>
                                 <button
                                     onClick={() => signOut()}
                                     className="p-2 text-muted-foreground hover:text-red-500 transition-colors active:scale-90"
@@ -125,17 +136,38 @@ const Navbar = () => {
 
                                 <div className="pt-6 border-t border-white/10">
                                     {user ? (
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex flex-col">
-                                                <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-1">Signed in as</span>
-                                                <span className="text-sm font-bold text-white truncate max-w-[200px]">{user.email}</span>
+                                        <div>
+                                            <div className="py-2 border-b border-white/5">
+                                                <div className="px-4 py-2">
+                                                    <p className="text-[10px] font-mono text-white/40 uppercase tracking-widest">Operario</p>
+                                                    <p className="text-xs font-black text-white truncate">{user.email}</p>
+                                                </div>
                                             </div>
-                                            <button
-                                                onClick={() => { signOut(); setIsOpen(false); }}
-                                                className="p-3 bg-red-500/10 text-red-500 rounded-xl active:scale-90 transition-transform"
-                                            >
-                                                <LogOut size={20} />
-                                            </button>
+                                            <div className="py-2">
+                                                <Link
+                                                    href="/profile"
+                                                    className="flex items-center gap-3 px-4 py-3 text-xs font-black uppercase italic tracking-widest text-white/60 hover:text-white hover:bg-white/5 transition-all"
+                                                    onClick={() => setIsOpen(false)}
+                                                >
+                                                    <Terminal size={14} className="text-electric-blue" />
+                                                    Panel de Control
+                                                </Link>
+                                                <Link
+                                                    href="/orders"
+                                                    className="flex items-center gap-3 px-4 py-3 text-xs font-black uppercase italic tracking-widest text-white/60 hover:text-white hover:bg-white/5 transition-all"
+                                                    onClick={() => setIsOpen(false)}
+                                                >
+                                                    <Package size={14} />
+                                                    Mis Pedidos
+                                                </Link>
+                                                <button
+                                                    onClick={() => { signOut(); setIsOpen(false); }}
+                                                    className="flex items-center gap-3 px-4 py-3 text-xs font-black uppercase italic tracking-widest text-red-500/60 hover:text-red-500 hover:bg-white/5 transition-all w-full text-left"
+                                                >
+                                                    <LogOut size={14} />
+                                                    Cerrar Sesión
+                                                </button>
+                                            </div>
                                         </div>
                                     ) : (
                                         <Link

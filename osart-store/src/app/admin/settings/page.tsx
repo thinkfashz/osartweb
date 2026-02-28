@@ -1,64 +1,201 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { PageTransition } from '@/components/admin/ui/PageTransition';
-import { Settings, Shield, Zap, Database, Save } from 'lucide-react';
-import { GlowButton } from '@/components/admin/ui/GlowButton';
+import {
+    Settings, Shield, Zap, Database, Save, Bell, Globe,
+    Moon, Loader2, Check, ChevronRight, User, Lock, RefreshCcw
+} from 'lucide-react';
+import { toast } from 'sonner';
+import { useAuth } from '@/context/AuthContext';
+import { motion } from 'framer-motion';
+
+interface ToggleProps {
+    checked: boolean;
+    onChange: (v: boolean) => void;
+    disabled?: boolean;
+}
+
+function Toggle({ checked, onChange, disabled }: ToggleProps) {
+    return (
+        <button
+            type="button"
+            disabled={disabled}
+            onClick={() => onChange(!checked)}
+            className={`w-12 h-6 rounded-full flex items-center px-1 transition-all duration-300 shrink-0 disabled:opacity-50 ${checked ? 'bg-emerald-500 shadow-[0_0_12px_rgba(16,185,129,0.4)]' : 'bg-zinc-700'}`}
+        >
+            <motion.div
+                layout
+                transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                className={`w-4 h-4 bg-white rounded-full shadow-md ${checked ? 'translate-x-6' : 'translate-x-0'}`}
+            />
+        </button>
+    );
+}
+
+interface SettingRow {
+    label: string;
+    description: string;
+    key: string;
+}
+
+const SECURITY_SETTINGS: SettingRow[] = [
+    { label: 'Autenticación Multifactor', description: 'Requerido para administradores', key: 'mfa' },
+    { label: 'Log de Accesos', description: 'Registrar todos los inicios de sesión', key: 'access_log' },
+    { label: 'IP Allowlist', description: 'Restringir acceso a IPs autorizadas', key: 'ip_allowlist' },
+];
+
+const PERFORMANCE_SETTINGS: SettingRow[] = [
+    { label: 'Caché de Productos', description: 'Almacenar catálogo en memoria', key: 'product_cache' },
+    { label: 'Notificaciones Push', description: 'Alertas de stock en tiempo real', key: 'push_notifications' },
+    { label: 'Modo Compacto', description: 'Reducir animaciones en tablas grandes', key: 'compact_mode' },
+];
 
 export default function SettingsPage() {
+    const { user } = useAuth();
+    const [settings, setSettings] = useState<Record<string, boolean>>({
+        mfa: true,
+        access_log: true,
+        ip_allowlist: false,
+        product_cache: true,
+        push_notifications: false,
+        compact_mode: false,
+    });
+    const [saved, setSaved] = useState(false);
+    const [saving, setSaving] = useState(false);
+    const [dirty, setDirty] = useState(false);
+
+    const toggle = (key: string) => (val: boolean) => {
+        setSettings(s => ({ ...s, [key]: val }));
+        setDirty(true);
+        setSaved(false);
+    };
+
+    const handleSave = async () => {
+        setSaving(true);
+        // Simulate a config save (could write to localStorage or a settings API)
+        await new Promise(r => setTimeout(r, 600));
+        localStorage.setItem('osart_admin_settings', JSON.stringify(settings));
+        setSaving(false);
+        setSaved(true);
+        setDirty(false);
+        toast.success('Configuración guardada en el sistema');
+        setTimeout(() => setSaved(false), 3000);
+    };
+
+    // Load saved settings on mount
+    useEffect(() => {
+        try {
+            const saved = localStorage.getItem('osart_admin_settings');
+            if (saved) setSettings(JSON.parse(saved));
+        } catch { /* ignore */ }
+    }, []);
+
+    const SettingGroup = ({ title, icon: Icon, color, rows }: { title: string; icon: any; color: string; rows: SettingRow[] }) => (
+        <div className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 md:p-8 space-y-5">
+            <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-white flex items-center gap-3 mb-6">
+                <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${color}`}>
+                    <Icon size={16} />
+                </div>
+                {title}
+            </h3>
+            <div className="space-y-3">
+                {rows.map(row => (
+                    <div key={row.key} className="flex items-center justify-between bg-zinc-950/60 rounded-2xl px-5 py-4 border border-zinc-800/50 hover:border-zinc-700 transition-all">
+                        <div className="min-w-0 pr-4">
+                            <p className="text-sm font-black text-white uppercase italic tracking-tight">{row.label}</p>
+                            <p className="text-[9px] font-mono text-zinc-500 uppercase tracking-widest mt-0.5">{row.description}</p>
+                        </div>
+                        <Toggle checked={settings[row.key]} onChange={toggle(row.key)} />
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+
     return (
         <PageTransition>
-            <div className="space-y-6 md:space-y-10 pb-20">
-                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-white p-6 md:p-10 rounded-[2rem] md:rounded-[2.5rem] border border-zinc-100 shadow-sm transition-all duration-300">
-                    <div className="space-y-1">
-                        <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">
-                            <Settings size={14} />
-                            Configuración de Núcleo
+            <div className="space-y-6 md:space-y-8 pb-20">
+                {/* Header */}
+                <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+                    <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                            <div className="w-1.5 h-1.5 rounded-full bg-electric-blue animate-pulse" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-electric-blue">Panel de Control</span>
                         </div>
-                        <h1 className="text-2xl md:text-3xl lg:text-4xl font-black tracking-tighter uppercase italic text-zinc-950 leading-tight">Ajustes del Sistema</h1>
+                        <h1 className="text-4xl md:text-5xl font-black uppercase italic tracking-tighter text-white leading-none">
+                            Configuración
+                        </h1>
+                        <p className="text-zinc-500 text-[10px] font-mono uppercase tracking-widest">
+                            Ajustes del núcleo operativo OSART
+                        </p>
                     </div>
-
-                    <GlowButton className="py-4 px-8 h-12 md:h-16 text-[9px] md:text-[10px] rounded-xl md:rounded-2xl w-full lg:w-auto shadow-lg shadow-blue-500/10">
-                        <Save size={16} className="mr-3" />
-                        GUARDAR CONFIGURACIÓN
-                    </GlowButton>
+                    <button
+                        onClick={handleSave}
+                        disabled={saving || !dirty}
+                        className={`flex items-center gap-3 px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all shadow-lg disabled:opacity-40 ${dirty ? 'bg-white text-black hover:bg-electric-blue' : 'bg-zinc-800 text-zinc-500 cursor-not-allowed'}`}
+                    >
+                        {saving ? <Loader2 size={16} className="animate-spin" />
+                            : saved ? <Check size={16} className="text-emerald-500" />
+                                : <Save size={16} />}
+                        {saving ? 'Guardando...' : saved ? 'Guardado ✓' : 'Guardar Configuración'}
+                    </button>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-                    <div className="bg-white border border-zinc-100 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 space-y-8 shadow-sm">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-950 flex items-center gap-3">
-                            <Shield size={18} className="text-emerald-500" />
-                            Seguridad y Accesos
-                        </h3>
-                        <div className="space-y-6">
-                            <div className="flex items-center justify-between bg-zinc-50/50 p-4 md:p-6 rounded-2xl border border-zinc-100/50">
-                                <div className="min-w-0 pr-4">
-                                    <p className="text-[11px] font-black uppercase tracking-widest text-zinc-950 truncate">Autenticación Multifactor</p>
-                                    <p className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest mt-1">Requerido para administradores</p>
-                                </div>
-                                <div className="w-12 h-6 bg-emerald-500 rounded-full flex items-center px-1 shrink-0 cursor-pointer shadow-inner">
-                                    <div className="w-4 h-4 bg-white rounded-full translate-x-6 shadow-sm" />
-                                </div>
-                            </div>
-                        </div>
+                {/* User info card */}
+                <div className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 flex items-center gap-5">
+                    <div className="w-14 h-14 bg-zinc-800 rounded-2xl grid place-items-center border border-zinc-700 shrink-0">
+                        <User size={24} className="text-electric-blue" />
                     </div>
+                    <div className="flex-1 min-w-0">
+                        <p className="font-black text-white uppercase italic text-lg tracking-tighter truncate">
+                            {user?.email?.split('@')[0] || 'Admin'}
+                        </p>
+                        <p className="text-[10px] text-zinc-500 font-mono uppercase tracking-widest truncate">{user?.email}</p>
+                    </div>
+                    <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 text-emerald-400 rounded-xl border border-emerald-500/20 text-[9px] font-black uppercase tracking-widest shrink-0">
+                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                        Admin
+                    </div>
+                </div>
 
-                    <div className="bg-white border border-zinc-100 rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-10 space-y-8 shadow-sm">
-                        <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-950 flex items-center gap-3">
-                            <Zap size={18} className="text-blue-500" />
-                            Rendimiento Global
-                        </h3>
-                        <div className="space-y-6">
-                            <div className="flex items-center justify-between bg-zinc-50/50 p-4 md:p-6 rounded-2xl border border-zinc-100/50">
-                                <div className="min-w-0 pr-4">
-                                    <p className="text-[11px] font-black uppercase tracking-widest text-zinc-950 truncate">Modo de Alta Velocidad</p>
-                                    <p className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest mt-1">Optimizar consultas GraphQL</p>
-                                </div>
-                                <div className="w-12 h-6 bg-zinc-200 rounded-full flex items-center px-1 shrink-0 cursor-pointer shadow-inner">
-                                    <div className="w-4 h-4 bg-white rounded-full shadow-sm" />
-                                </div>
-                            </div>
+                {/* Settings Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
+                    <SettingGroup
+                        title="Seguridad y Accesos"
+                        icon={Shield}
+                        color="bg-emerald-500/20 text-emerald-400"
+                        rows={SECURITY_SETTINGS}
+                    />
+                    <SettingGroup
+                        title="Rendimiento y Notificaciones"
+                        icon={Zap}
+                        color="bg-electric-blue/20 text-electric-blue"
+                        rows={PERFORMANCE_SETTINGS}
+                    />
+                </div>
+
+                {/* Danger Zone */}
+                <div className="bg-red-500/5 border border-red-500/20 rounded-[2rem] p-6 md:p-8 space-y-4">
+                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-red-400 flex items-center gap-2">
+                        <Lock size={14} />
+                        Zona Restringida
+                    </h3>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-zinc-950 rounded-2xl p-5 border border-red-500/10">
+                        <div>
+                            <p className="font-black text-white uppercase italic text-sm tracking-tight">Borrar caché del sistema</p>
+                            <p className="text-[9px] text-zinc-500 font-mono uppercase tracking-widest mt-1">Elimina todos los datos en memoria local</p>
                         </div>
+                        <button
+                            onClick={() => {
+                                localStorage.removeItem('osart_admin_settings');
+                                localStorage.removeItem('osart_products_cache');
+                                toast.success('Caché del sistema borrada');
+                            }}
+                            className="px-5 py-3 rounded-xl bg-red-500/10 text-red-400 border border-red-500/20 text-[9px] font-black uppercase tracking-widest hover:bg-red-500/20 transition-all whitespace-nowrap shrink-0"
+                        >
+                            Borrar Caché
+                        </button>
                     </div>
                 </div>
             </div>

@@ -1,8 +1,6 @@
 "use client";
 
 import React from 'react';
-import { useQuery, useMutation } from '@apollo/client/react';
-import { ADMIN_SALES_SUMMARY, ADMIN_ORDERS, ADMIN_SEED_DATA } from '@/lib/graphql/adminQueries';
 import SalesKpis from '@/components/admin/sales/SalesKpis';
 import SalesCharts from '@/components/admin/sales/SalesCharts';
 import OrdersTable from '@/components/admin/sales/OrdersTable';
@@ -116,7 +114,7 @@ export default function SalesPage() {
                                 onClick={handleRefresh}
                                 className="flex-1 sm:flex-none p-4 rounded-xl md:rounded-2xl bg-zinc-50 border border-zinc-100 text-zinc-400 hover:text-zinc-950 hover:bg-white transition-all shadow-sm group"
                             >
-                                <RefreshCcw size={20} className={summaryLoading ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-700'} />
+                                <RefreshCcw size={20} className={loading ? 'animate-spin' : 'group-hover:rotate-180 transition-transform duration-700'} />
                             </button>
                             <div className="h-8 w-[1px] bg-zinc-100 sm:hidden mx-1" />
                         </div>

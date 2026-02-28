@@ -3,13 +3,14 @@
 import React from 'react';
 import { Bell, Search, User, Zap, Menu } from 'lucide-react';
 
-export default function AdminTopbar({ onMenuClick }: { onMenuClick: () => void }) {
+export default function AdminTopbar({ onMenuClick, userEmail }: { onMenuClick: () => void; userEmail?: string }) {
+    const displayName = userEmail ? userEmail.split('@')[0].toUpperCase() : 'ADMIN';
     return (
-        <header className="h-20 bg-white/80 backdrop-blur-md border-b border-zinc-100 px-4 md:px-8 flex items-center z-40 sticky top-0 safe-area-pt">
-            {/* Mobile Menu Trigger */}
+        <header className="h-16 md:h-20 bg-white/80 backdrop-blur-md border-b border-zinc-100 px-4 md:px-8 flex items-center z-40 sticky top-0 safe-area-pt">
+            {/* Mobile Menu Trigger (Only show on tablet now, BottomNav handles mobile) */}
             <button
                 onClick={onMenuClick}
-                className="p-2 mr-2 text-zinc-500 hover:bg-zinc-50 rounded-xl lg:hidden active:scale-95 transition-transform touch-target interactive-focus"
+                className="p-2 mr-2 text-zinc-500 hover:bg-zinc-50 rounded-xl hidden md:block lg:hidden active:scale-95 transition-transform touch-target interactive-focus"
                 aria-label="Open menu"
             >
                 <Menu size={24} />
@@ -35,21 +36,21 @@ export default function AdminTopbar({ onMenuClick }: { onMenuClick: () => void }
             </div>
 
             {/* Right Side Actions */}
-            <div className="flex items-center gap-2 sm:gap-4 ml-auto">
-                <button className="p-2.5 rounded-2xl bg-zinc-50 text-zinc-500 hover:bg-zinc-100 transition-colors relative touch-target interactive-focus">
-                    <Bell size={20} />
-                    <span className="absolute top-3 right-3 w-2 h-2 rounded-full bg-orange-500 border-2 border-white" />
+            <div className="flex items-center gap-1 sm:gap-4 ml-auto">
+                <button className="p-2 md:p-2.5 rounded-2xl bg-zinc-50 text-zinc-500 hover:bg-zinc-100 transition-colors relative touch-target interactive-focus">
+                    <Bell size={20} className="md:w-5 md:h-5 w-4 h-4" />
+                    <span className="absolute top-2 right-2 md:top-3 md:right-3 w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-orange-500 border border-white md:border-2" />
                 </button>
 
-                <div className="h-8 w-[1px] bg-zinc-100 mx-1 sm:mx-2" />
+                <div className="h-8 w-[1px] bg-zinc-100 mx-1 sm:mx-2 hidden sm:block" />
 
                 <div className="flex items-center gap-2 md:gap-3 pl-1 group cursor-pointer touch-target interactive-focus">
                     <div className="flex flex-col items-end hidden lg:flex">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-zinc-950">Eduardo AR.</span>
-                        <span className="text-[8px] font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">Fleet Admin</span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-zinc-950">{displayName}</span>
+                        <span className="text-[8px] font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">Admin</span>
                     </div>
-                    <div className="w-10 h-10 rounded-2xl bg-zinc-100 overflow-hidden border-2 border-transparent group-hover:border-zinc-950 transition-all flex items-center justify-center shrink-0 shadow-sm">
-                        <User size={20} className="text-zinc-400" />
+                    <div className="w-8 h-8 md:w-10 md:h-10 rounded-xl md:rounded-2xl bg-zinc-100 overflow-hidden border-2 border-transparent group-hover:border-zinc-950 transition-all flex items-center justify-center shrink-0 shadow-sm">
+                        <User size={16} className="text-zinc-400 md:w-5 md:h-5" />
                     </div>
                 </div>
             </div>
