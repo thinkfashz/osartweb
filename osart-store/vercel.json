@@ -1,0 +1,17 @@
+{
+    "version": 2,
+    "rewrites": [
+        {
+            "source": "/api/(.*)",
+            "destination": "https://osart-api.vercel.app/api/$1"
+        },
+        {
+            "source": "/graphql",
+            "destination": "https://osart-api.vercel.app/graphql"
+        },
+        {
+            "source": "/health",
+            "destination": "https://osart-api.vercel.app/health"
+        }
+    ]
+}

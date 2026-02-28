@@ -10,6 +10,37 @@ export class ProductsService {
     private anon = makeSupabaseAnon();
     private admin = makeSupabaseService();
 
+    async findAll(options: { limit?: number } = {}) {
+        const limit = options.limit || 10;
+        const { data, error } = await this.anon
+            .from('products')
+            .select('*')
+            .eq('is_active', true)
+            .order('created_at', { ascending: false })
+            .limit(limit);
+
+        if (error) throw error;
+        return (data || []).map(this.mapProduct);
+    }
+
+    async findBySlug(slug: string) {
+        return this.bySlug(slug);
+    }
+
+    async findOne(id: string) {
+        const { data, error } = await this.anon
+            .from('products')
+            .select('*')
+            .eq('id', id)
+            .single();
+
+        if (error || !data) {
+            throw new NotFoundException(`Producto con ID "${id}" no encontrado.`);
+        }
+
+        return this.mapProduct(data);
+    }
+
     async findConnection(
         filter?: ProductsFilterInput,
         sort?: ProductSort,

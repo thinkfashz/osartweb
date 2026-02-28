@@ -14,7 +14,15 @@
     ],
     "routes": [
         {
-            "src": "/(.*)",
+            "src": "/api/(.*)",
+            "dest": "api/index.ts"
+        },
+        {
+            "src": "/graphql",
+            "dest": "api/index.ts"
+        },
+        {
+            "src": "/health",
             "dest": "api/index.ts"
         }
     ]

@@ -24,10 +24,8 @@ import { SystemModule } from './modules/system/system.module';
     ConfigModule.forRoot({ isGlobal: true }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      autoSchemaFile: process.env.VERCEL ? true : join(process.cwd(), 'src/schema.gql'),
       sortSchema: true,
-      // playground: true is removed — deprecated in Apollo Server 4.
-      // Use the Apollo Sandbox landing page instead (works in development).
       introspection: true,
       plugins: [
         ApolloServerPluginLandingPageLocalDefault({ embed: true }),

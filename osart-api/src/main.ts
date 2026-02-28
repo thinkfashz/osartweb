@@ -5,6 +5,12 @@ import { AppModule } from './app.module';
 
 export async function createApp() {
   const app = await NestFactory.create(AppModule);
+
+  // Set global prefix for all routes except system endpoints
+  app.setGlobalPrefix('api', {
+    exclude: ['health', 'graphql'],
+  });
+
   app.enableCors({
     origin: process.env.CORS_ORIGIN ?? '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
