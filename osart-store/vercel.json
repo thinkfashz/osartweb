@@ -3,15 +3,15 @@
     "rewrites": [
         {
             "source": "/api/(.*)",
-            "destination": "https://osart-api.vercel.app/api/$1"
+            "destination": "https://osartweb-ltg8-git-main-think-fastzs-projects.vercel.app/api/$1"
         },
         {
             "source": "/graphql",
-            "destination": "https://osart-api.vercel.app/graphql"
+            "destination": "https://osartweb-ltg8-git-main-think-fastzs-projects.vercel.app/graphql"
         },
         {
             "source": "/health",
-            "destination": "https://osart-api.vercel.app/health"
+            "destination": "https://osartweb-ltg8-git-main-think-fastzs-projects.vercel.app/health"
         }
     ]
 }
