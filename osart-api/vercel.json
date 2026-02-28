@@ -12,18 +12,18 @@
             }
         }
     ],
-    "routes": [
+    "rewrites": [
         {
-            "src": "/api/(.*)",
-            "dest": "api/index.ts"
+            "source": "/api/(.*)",
+            "destination": "api/index.ts"
         },
         {
-            "src": "/graphql",
-            "dest": "api/index.ts"
+            "source": "/graphql",
+            "destination": "api/index.ts"
         },
         {
-            "src": "/health",
-            "dest": "api/index.ts"
+            "source": "/health",
+            "destination": "api/index.ts"
         }
     ]
 }
