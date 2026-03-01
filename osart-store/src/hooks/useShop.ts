@@ -130,7 +130,7 @@ export const useProducts = (filter?: { name?: string; categoryId?: string }) => 
         setIsValidating(false);
       }
     }
-  }, [filter?.name, filter?.categoryId, data]);
+  }, [filter?.name, filter?.categoryId]);
 
   useEffect(() => {
     let isMounted = true;
@@ -217,7 +217,7 @@ export const useCategories = () => {
         setIsValidating(false);
       }
     }
-  }, [data]);
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
