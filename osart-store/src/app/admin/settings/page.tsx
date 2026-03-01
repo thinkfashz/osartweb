@@ -60,7 +60,7 @@ export default function SettingsPage() {
         product_cache: true,
         push_notifications: false,
         compact_mode: false,
-        osart_data_mode: 'database', // 'local' | 'database'
+        osart_data_mode: 'local', // 'local' | 'database' - Defaulting to local demo products per user request
         osart_custom_db_url: '',
         osart_custom_db_key: ''
     });

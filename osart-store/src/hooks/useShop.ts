@@ -7,19 +7,19 @@ const CACHE_KEY_PRODUCTS = 'osart_products_cache';
 const CACHE_KEY_CATEGORIES = 'osart_categories_cache';
 
 const getAppModeSettings = () => {
-  if (typeof window === 'undefined') return { mode: 'database', url: '', key: '' };
+  if (typeof window === 'undefined') return { mode: 'local', url: '', key: '' };
   try {
     const saved = localStorage.getItem('osart_admin_settings');
     if (saved) {
       const parsed = JSON.parse(saved);
       return {
-        mode: parsed.osart_data_mode || 'database',
+        mode: parsed.osart_data_mode || 'local',
         url: parsed.osart_custom_db_url || '',
         key: parsed.osart_custom_db_key || ''
       };
     }
   } catch { /* ignore */ }
-  return { mode: 'database', url: '', key: '' };
+  return { mode: 'local', url: '', key: '' };
 };
 
 export const useProducts = (filter?: { name?: string; categoryId?: string }) => {
