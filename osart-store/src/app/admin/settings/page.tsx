@@ -53,13 +53,16 @@ const PERFORMANCE_SETTINGS: SettingRow[] = [
 
 export default function SettingsPage() {
     const { user } = useAuth();
-    const [settings, setSettings] = useState<Record<string, boolean>>({
+    const [settings, setSettings] = useState<Record<string, any>>({
         mfa: true,
         access_log: true,
         ip_allowlist: false,
         product_cache: true,
         push_notifications: false,
         compact_mode: false,
+        osart_data_mode: 'database', // 'local' | 'database'
+        osart_custom_db_url: '',
+        osart_custom_db_key: ''
     });
     const [saved, setSaved] = useState(false);
     const [saving, setSaving] = useState(false);
@@ -67,6 +70,12 @@ export default function SettingsPage() {
 
     const toggle = (key: string) => (val: boolean) => {
         setSettings(s => ({ ...s, [key]: val }));
+        setDirty(true);
+        setSaved(false);
+    };
+
+    const handleTextChange = (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
+        setSettings(s => ({ ...s, [key]: e.target.value }));
         setDirty(true);
         setSaved(false);
     };
@@ -87,7 +96,10 @@ export default function SettingsPage() {
     useEffect(() => {
         try {
             const saved = localStorage.getItem('osart_admin_settings');
-            if (saved) setSettings(JSON.parse(saved));
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                setSettings(prev => ({ ...prev, ...parsed }));
+            }
         } catch { /* ignore */ }
     }, []);
 
@@ -157,6 +169,73 @@ export default function SettingsPage() {
                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                         Admin
                     </div>
+                </div>
+
+                {/* Custom Data Source Block */}
+                <div className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 md:p-8 space-y-5">
+                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-white flex items-center gap-3 mb-6">
+                        <div className="w-8 h-8 rounded-xl flex items-center justify-center bg-zinc-800 text-zinc-300">
+                            <Database size={16} />
+                        </div>
+                        Origen de Datos del Catálogo
+                    </h3>
+
+                    <div className="flex flex-col sm:flex-row items-center justify-between bg-zinc-950/60 rounded-2xl px-5 py-4 border border-zinc-800/50">
+                        <div className="min-w-0 pr-4 mb-4 sm:mb-0">
+                            <p className="text-sm font-black text-white uppercase italic tracking-tight">Modo de Catálogo</p>
+                            <p className="text-[9px] font-mono text-zinc-500 uppercase tracking-widest mt-0.5">
+                                {settings.osart_data_mode === 'local' ? 'Usando lista local (Demo)' : 'Conectado a Base de Datos'}
+                            </p>
+                        </div>
+                        <div className="flex bg-zinc-900 p-1 rounded-xl border border-zinc-800 shrink-0">
+                            <button
+                                onClick={() => { setSettings(s => ({ ...s, osart_data_mode: 'local' })); setDirty(true); setSaved(false); }}
+                                className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${settings.osart_data_mode === 'local' ? 'bg-zinc-800 text-white shadow-md' : 'text-zinc-500 hover:text-zinc-300'}`}
+                            >
+                                Demo (Local)
+                            </button>
+                            <button
+                                onClick={() => { setSettings(s => ({ ...s, osart_data_mode: 'database' })); setDirty(true); setSaved(false); }}
+                                className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all ${settings.osart_data_mode === 'database' ? 'bg-zinc-800 text-white shadow-md' : 'text-zinc-500 hover:text-zinc-300'}`}
+                            >
+                                Base de Datos
+                            </button>
+                        </div>
+                    </div>
+
+                    {settings.osart_data_mode === 'database' && (
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            className="bg-zinc-950/60 rounded-2xl p-5 border border-zinc-800/50 space-y-4"
+                        >
+                            <p className="text-[9px] font-mono text-zinc-400 uppercase tracking-widest leading-relaxed">
+                                Deja los campos en blanco para usar la base de datos por defecto del proyecto. Completa para enlazar tu propia base Supabase temporalmente.
+                            </p>
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2">Supabase URL Personalizada</label>
+                                    <input
+                                        type="text"
+                                        value={settings.osart_custom_db_url || ''}
+                                        onChange={handleTextChange('osart_custom_db_url')}
+                                        placeholder="https://tuid.supabase.co"
+                                        className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-white text-sm focus:border-white focus:ring-1 focus:ring-white transition-all outline-none"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-2">Supabase Anon/Service Key</label>
+                                    <input
+                                        type="password"
+                                        value={settings.osart_custom_db_key || ''}
+                                        onChange={handleTextChange('osart_custom_db_key')}
+                                        placeholder="eyJh..."
+                                        className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 text-white text-sm focus:border-white focus:ring-1 focus:ring-white transition-all outline-none font-mono"
+                                    />
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
                 </div>
 
                 {/* Settings Grid */}
