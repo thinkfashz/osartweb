@@ -31,12 +31,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ProductsPage() {
     const router = useRouter();
-    const [products, setProducts] = useState<AdminProduct[]>([]);
-    const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
     const [selectedProduct, setSelectedProduct] = useState<AdminProduct | null>(null);
-    const [dataSource, setDataSource] = useState<'live' | 'offline'>('live');
-
     const [debouncedSearch, setDebouncedSearch] = React.useState('');
 
     // Debounce: only update debouncedSearch 300ms after user stops typing
@@ -45,36 +41,29 @@ export default function ProductsPage() {
         return () => clearTimeout(timer);
     }, [search]);
 
-    const fetchProducts = React.useCallback(async () => {
-        setLoading(true);
-        try {
-            const res = await fetch(`/api/products?admin=true&search=${debouncedSearch}`);
-            if (!res.ok) throw new Error('Fetch failed');
-            const data = await res.json();
-            setProducts(data.products || []);
-            setDataSource('live');
-        } catch (err) {
-            toast.error('Falla en la red. Cargando caché local si existe.');
-            setDataSource('offline');
-            // Try fallback
-            try {
-                const cached = localStorage.getItem('osart_offline_products');
-                if (cached) {
-                    setProducts(JSON.parse(cached));
-                } else {
-                    setProducts([]); // No fallback
-                }
-            } catch {
-                setProducts([]);
-            }
-        } finally {
-            setLoading(false);
-        }
-    }, [debouncedSearch]);
+    // Consuming our robust SWR hook
+    const {
+        data,
+        loading: initialLoading,
+        isValidating,
+        error,
+        dataSource
+    } = useProducts({ name: debouncedSearch });
 
+    // We consider it "loading" strictly if there's no data and it's doing the intial fetch
+    const loading = initialLoading && !data?.products?.length;
+    const products = data?.products || [];
+
+    // Optional user feedback on background sync
     React.useEffect(() => {
-        fetchProducts();
-    }, [fetchProducts]);
+        if (!initialLoading && !isValidating && dataSource === 'network') {
+            // Optional: you can show a tiny non-intrusive toast that data was updated from server
+            // toast.success('Catálogo sincronizado', { duration: 1500, style: { fontSize: '10px' } });
+        }
+        if (error && dataSource === 'cache') {
+            toast.error('Sin conexión. Mostrando versión offline.', { duration: 3000 });
+        }
+    }, [isValidating, dataSource, error, initialLoading]);
 
     const filteredProducts = products;
 
@@ -194,10 +183,10 @@ export default function ProductsPage() {
                     <div className="flex items-center justify-between sm:justify-end gap-3 w-full xl:w-auto">
                         <div className="flex items-center gap-3">
                             <button
-                                onClick={fetchProducts}
+                                onClick={mutate}
                                 className="p-4 rounded-2xl bg-zinc-50 border border-zinc-100 text-zinc-400 hover:text-zinc-950 hover:bg-white transition-all shadow-sm touch-target"
                             >
-                                <RefreshCcw size={20} className={loading ? 'animate-spin' : ''} />
+                                <RefreshCcw size={20} className={isValidating ? 'animate-spin' : ''} />
                             </button>
                             <div className="h-10 w-[1px] bg-zinc-100 mx-1 hidden sm:block" />
                         </div>
