@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { ShoppingCart, Heart, Zap, Star, Package } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/hooks/useCart';
 import { useToggleWishlist, useWishlist } from '@/hooks/useWishlist';
@@ -11,6 +11,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { Product } from '@/lib/graphql/types';
 import { toast } from 'sonner';
+import { SafeImage } from '@/components/ui/SafeImage';
 
 interface ProductCardProps {
     product: Product;
@@ -23,6 +24,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     const [toggleWishlist] = useToggleWishlist();
     const { wishlist } = useWishlist();
     const [adding, setAdding] = useState(false);
+    const [showFloat, setShowFloat] = useState(false);
 
     const isFavorited = wishlist.some((item: any) => item.productId === product.id);
 
@@ -43,6 +45,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         try {
             await addToCart(product as any, 1);
             toast.success(`${product.name} añadido al carrito`);
+
+            // Trigger floating animation
+            setShowFloat(true);
+            setTimeout(() => setShowFloat(false), 1200);
+
         } catch {
             toast.error('Error al añadir al carrito');
         } finally {
@@ -104,22 +111,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     {/* Subtle scanline overlay */}
                     <div className="absolute inset-0 retro-scanlines opacity-20 pointer-events-none z-10" />
 
-                    {imgSrc ? (
-                        <img
-                            src={imgSrc}
-                            alt={product.name}
-                            className={cn(
-                                'w-full h-full object-cover transition-all duration-700',
-                                'group-hover:scale-105',
-                                isOutOfStock ? 'grayscale opacity-40' : 'opacity-100'
-                            )}
-                        />
-                    ) : (
-                        <div className="w-full h-full flex flex-col items-center justify-center gap-3 bg-zinc-900/60">
-                            <Package size={40} className="text-zinc-700 group-hover:text-electric-blue/50 transition-colors" />
-                            <span className="text-[9px] font-mono text-zinc-700 uppercase tracking-widest">Sin imagen</span>
-                        </div>
-                    )}
+                    <SafeImage
+                        src={imgSrc}
+                        alt={product.name}
+                        fallbackIconSize={40}
+                        className={cn(
+                            'w-full h-full object-cover transition-all duration-700',
+                            'group-hover:scale-105',
+                            isOutOfStock ? 'grayscale opacity-40' : 'opacity-100'
+                        )}
+                    />
 
                     {/* Bottom gradient */}
                     <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-zinc-950/80 to-transparent pointer-events-none z-10" />
@@ -154,7 +155,35 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 </Link>
 
                 {/* Price + CTA */}
-                <div className="mt-auto pt-2 flex items-center justify-between gap-2 border-t border-white/5">
+                <div className="relative mt-auto pt-2 flex items-center justify-between gap-2 border-t border-white/5">
+
+                    {/* Floating Add to Cart Animation Overlay */}
+                    <AnimatePresence>
+                        {showFloat && (
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.5, y: 10 }}
+                                animate={{ opacity: 1, scale: 1, y: -30 }}
+                                exit={{ opacity: 0, scale: 1.2, y: -40 }}
+                                transition={{ duration: 0.4, type: "spring" }}
+                                className="absolute right-0 bottom-12 z-50 flex items-center justify-center w-10 h-10 bg-emerald-500 rounded-full shadow-[0_0_20px_rgba(16,185,129,0.5)] pointer-events-none"
+                            >
+                                <ShoppingCart size={18} className="text-white" />
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    transition={{ delay: 0.2 }}
+                                    className="absolute -top-1 -right-1"
+                                >
+                                    <div className="w-3.5 h-3.5 rounded-full bg-white flex items-center justify-center">
+                                        <svg className="w-2.5 h-2.5 text-emerald-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={4}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                        </svg>
+                                    </div>
+                                </motion.div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+
                     <div>
                         <p className="text-[8px] text-zinc-600 font-mono uppercase mb-0.5">Precio unit.</p>
                         <p className="text-lg font-black text-white tracking-tighter leading-none">
@@ -167,21 +196,27 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                         disabled={adding || isOutOfStock}
                         aria-label="Añadir al carrito"
                         className={cn(
-                            'flex items-center gap-2 px-4 py-2.5 rounded-xl font-black uppercase text-[9px] tracking-widest transition-all duration-200 border shrink-0',
+                            'relative flex items-center gap-2 px-4 py-2.5 rounded-xl font-black uppercase text-[9px] tracking-widest transition-all duration-200 border shrink-0 overflow-hidden',
                             isOutOfStock
                                 ? 'border-zinc-800 text-zinc-700 cursor-not-allowed bg-transparent'
-                                : adding
-                                    ? 'bg-electric-blue/20 border-electric-blue/30 text-electric-blue'
+                                : adding || showFloat
+                                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-500'
                                     : 'bg-electric-blue text-black border-transparent hover:bg-electric-blue/90 shadow-[0_0_15px_rgba(0,229,255,0.2)] hover:shadow-[0_0_25px_rgba(0,229,255,0.35)] active:scale-95'
                         )}
                     >
                         {adding ? (
                             <Zap size={13} className="animate-pulse" />
+                        ) : showFloat ? (
+                            <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 0.3 }}>
+                                <svg className="w-[13px] h-[13px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                            </motion.div>
                         ) : (
                             <ShoppingCart size={13} />
                         )}
                         <span className="hidden sm:inline">
-                            {isOutOfStock ? 'Agotado' : adding ? 'Añadiendo' : 'Añadir'}
+                            {isOutOfStock ? 'Agotado' : showFloat ? 'Añadido' : adding ? 'Añadiendo' : 'Añadir'}
                         </span>
                     </button>
                 </div>
