@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { ChevronRight, Loader2, RefreshCcw, Home, Share2, Activity } from 'lucide-react';
 import Link from 'next/link';
 import { Product } from '@/lib/graphql/types';
@@ -9,47 +9,24 @@ import { PurchasePanel } from '@/components/product/PurchasePanel';
 import { ProductTabs } from '@/components/product/ProductTabs';
 import { RelatedCarousel } from '@/components/product/RelatedCarousel';
 import { useCart } from '@/hooks/useCart';
+import { useProducts } from '@/hooks/useShop';
 
 export default function ProductDetailPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = React.use(params);
     const { refetch: refetchGlobalCart } = useCart();
 
-    const [product, setProduct] = useState<Product | null>(null);
-    const [related, setRelated] = useState<Product[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<any>(null);
+    // Dynamic hook that respects Admin "Demo Mode" vs "Database" settings
+    const { data, loading, error, mutate: retry } = useProducts();
 
-    const fetchData = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-            // 1. Fetch Product by Slug using internal API proxy
-            const res = await fetch(`/api/products/slug/${slug}`);
-            if (!res.ok) throw new Error('Failed to fetch product');
-            const productData = await res.json();
-            setProduct(productData);
+    const product = useMemo(() => {
+        if (!data?.products) return null;
+        return data.products.find(p => p.slug === slug) as unknown as Product;
+    }, [data?.products, slug]);
 
-            // 2. Fetch Related Products using internal API proxy
-            if (productData) {
-                const relatedRes = await fetch(`/api/products?limit=10`);
-                if (relatedRes.ok) {
-                    const { products: allProducts } = await relatedRes.json();
-                    setRelated(allProducts.filter((p: Product) => p.id !== productData.id));
-                }
-            }
-        } catch (err) {
-            console.error('[ProductDetail] Fetch Error:', err);
-            setError(err);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        if (slug) {
-            fetchData();
-        }
-    }, [slug]);
+    const related = useMemo(() => {
+        if (!data?.products || !product) return [];
+        return data.products.filter(p => p.id !== product.id).slice(0, 10) as unknown as Product[];
+    }, [data?.products, product]);
 
     if (loading) return (
         <div className="min-h-screen bg-zinc-950 pt-32 pb-20 flex items-center justify-center">

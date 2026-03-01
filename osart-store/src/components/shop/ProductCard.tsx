@@ -111,7 +111,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                             className={cn(
                                 'w-full h-full object-cover transition-all duration-700',
                                 'group-hover:scale-105',
-                                isOutOfStock ? 'grayscale opacity-40' : 'grayscale-[20%] group-hover:grayscale-0 opacity-85 group-hover:opacity-100'
+                                isOutOfStock ? 'grayscale opacity-40' : 'opacity-100'
                             )}
                         />
                     ) : (

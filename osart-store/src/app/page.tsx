@@ -9,6 +9,9 @@ import { Loader2, Zap, ShieldCheck, CreditCard, ChevronRight } from "lucide-reac
 import Link from "next/link";
 import { motion } from "framer-motion";
 
+import { useProducts } from '@/hooks/useShop';
+import { AdminProduct } from '@/types/admin';
+
 // ─── Animate on scroll — uses native IntersectionObserver to avoid Turbopack HMR issues ───
 function AnimateIn({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -40,38 +43,17 @@ function AnimateIn({ children, delay = 0, className = '' }: { children: React.Re
   );
 }
 
-
 export default function Home() {
-  const [products, setProducts] = useState<any[]>([]);
-  const [featuredProducts, setFeaturedProducts] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data, loading } = useProducts();
+  const products = data?.products || [];
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        setLoading(true);
-        const { data: featuredData } = await supabase
-          .from('products')
-          .select('*, category:categories(name)')
-          .eq('is_active', true)
-          .order('created_at', { ascending: false });
+  // Format them for the frontend expectations (Hero expects `title` instead of `name`, standardizing it)
+  const displayProducts = products.map((p) => ({ ...p, title: p.name }));
 
-        const formattedData = (featuredData || []).map((p: any) => {
-          const images = p.image_url ? [{ url: p.image_url, position: 0 }] : [];
-          return { ...p, images, image_url: p.image_url || null, title: p.name };
-        });
-
-        const featured = (featuredData || []).filter((p: any) => p.metadata?.is_featured === true);
-        setFeaturedProducts(featured.length > 0 ? featured : formattedData.slice(0, 3));
-        setProducts(formattedData || []);
-      } catch (err) {
-        console.error("Error fetching homepage data:", err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchData();
-  }, []);
+  // Find featured, or fallback to the first 3 active products
+  const featuredProducts = displayProducts.filter(p => (p as any).metadata?.is_featured).length > 0
+    ? displayProducts.filter(p => (p as any).metadata?.is_featured)
+    : displayProducts.slice(0, 3);
 
   const CATEGORY_CARDS = [
     { title: "Pantallas Originales", desc: "Máxima resolución y respuesta táctil garantizada para dispositivos de gama alta.", href: "/catalog?category=pantallas", tag: "LCD_PRO_LEVEL" },
@@ -85,6 +67,12 @@ export default function Home() {
       {/* ── Featured Banner / Hero ── */}
       {!loading && featuredProducts.length > 0 && <FeaturedBanner products={featuredProducts} />}
       {!loading && featuredProducts.length === 0 && <Hero />}
+      {loading && (
+        <div className="w-full h-[60vh] flex flex-col items-center justify-center bg-zinc-950">
+          <Loader2 className="animate-spin text-electric-blue mb-4" size={40} />
+          <p className="text-sm font-mono text-zinc-500 uppercase tracking-widest">Inicializando Motor de Catálogo...</p>
+        </div>
+      )}
 
       {/* ── Mobile Advantage Bar ── */}
       <div className="lg:hidden bg-zinc-950 py-4 border-b border-white/5">
@@ -112,8 +100,8 @@ export default function Home() {
         <div className="max-w-[1200px] mx-auto px-5 relative z-10">
           <AnimateIn className="flex items-end justify-between mb-16 px-4 sm:px-0">
             <div className="space-y-2">
-              <span className="text-xs font-bold uppercase tracking-[0.3em] text-electric-blue">Potencia tus reparaciones</span>
-              <h2 className="text-3xl lg:text-5xl font-black tracking-tighter uppercase italic text-foreground leading-none">Catálogo Industrial</h2>
+              <span className="text-xs font-bold uppercase tracking-[0.3em] text-electric-blue">Catálogo Dinámico</span>
+              <h2 className="text-3xl lg:text-5xl font-black tracking-tighter uppercase italic text-foreground leading-none">Últimas Adiciones</h2>
             </div>
             <Link href="/catalog" className="hidden sm:flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors group">
               Explorar Todo <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
@@ -127,7 +115,7 @@ export default function Home() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {products.map((product: any, i: number) => (
+              {displayProducts.slice(0, 8).map((product: any, i: number) => (
                 <motion.div
                   key={product.id}
                   initial={{ opacity: 0, y: 30 }}
@@ -138,9 +126,9 @@ export default function Home() {
                   <ProductCard product={product} />
                 </motion.div>
               ))}
-              {products.length === 0 && (
+              {displayProducts.length === 0 && (
                 <div className="col-span-full py-20 bg-zinc-900/50 rounded-[40px] border border-dashed border-white/10 text-center">
-                  <p className="text-muted-foreground font-bold uppercase tracking-widest text-sm">No se encontraron productos en el inventario.</p>
+                  <p className="text-muted-foreground font-bold uppercase tracking-widest text-sm">El inventario se encuentra vacío.</p>
                 </div>
               )}
             </div>
