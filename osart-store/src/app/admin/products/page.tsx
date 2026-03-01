@@ -11,7 +11,12 @@ import {
     Layers,
     Filter,
     ArrowUpRight,
-    Search as SearchIcon
+    Search as SearchIcon,
+    X,
+    Database,
+    WifiOff,
+    CheckCircle2,
+    Activity
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PageTransition } from '@/components/admin/ui/PageTransition';
@@ -22,12 +27,15 @@ import { toast } from 'sonner';
 import ProductImage from '@/components/admin/ProductImage';
 import { DataTable } from '@/components/admin/ui/DataTable';
 import { AdminProduct } from '@/types/admin';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function ProductsPage() {
     const router = useRouter();
     const [products, setProducts] = useState<AdminProduct[]>([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');
+    const [selectedProduct, setSelectedProduct] = useState<AdminProduct | null>(null);
+    const [dataSource, setDataSource] = useState<'live' | 'offline'>('live');
 
     const [debouncedSearch, setDebouncedSearch] = React.useState('');
 
@@ -41,10 +49,24 @@ export default function ProductsPage() {
         setLoading(true);
         try {
             const res = await fetch(`/api/products?admin=true&search=${debouncedSearch}`);
+            if (!res.ok) throw new Error('Fetch failed');
             const data = await res.json();
             setProducts(data.products || []);
+            setDataSource('live');
         } catch (err) {
-            toast.error('Falla en la sincronía de inventario');
+            toast.error('Falla en la red. Cargando caché local si existe.');
+            setDataSource('offline');
+            // Try fallback
+            try {
+                const cached = localStorage.getItem('osart_offline_products');
+                if (cached) {
+                    setProducts(JSON.parse(cached));
+                } else {
+                    setProducts([]); // No fallback
+                }
+            } catch {
+                setProducts([]);
+            }
         } finally {
             setLoading(false);
         }
@@ -54,7 +76,7 @@ export default function ProductsPage() {
         fetchProducts();
     }, [fetchProducts]);
 
-    const filteredProducts = products; // Search is handled server-side now
+    const filteredProducts = products;
 
     const columns = [
         {
@@ -63,7 +85,7 @@ export default function ProductsPage() {
             cell: ({ row }: { row: { original: AdminProduct } }) => (
                 <div className="flex items-center gap-3 min-w-[200px]">
                     <ProductImage
-                        src={row.original.image_url}
+                        src={row.original.image_url || (row.original.images && row.original.images[0]?.url) || ''}
                         alt={row.original.name}
                         size="md"
                     />
@@ -196,9 +218,149 @@ export default function ProductsPage() {
                         data={filteredProducts}
                         columns={columns}
                         loading={loading && products.length > 0}
+                        onRowClick={(product) => setSelectedProduct(product)}
                     />
                 )}
             </div>
+
+            {/* Product Details Modal */}
+            <AnimatePresence>
+                {selectedProduct && (
+                    <>
+                        {/* Backdrop */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setSelectedProduct(null)}
+                            className="fixed inset-0 bg-zinc-950/40 backdrop-blur-sm z-50 transition-all"
+                        />
+
+                        {/* Modal Panel */}
+                        <motion.div
+                            initial={{ x: '100%', opacity: 0 }}
+                            animate={{ x: 0, opacity: 1 }}
+                            exit={{ x: '100%', opacity: 0 }}
+                            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                            className="fixed inset-y-0 right-0 z-50 w-full max-w-xl bg-white shadow-2xl border-l border-zinc-100 flex flex-col"
+                        >
+                            <div className="p-6 md:p-8 border-b border-zinc-100 flex items-center justify-between bg-zinc-50 relative">
+                                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-blue-500 via-emerald-500 to-transparent" />
+                                <div>
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-1 flex items-center gap-2">
+                                        <Package size={12} /> Detalles de Entidad
+                                    </p>
+                                    <h2 className="text-2xl font-black uppercase italic tracking-tighter text-zinc-950 truncate max-w-[300px] md:max-w-md">
+                                        {selectedProduct.name}
+                                    </h2>
+                                </div>
+                                <button
+                                    onClick={() => setSelectedProduct(null)}
+                                    className="p-3 bg-white rounded-full border border-zinc-200 text-zinc-400 hover:text-red-500 hover:border-red-200 transition-all shadow-sm active:scale-95"
+                                >
+                                    <X size={18} />
+                                </button>
+                            </div>
+
+                            {/* Content */}
+                            <div className="flex-1 overflow-y-auto p-6 md:p-8 custom-scrollbar space-y-8">
+                                <div className="flex gap-6 items-start">
+                                    <div className="w-32 h-32 md:w-40 md:h-40 shrink-0 bg-zinc-50 rounded-2xl border border-zinc-100 overflow-hidden shadow-inner">
+                                        {(selectedProduct.image_url || selectedProduct.images?.[0]?.url) ? (
+                                            <img
+                                                src={selectedProduct.image_url || selectedProduct.images?.[0]?.url}
+                                                alt={selectedProduct.name}
+                                                className="w-full h-full object-cover"
+                                            />
+                                        ) : (
+                                            <div className="w-full h-full flex items-center justify-center text-zinc-300">
+                                                <Package size={40} />
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="space-y-4 flex-1">
+                                        <div>
+                                            <p className="text-[9px] font-black uppercase tracking-widest text-zinc-400">Identificador SKU</p>
+                                            <p className="font-mono text-sm font-bold text-zinc-800">{selectedProduct.sku}</p>
+                                        </div>
+                                        <div>
+                                            <p className="text-[9px] font-black uppercase tracking-widest text-zinc-400">Categoría</p>
+                                            <span className="inline-block mt-1 px-3 py-1 bg-zinc-100 text-zinc-600 rounded text-[10px] font-black uppercase tracking-widest">
+                                                {selectedProduct.category?.name || 'No Asignada'}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="p-4 bg-zinc-50 border border-zinc-100 rounded-2xl">
+                                        <p className="text-[9px] font-black uppercase tracking-widest text-zinc-400 mb-1">Precio Unitario</p>
+                                        <p className="text-xl font-mono text-zinc-950">${selectedProduct.price?.toLocaleString() || 0}</p>
+                                    </div>
+                                    <div className="p-4 bg-zinc-50 border border-zinc-100 rounded-2xl">
+                                        <p className="text-[9px] font-black uppercase tracking-widest text-zinc-400 mb-1">Nivel de Stock</p>
+                                        <p className={cn(
+                                            "text-xl font-mono",
+                                            selectedProduct.outOfStock ? "text-red-500" : selectedProduct.isLowStock ? "text-orange-500" : "text-emerald-500"
+                                        )}>
+                                            {selectedProduct.stock || 0}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <p className="text-[10px] font-black uppercase tracking-widest text-zinc-950 mb-3 border-b border-zinc-100 pb-2">Descripción del Sistema</p>
+                                    <p className="text-sm text-zinc-600 leading-relaxed">
+                                        {selectedProduct.description || 'Sin parámetros de descripción. El registro no contiene detalles técnicos en el bloque de almacenamiento principal.'}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Connection Status Bar */}
+                            <div className="border-t border-zinc-100 bg-zinc-950 p-4 shrink-0">
+                                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-3">
+                                        {dataSource === 'live' ? (
+                                            <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center relative">
+                                                <div className="absolute inset-0 rounded-lg shadow-[0_0_10px_rgba(16,185,129,0.3)] animate-pulse" />
+                                                <Database size={14} />
+                                            </div>
+                                        ) : (
+                                            <div className="w-8 h-8 rounded-lg bg-orange-500/20 text-orange-400 border border-orange-500/30 flex items-center justify-center relative">
+                                                <WifiOff size={14} />
+                                            </div>
+                                        )}
+                                        <div>
+                                            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-500">
+                                                Sistema Base de Datos
+                                            </p>
+                                            <p className={cn(
+                                                "text-[11px] font-black uppercase tracking-widest",
+                                                dataSource === 'live' ? "text-emerald-400" : "text-orange-400"
+                                            )}>
+                                                {dataSource === 'live' ? 'ONLINE (Sincronizado)' : 'OFFLINE (Modo Caché)'}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="text-[8px] font-mono text-zinc-500 uppercase tracking-widest">Origen Transaccional</p>
+                                        <div className="flex items-center justify-end gap-1.5 mt-0.5">
+                                            {dataSource === 'live' ? (
+                                                <CheckCircle2 size={10} className="text-blue-500" />
+                                            ) : (
+                                                <Activity size={10} className="text-zinc-500" />
+                                            )}
+                                            <p className="text-[10px] font-mono font-bold text-zinc-300">
+                                                {dataSource === 'live' ? '/api/products' : 'localStorage'}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
         </PageTransition>
     );
 }

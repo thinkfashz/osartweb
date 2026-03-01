@@ -15,9 +15,10 @@ interface DataTableProps<T = any> {
     loading?: boolean;
     title?: string;
     actions?: React.ReactNode;
+    onRowClick?: (row: T) => void;
 }
 
-export const DataTable = <T,>({ headers, children, data, columns, loading, title, actions }: DataTableProps<T>) => {
+export const DataTable = <T,>({ headers, children, data, columns, loading, title, actions, onRowClick }: DataTableProps<T>) => {
     const tableHeaders = headers || columns?.map(c => c.header) || [];
 
     return (
@@ -71,8 +72,12 @@ export const DataTable = <T,>({ headers, children, data, columns, loading, title
                             </tr>
                         ) : data && columns ? (
                             data.length > 0 ? (
-                                data.map((item, rowIdx) => (
-                                    <DataRow key={item.id || rowIdx} className="group/row">
+                                data.map((item: any, rowIdx: number) => (
+                                    <DataRow
+                                        key={item.id || rowIdx}
+                                        className="group/row"
+                                        onClick={onRowClick ? () => onRowClick(item) : undefined}
+                                    >
                                         {columns.map((col, colIdx) => (
                                             <DataCell key={colIdx} className="group-hover/row:bg-zinc-50/30 transition-colors">
                                                 {col.cell ? col.cell({ row: { original: item } }) : (col.accessorKey ? item[col.accessorKey] : null)}
@@ -100,11 +105,12 @@ export const DataTable = <T,>({ headers, children, data, columns, loading, title
     );
 };
 
-export const DataRow = ({ children, className = "" }: { children: React.ReactNode, className?: string }) => (
+export const DataRow = ({ children, className = "", onClick }: { children: React.ReactNode, className?: string, onClick?: () => void }) => (
     <motion.tr
+        onClick={onClick}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className={`hover:bg-zinc-50/50 transition-colors group ${className}`}
+        className={`hover:bg-zinc-50/50 transition-colors group ${className} ${onClick ? 'cursor-pointer' : ''}`}
     >
         {children}
     </motion.tr>

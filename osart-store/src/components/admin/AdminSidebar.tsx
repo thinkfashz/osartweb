@@ -16,7 +16,8 @@ import {
     TrendingUp,
     ShieldCheck,
     Zap,
-    Layers
+    Layers,
+    Webhook
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
@@ -35,6 +36,7 @@ const SYSTEM_ITEMS = [
     { name: 'Ventas', icon: BarChart3, path: '/admin/sales' },
     { name: 'Sincronización', icon: Zap, path: '/admin/sync' },
     { name: 'Base de Datos', icon: Database, path: '/admin/database' },
+    { name: 'Explorador API', icon: Webhook, path: '/admin/api-tester' },
 ];
 
 export default function AdminSidebar({ isOpen, setIsOpen }: { isOpen: boolean, setIsOpen: (val: boolean) => void }) {
