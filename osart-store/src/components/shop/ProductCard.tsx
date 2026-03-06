@@ -154,18 +154,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                     </h3>
                 </Link>
 
-                {/* Price + CTA */}
-                <div className="relative mt-auto pt-2 flex items-center justify-between gap-2 border-t border-white/5">
+                {/* Price + CTA Block */}
+                <div className="relative mt-auto pt-4 flex flex-col gap-3 border-t border-white/5">
 
                     {/* Floating Add to Cart Animation Overlay */}
                     <AnimatePresence>
                         {showFloat && (
                             <motion.div
                                 initial={{ opacity: 0, scale: 0.5, y: 10 }}
-                                animate={{ opacity: 1, scale: 1, y: -30 }}
-                                exit={{ opacity: 0, scale: 1.2, y: -40 }}
+                                animate={{ opacity: 1, scale: 1, y: -45 }}
+                                exit={{ opacity: 0, scale: 1.2, y: -60 }}
                                 transition={{ duration: 0.4, type: "spring" }}
-                                className="absolute right-0 bottom-12 z-50 flex items-center justify-center w-10 h-10 bg-emerald-500 rounded-full shadow-[0_0_20px_rgba(16,185,129,0.5)] pointer-events-none"
+                                className="absolute right-4 bottom-16 z-50 flex items-center justify-center w-10 h-10 bg-emerald-500 rounded-full shadow-[0_0_20px_rgba(16,185,129,0.5)] pointer-events-none"
                             >
                                 <ShoppingCart size={18} className="text-white" />
                                 <motion.div
@@ -184,41 +184,59 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                         )}
                     </AnimatePresence>
 
-                    <div>
-                        <p className="text-[8px] text-zinc-600 font-mono uppercase mb-0.5">Precio unit.</p>
-                        <p className="text-lg font-black text-white tracking-tighter leading-none">
-                            ${(product.price || 0).toLocaleString('es-CL')}
-                        </p>
+                    {/* Price */}
+                    <div className="flex items-end justify-between">
+                        <div>
+                            <p className="text-[8px] text-zinc-500 font-mono uppercase tracking-[0.2em] mb-0.5">Valor Unitario</p>
+                            <p className="text-xl font-black text-white tracking-tighter leading-none">
+                                ${(product.price || 0).toLocaleString('es-CL')}
+                            </p>
+                        </div>
                     </div>
 
-                    <button
-                        onClick={handleAddToCart}
-                        disabled={adding || isOutOfStock}
-                        aria-label="Añadir al carrito"
-                        className={cn(
-                            'relative flex items-center gap-2 px-4 py-2.5 rounded-xl font-black uppercase text-[9px] tracking-widest transition-all duration-200 border shrink-0 overflow-hidden',
-                            isOutOfStock
-                                ? 'border-zinc-800 text-zinc-700 cursor-not-allowed bg-transparent'
-                                : adding || showFloat
-                                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-500'
-                                    : 'bg-electric-blue text-black border-transparent hover:bg-electric-blue/90 shadow-[0_0_15px_rgba(0,229,255,0.2)] hover:shadow-[0_0_25px_rgba(0,229,255,0.35)] active:scale-95'
-                        )}
-                    >
-                        {adding ? (
-                            <Zap size={13} className="animate-pulse" />
-                        ) : showFloat ? (
-                            <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 0.3 }}>
-                                <svg className="w-[13px] h-[13px]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                </svg>
-                            </motion.div>
-                        ) : (
-                            <ShoppingCart size={13} />
-                        )}
-                        <span className="hidden sm:inline">
-                            {isOutOfStock ? 'Agotado' : showFloat ? 'Añadido' : adding ? 'Añadiendo' : 'Añadir'}
-                        </span>
-                    </button>
+                    {/* Action Buttons Row */}
+                    <div className="flex items-center gap-2 mt-1">
+                        {/* Ver Detalles Button (Secondary) */}
+                        <Link
+                            href={`/product/${product.slug}`}
+                            className="flex-1 flex items-center justify-center gap-1.5 px-3 py-3 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-zinc-500 text-zinc-400 hover:text-white text-[9px] font-black uppercase tracking-[0.2em] transition-all duration-300"
+                        >
+                            Detalles
+                        </Link>
+
+                        {/* Añadir al Carrito Button (Primary Glow) */}
+                        <button
+                            onClick={handleAddToCart}
+                            disabled={adding || isOutOfStock}
+                            aria-label="Añadir al carrito"
+                            className={cn(
+                                'flex-[1.4] relative flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-black uppercase text-[9px] tracking-[0.2em] transition-all duration-300 overflow-hidden group/btn',
+                                isOutOfStock
+                                    ? 'border border-zinc-800 text-zinc-700 cursor-not-allowed bg-transparent'
+                                    : adding || showFloat
+                                        ? 'bg-emerald-500/10 border border-emerald-500/30 text-emerald-500'
+                                        : 'bg-electric-blue text-black hover:bg-white shadow-[0_0_20px_rgba(0,229,255,0.15)] hover:shadow-[0_0_30px_rgba(255,255,255,0.4)] active:scale-95'
+                            )}
+                        >
+                            {/* Hover light sweep effect */}
+                            <div className="absolute inset-0 -translate-x-full group-hover/btn:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none" />
+
+                            {adding ? (
+                                <Zap size={14} className="animate-pulse" />
+                            ) : showFloat ? (
+                                <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 0.3 }}>
+                                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                    </svg>
+                                </motion.div>
+                            ) : (
+                                <ShoppingCart size={13} className="group-hover/btn:-translate-x-0.5 transition-transform" />
+                            )}
+                            <span className="truncate relative z-10">
+                                {isOutOfStock ? 'Agotado' : showFloat ? 'Añadido' : adding ? 'Cargando' : 'Comprar'}
+                            </span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </motion.article>
