@@ -53,6 +53,7 @@ export const useProducts = (filter?: { name?: string; categoryId?: string }) => 
     }
 
     // -- 2. STALE: Try IndexedDB cache --
+    let hasLoadedInitialData = false;
     try {
       const cachedProducts = await getCache<AdminProduct[]>(CACHE_KEY_PRODUCTS);
       if (cachedProducts && cachedProducts.length > 0 && isMounted) {
@@ -67,12 +68,28 @@ export const useProducts = (filter?: { name?: string; categoryId?: string }) => 
         setData({ products: filtered });
         setDataSource('cache');
         setLoading(false);
+        hasLoadedInitialData = true;
       }
     } catch (err) { }
 
+    // If no cache, load mock data immediately to prevent LCP blocking (first visit)
+    if (!hasLoadedInitialData && isMounted) {
+      let filtered = MOCK_LOCAL_PRODUCTS;
+      if (filter?.name) {
+        const searchLower = filter.name.toLowerCase();
+        filtered = filtered.filter(p => p.name.toLowerCase().includes(searchLower) || p.sku?.toLowerCase().includes(searchLower));
+      }
+      if (filter?.categoryId) {
+        filtered = filtered.filter(p => p.category?.id === filter.categoryId || p.category_id === filter.categoryId);
+      }
+      setData({ products: filtered });
+      setDataSource('mock');
+      setLoading(false);
+    }
+
     // -- 3. REVALIDATE: From Custom DB or Default API --
     setIsValidating(true);
-    if (!data) setLoading(true);
+    // Remove setLoading(true) because we already showed mock/cache data
 
     try {
       let formatted: AdminProduct[] = [];
@@ -101,7 +118,14 @@ export const useProducts = (filter?: { name?: string; categoryId?: string }) => 
         const params = new URLSearchParams();
         if (filter?.name) params.append('search', filter.name);
         if (filter?.categoryId) params.append('category', filter.categoryId);
-        const res = await fetch(`/api/products?${params.toString()}`);
+
+        // Add timeout flag to fetch API using an AbortController matching the 8 second threshold
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+        const res = await fetch(`/api/products?${params.toString()}`, { signal: controller.signal });
+        clearTimeout(timeoutId);
+
         if (!res.ok) throw new Error('Failed to fetch products');
         const json = await res.json();
         formatted = (json.products || []).map((p: any) => {
@@ -168,18 +192,26 @@ export const useCategories = () => {
     }
 
     // -- 2. STALE: Cache --
+    let hasLoadedInitialData = false;
     try {
       const cached = await getCache<AdminCategory[]>(CACHE_KEY_CATEGORIES);
       if (cached && cached.length > 0 && isMounted) {
         setData({ categories: cached });
         setDataSource('cache');
         setLoading(false);
+        hasLoadedInitialData = true;
       }
     } catch (e) { }
 
+    // If no cache, load mock data immediately to prevent rendering delays (first visit)
+    if (!hasLoadedInitialData && isMounted) {
+      setData({ categories: MOCK_CATEGORIES });
+      setDataSource('mock');
+      setLoading(false);
+    }
+
     // -- 3. REVALIDATE --
     setIsValidating(true);
-    if (!data) setLoading(true);
 
     try {
       let formatted: AdminCategory[] = [];
@@ -193,7 +225,12 @@ export const useCategories = () => {
         formatted = await res.json();
         source = 'custom_db';
       } else {
-        const res = await fetch('/api/categories');
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 8000);
+
+        const res = await fetch('/api/categories', { signal: controller.signal });
+        clearTimeout(timeoutId);
+
         if (!res.ok) throw new Error('Failed to fetch categories');
         formatted = await res.json();
       }

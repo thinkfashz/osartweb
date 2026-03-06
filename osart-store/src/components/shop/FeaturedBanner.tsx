@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/hooks/useCart';
 import { toast } from 'sonner';
+import { SafeImage } from '@/components/ui/SafeImage';
 
 interface FeaturedProduct {
     id: string;
@@ -203,16 +204,19 @@ const FeaturedBanner: React.FC<FeaturedBannerProps> = ({ products }) => {
                             {/* Glow halo */}
                             <div className="absolute inset-10 bg-electric-blue/10 blur-[80px] rounded-full animate-pulse-glow pointer-events-none" />
 
-                            {/* Product image */}
-                            <div className="relative aspect-square w-full max-w-[380px] flex items-center justify-center p-8">
+                            <div className="relative aspect-square w-full max-w-[380px] p-8">
                                 {p.image_url ? (
-                                    <img
+                                    <SafeImage
                                         src={p.image_url}
                                         alt={title}
-                                        className="relative z-10 max-h-[320px] max-w-full object-contain drop-shadow-[0_20px_60px_rgba(0,229,255,0.25)]"
+                                        priority={true}
+                                        sizes="(max-width: 768px) 100vw, 380px"
+                                        className="object-contain drop-shadow-[0_20px_60px_rgba(0,229,255,0.25)]"
                                     />
                                 ) : (
-                                    <Zap size={180} className="text-electric-blue opacity-15 relative z-10 drop-shadow-[0_0_50px_rgba(0,229,255,0.3)]" />
+                                    <div className="w-full h-full flex items-center justify-center">
+                                        <Zap size={180} className="text-electric-blue opacity-15 relative z-10 drop-shadow-[0_0_50px_rgba(0,229,255,0.3)]" />
+                                    </div>
                                 )}
                             </div>
                         </motion.div>
