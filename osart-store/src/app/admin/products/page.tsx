@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import {
+    WifiOff,
     Search,
     Plus,
     RefreshCcw,
@@ -14,7 +15,6 @@ import {
     Search as SearchIcon,
     X,
     Database,
-    WifiOff,
     CheckCircle2,
     Activity
 } from 'lucide-react';
@@ -28,6 +28,7 @@ import ProductImage from '@/components/admin/ProductImage';
 import { DataTable } from '@/components/admin/ui/DataTable';
 import { AdminProduct } from '@/types/admin';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useProducts } from '@/hooks/useShop';
 
 export default function ProductsPage() {
     const router = useRouter();
