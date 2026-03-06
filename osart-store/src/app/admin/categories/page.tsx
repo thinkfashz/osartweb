@@ -182,29 +182,18 @@ function CategoryModal({
 }
 
 // ─── Main Page ──────────────────────────────────────────────────────────────
+import { useCategories } from '@/hooks/useShop';
+
 export default function CategoriesPage() {
-    const [categories, setCategories] = useState<Category[]>([]);
-    const [loading, setLoading] = useState(true);
+    const { data, loading: hookLoading, isValidating, mutate } = useCategories();
+    const categories = data?.categories || [];
+    const loading = hookLoading && categories.length === 0;
+
     const [search, setSearch] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingCategory, setEditingCategory] = useState<Category | null>(null);
     const [isSaving, setIsSaving] = useState(false);
     const [deletingId, setDeletingId] = useState<string | null>(null);
-
-    const fetchCategories = useCallback(async () => {
-        setLoading(true);
-        try {
-            const res = await fetch('/api/categories');
-            const data = await res.json();
-            setCategories(Array.isArray(data) ? data : []);
-        } catch {
-            toast.error('Error al cargar categorías');
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
-    useEffect(() => { fetchCategories(); }, [fetchCategories]);
 
     const openCreate = () => { setEditingCategory(null); setIsModalOpen(true); };
     const openEdit = (cat: Category) => { setEditingCategory(cat); setIsModalOpen(true); };
@@ -223,13 +212,13 @@ export default function CategoriesPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body),
             });
-            const data = await res.json();
+            const dataResp = await res.json();
 
-            if (!res.ok) { toast.error(data.error || 'Error al guardar'); return; }
+            if (!res.ok) { toast.error(dataResp.error || 'Error al guardar'); return; }
 
-            toast.success(isEdit ? `"${data.name}" actualizado ✓` : `"${data.name}" creado ✓`);
+            toast.success(isEdit ? `"${dataResp.name}" actualizado ✓` : `"${dataResp.name}" creado ✓`);
             closeModal();
-            fetchCategories();
+            mutate();
         } catch {
             toast.error('Error de conexión');
         } finally {
@@ -244,7 +233,7 @@ export default function CategoriesPage() {
             const res = await fetch(`/api/categories?id=${cat.id}`, { method: 'DELETE' });
             if (!res.ok) { const d = await res.json(); toast.error(d.error || 'Error al eliminar'); return; }
             toast.success(`"${cat.name}" eliminado`);
-            setCategories(prev => prev.filter(c => c.id !== cat.id));
+            mutate();
         } catch {
             toast.error('Error de conexión');
         } finally {
@@ -252,12 +241,12 @@ export default function CategoriesPage() {
         }
     };
 
-    const filtered = categories.filter(c =>
+    const filtered = categories.filter((c: Category) =>
         c.name.toLowerCase().includes(search.toLowerCase()) ||
         (c.description ?? '').toLowerCase().includes(search.toLowerCase())
     );
 
-    const parentMap = Object.fromEntries(categories.map(c => [c.id, c.name]));
+    const parentMap = Object.fromEntries(categories.map((c: Category) => [c.id, c.name]));
 
     return (
         <PageTransition>
@@ -289,9 +278,9 @@ export default function CategoriesPage() {
                             />
                         </div>
                         {/* Refresh */}
-                        <button onClick={fetchCategories}
+                        <button onClick={mutate}
                             className="p-3 rounded-2xl bg-zinc-900 border border-zinc-800 text-zinc-500 hover:text-white hover:border-zinc-600 transition-all active:scale-95 shrink-0">
-                            <RefreshCcw size={18} className={loading ? 'animate-spin' : ''} />
+                            <RefreshCcw size={18} className={isValidating ? 'animate-spin' : ''} />
                         </button>
                         {/* Create */}
                         <button onClick={openCreate}
@@ -306,8 +295,8 @@ export default function CategoriesPage() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                     {[
                         { label: 'Total Categorías', value: categories.length, icon: Layers },
-                        { label: 'Con Subcategorías', value: categories.filter(c => c.parent_id).length, icon: FolderOpen },
-                        { label: 'Productos Indexados', value: categories.reduce((a, c) => a + (c.productCount || 0), 0), icon: Package },
+                        { label: 'Con Subcategorías', value: categories.filter((c: Category) => c.parent_id).length, icon: FolderOpen },
+                        { label: 'Productos Indexados', value: categories.reduce((a: number, c: Category) => a + (c.productCount || 0), 0), icon: Package },
                     ].map(stat => (
                         <div key={stat.label} className="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-5 flex items-center gap-4">
                             <div className="w-10 h-10 bg-zinc-800 rounded-xl flex items-center justify-center text-electric-blue shrink-0">
@@ -358,7 +347,7 @@ export default function CategoriesPage() {
                             </div>
                         ) : (
                             <AnimatePresence>
-                                {filtered.map((cat, i) => (
+                                {filtered.map((cat: Category, i: number) => (
                                     <motion.div
                                         key={cat.id}
                                         initial={{ opacity: 0, y: 4 }}
@@ -401,7 +390,7 @@ export default function CategoriesPage() {
                                         {/* Product count */}
                                         <div className="col-span-2 flex justify-center">
                                             <span className="px-3 py-1.5 rounded-xl bg-zinc-800 text-white text-[10px] font-black border border-zinc-700">
-                                                {cat.productCount}
+                                                {cat.productCount || 0}
                                             </span>
                                         </div>
 
