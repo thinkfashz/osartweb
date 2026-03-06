@@ -9,17 +9,7 @@ import {
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { PageTransition } from '@/components/admin/ui/PageTransition';
-
-interface Category {
-    id: string;
-    name: string;
-    slug: string;
-    description: string | null;
-    image_url: string | null;
-    parent_id: string | null;
-    productCount: number;
-    created_at: string;
-}
+import { AdminCategory } from '@/types/admin';
 
 interface CategoryFormData {
     name: string;
@@ -42,8 +32,8 @@ function CategoryModal({
     isOpen: boolean;
     onClose: () => void;
     onSave: (data: CategoryFormData) => void;
-    editing: Category | null;
-    categories: Category[];
+    editing: AdminCategory | null;
+    categories: AdminCategory[];
     isSaving: boolean;
 }) {
     const [form, setForm] = useState<CategoryFormData>(EMPTY_FORM);
@@ -191,12 +181,12 @@ export default function CategoriesPage() {
 
     const [search, setSearch] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [editingCategory, setEditingCategory] = useState<Category | null>(null);
+    const [editingCategory, setEditingCategory] = useState<AdminCategory | null>(null);
     const [isSaving, setIsSaving] = useState(false);
     const [deletingId, setDeletingId] = useState<string | null>(null);
 
     const openCreate = () => { setEditingCategory(null); setIsModalOpen(true); };
-    const openEdit = (cat: Category) => { setEditingCategory(cat); setIsModalOpen(true); };
+    const openEdit = (cat: AdminCategory) => { setEditingCategory(cat); setIsModalOpen(true); };
     const closeModal = () => { setIsModalOpen(false); setEditingCategory(null); };
 
     const handleSave = async (formData: CategoryFormData) => {
@@ -226,7 +216,7 @@ export default function CategoriesPage() {
         }
     };
 
-    const handleDelete = async (cat: Category) => {
+    const handleDelete = async (cat: AdminCategory) => {
         if (!confirm(`¿Eliminar "${cat.name}"? Los productos en esta categoría quedarán sin clasificar.`)) return;
         setDeletingId(cat.id);
         try {
@@ -241,12 +231,12 @@ export default function CategoriesPage() {
         }
     };
 
-    const filtered = categories.filter((c: Category) =>
+    const filtered = categories.filter((c: AdminCategory) =>
         c.name.toLowerCase().includes(search.toLowerCase()) ||
         (c.description ?? '').toLowerCase().includes(search.toLowerCase())
     );
 
-    const parentMap = Object.fromEntries(categories.map((c: Category) => [c.id, c.name]));
+    const parentMap = Object.fromEntries(categories.map((c: AdminCategory) => [c.id, c.name]));
 
     return (
         <PageTransition>
@@ -295,8 +285,8 @@ export default function CategoriesPage() {
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                     {[
                         { label: 'Total Categorías', value: categories.length, icon: Layers },
-                        { label: 'Con Subcategorías', value: categories.filter((c: Category) => c.parent_id).length, icon: FolderOpen },
-                        { label: 'Productos Indexados', value: categories.reduce((a: number, c: Category) => a + (c.productCount || 0), 0), icon: Package },
+                        { label: 'Con Subcategorías', value: categories.filter((c: AdminCategory) => c.parent_id).length, icon: FolderOpen },
+                        { label: 'Productos Indexados', value: categories.reduce((a: number, c: AdminCategory) => a + (c.productCount || 0), 0), icon: Package },
                     ].map(stat => (
                         <div key={stat.label} className="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-5 flex items-center gap-4">
                             <div className="w-10 h-10 bg-zinc-800 rounded-xl flex items-center justify-center text-electric-blue shrink-0">
@@ -347,7 +337,7 @@ export default function CategoriesPage() {
                             </div>
                         ) : (
                             <AnimatePresence>
-                                {filtered.map((cat: Category, i: number) => (
+                                {filtered.map((cat: AdminCategory, i: number) => (
                                     <motion.div
                                         key={cat.id}
                                         initial={{ opacity: 0, y: 4 }}
