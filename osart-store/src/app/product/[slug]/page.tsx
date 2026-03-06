@@ -56,7 +56,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
             </p>
             <div className="flex gap-4">
                 <button
-                    onClick={() => fetchData()}
+                    onClick={() => retry()}
                     className="px-8 py-4 bg-white text-black font-black uppercase italic tracking-widest hover:bg-electric-blue hover:text-white transition-all rounded-xl"
                 >
                     Reintentar Protocolo
