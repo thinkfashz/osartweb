@@ -19,6 +19,7 @@ export interface AdminCategory {
 export interface AdminProduct {
     id: string;
     name: string;
+    slug?: string;
     description?: string;
     price?: number;
     stock: number;

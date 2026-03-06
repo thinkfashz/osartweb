@@ -29,6 +29,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             setSession(currentSession);
             setUser(currentSession?.user ?? null);
             setLoading(false);
+        }).catch((error) => {
+            console.error('Supabase getSession error:', error);
+            setSession(null);
+            setUser(null);
+            setLoading(false);
         });
 
         // Listen for changes
