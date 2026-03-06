@@ -48,7 +48,8 @@ export default function ProductsPage() {
         loading: initialLoading,
         isValidating,
         error,
-        dataSource
+        dataSource,
+        mutate
     } = useProducts({ name: debouncedSearch });
 
     // We consider it "loading" strictly if there's no data and it's doing the intial fetch
