@@ -5,6 +5,7 @@ import Footer from "@/components/layout/Footer";
 import { Providers } from "./providers";
 import { PageWrapper } from "@/components/layout/PageWrapper";
 import { ThemeProvider } from "@/context/ThemeContext";
+import { TopUtilityBar } from "@/components/layout/TopUtilityBar";
 
 export const metadata: Metadata = {
   title: "Osart Repuestos Electrónicos | La energía que mueve tus reparaciones",
@@ -42,6 +43,7 @@ export default function RootLayout({
       <body className="flex flex-col min-h-screen safe-area-pb overflow-x-hidden bg-[#050505] text-white">
         <Providers>
           <ThemeProvider>
+            <TopUtilityBar />
             <Navbar />
             <main className="flex-grow pt-20 md:pt-24 safe-area-pt">
               <PageWrapper>

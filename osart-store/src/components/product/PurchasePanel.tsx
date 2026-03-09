@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ShoppingCart, Zap, Package, ShieldCheck, Heart, AlertTriangle } from 'lucide-react';
+import { ShoppingCart, Zap, Package, ShieldCheck, Heart } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { Product } from '@/lib/graphql/types';
@@ -12,7 +12,8 @@ interface PurchasePanelProps {
     product: Product;
 }
 
-export function PurchasePanel({ product }: PurchasePanelProps) {
+export function PurchasePanel({ product: rawProduct }: PurchasePanelProps) {
+    const product = rawProduct as any;
     const [quantity, setQuantity] = useState(1);
     const { addToCart } = useCart();
     const [isAdding, setIsAdding] = useState(false);
@@ -21,12 +22,12 @@ export function PurchasePanel({ product }: PurchasePanelProps) {
         setIsAdding(true);
         try {
             await addToCart(product as any, quantity);
-            toast.success("COMPONENTE SINCRONIZADO", {
-                description: `${product.name} añadido al búfer de salida.`
+            toast.success("AGREGADO AL SISTEMA", {
+                description: `${product.name} listo para despacho.`
             });
         } catch (err) {
-            toast.error("ERROR DE PROTOCOLO", {
-                description: "No se pudo añadir el componente al inventario."
+            toast.error("ERROR", {
+                description: "No se pudo procesar la solicitud."
             });
         } finally {
             setIsAdding(false);
@@ -34,116 +35,109 @@ export function PurchasePanel({ product }: PurchasePanelProps) {
     };
 
     return (
-        <div className="space-y-10">
+        <div className="space-y-12">
             <div className="space-y-6">
-                <div className="flex flex-wrap items-center gap-3">
-                    <span className="text-[8px] font-black uppercase tracking-[0.4em] px-2.5 py-1 bg-electric-blue/10 text-electric-blue rounded border border-electric-blue/20 backdrop-blur-md">
-                        {product.brand || 'OSART_GENERIC'} // {product.model || 'V1.0'}
+                <div className="flex items-center gap-4">
+                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-electric-blue">
+                        {product.brand || 'OSART_INDUSTRIAL'}
                     </span>
-                    <span className="text-[8px] font-mono uppercase tracking-[0.2em] text-white/40">
-                        HASH: {(product.sku || product.id.slice(0, 12)).toUpperCase()}
+                    <span className="text-[9px] font-mono text-muted-foreground">
+                        REF_{(product.sku || product.id.slice(0, 6)).toUpperCase()}
                     </span>
                 </div>
 
-                <h1 className="text-4xl lg:text-6xl font-black uppercase italic tracking-tighter leading-[0.9] text-white">
+                <h1 className="text-5xl lg:text-7xl font-black uppercase italic tracking-tighter leading-[0.85] text-foreground">
                     {product.name}
                 </h1>
 
-                <div className="flex items-center gap-6 pt-4">
-                    <div className="flex flex-col">
-                        <div className="text-[8px] font-mono text-electric-blue/60 uppercase tracking-widest mb-1">Precio Unitario</div>
-                        <div className="flex items-baseline gap-2">
-                            <span className="text-5xl font-black text-white italic tracking-tighter">
-                                ${(product.price || 0).toLocaleString('es-CL')}
-                            </span>
-                            <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest">CLP</span>
-                        </div>
+                <div className="flex flex-col gap-2 pt-4">
+                    {product.original_price && (
+                        <span className="text-xl font-black text-muted-foreground line-through decoration-red-500/50 italic tracking-tighter">
+                            ${(product.original_price * 1000).toLocaleString('es-CL')}
+                        </span>
+                    )}
+                    <div className="flex items-baseline gap-4">
+                        <span className="text-7xl font-black text-foreground italic tracking-tighter">
+                            ${(product.price * 1000).toLocaleString('es-CL')}
+                        </span>
+                        <span className="text-[10px] font-black text-foreground/40 uppercase tracking-widest">CLP_NETO</span>
                     </div>
                 </div>
             </div>
 
-            {/* System Status */}
-            <div className="grid grid-cols-2 gap-4 py-8 border-y border-white/5">
-                <div className="flex items-center gap-3">
-                    <div className={cn(
-                        "w-2 h-2 rounded-full",
-                        product.stock > 10 ? "bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.4)]" :
-                            product.stock > 0 ? "bg-amber-500 shadow-[0_0_10px_rgba(245,158,11,0.4)]" :
-                                "bg-rose-500 shadow-[0_0_10px_rgba(244,63,94,0.4)]"
-                    )} />
-                    <div className="flex flex-col">
-                        <span className="text-[9px] font-black uppercase tracking-widest text-white/90">Estado de Stock</span>
-                        <span className="text-[8px] font-mono text-white/40 uppercase">
-                            {product.stock > 0 ? `${product.stock} UNI DISPONIBLES` : "REPOSICIÓN REQUERIDA"}
+            {/* Simple Status Grid */}
+            <div className="grid grid-cols-2 gap-px bg-foreground/5 border-y border-foreground/5 py-8">
+                <div className="flex flex-col gap-1">
+                    <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">DISPONIBILIDAD</span>
+                    <div className="flex items-center gap-2">
+                        <div className={cn(
+                            "w-2 h-2 rounded-full",
+                            (product.stock || product.stock_quantity) > 0 ? "bg-emerald-500 animate-pulse" : "bg-red-500"
+                        )} />
+                        <span className="text-sm font-black uppercase italic tracking-tighter">
+                            {(product.stock || product.stock_quantity) > 0 ? 'STOCK_ACTIVO' : 'SIN_EXISTENCIAS'}
                         </span>
                     </div>
                 </div>
-                <div className="flex items-center gap-3">
-                    <Zap size={16} className="text-electric-blue" />
-                    <div className="flex flex-col">
-                        <span className="text-[9px] font-black uppercase tracking-widest text-white/90">Despacho Priority</span>
-                        <span className="text-[8px] font-mono text-white/40 uppercase">ENVÍO EN &lt; 2 HORAS</span>
+                <div className="flex flex-col gap-1">
+                    <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">DESPACHO</span>
+                    <div className="flex items-center gap-2 text-electric-blue">
+                        <Zap size={14} fill="currentColor" />
+                        <span className="text-sm font-black uppercase italic tracking-tighter">EXPRESS_PRIORITY</span>
                     </div>
                 </div>
             </div>
 
-            {/* Operational Controls */}
-            <div className="space-y-6">
-                <div className="flex flex-col sm:flex-row items-stretch gap-4">
-                    <div className="flex items-center bg-zinc-900 border border-white/10 rounded-xl overflow-hidden">
+            {/* Actions */}
+            <div className="space-y-8">
+                <div className="flex flex-col lg:flex-row items-stretch gap-4">
+                    <div className="flex items-center border border-foreground/10 rounded-full h-20 px-4">
                         <button
                             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                            className="w-14 h-14 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/5 transition-all text-xl"
+                            className="w-12 h-12 flex items-center justify-center text-foreground/40 hover:text-foreground transition-all text-2xl font-black"
                         >-</button>
-                        <div className="w-14 text-center font-mono text-sm text-white">{quantity.toString().padStart(2, '0')}</div>
+                        <div className="w-16 text-center font-black text-xl text-foreground italic tracking-tighter">{quantity.toString().padStart(2, '0')}</div>
                         <button
-                            onClick={() => setQuantity(Math.min(product.stock || 99, quantity + 1))}
-                            className="w-14 h-14 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/5 transition-all text-xl"
+                            onClick={() => setQuantity(Math.min(product.stock || product.stock_quantity || 99, quantity + 1))}
+                            className="w-12 h-12 flex items-center justify-center text-foreground/40 hover:text-foreground transition-all text-2xl font-black"
                         >+</button>
                     </div>
 
                     <button
                         onClick={handleAddToCart}
-                        disabled={product.stock === 0 || isAdding}
+                        disabled={(product.stock === 0 && product.stock_quantity === 0) || isAdding}
                         className={cn(
-                            "flex-grow flex items-center justify-center gap-3 px-8 py-4 font-black uppercase italic tracking-widest transition-all rounded-xl relative overflow-hidden group/buy",
-                            product.stock === 0
-                                ? "bg-zinc-900 text-white/20 border border-white/5 cursor-not-allowed"
-                                : "bg-electric-blue text-background hover:scale-[1.02] active:scale-[0.98] shadow-[0_0_30px_rgba(0,240,255,0.2)]"
+                            "flex-grow h-20 flex items-center justify-center gap-4 font-black uppercase italic tracking-tighter text-xl transition-all rounded-full overflow-hidden",
+                            (product.stock === 0 && product.stock_quantity === 0)
+                                ? "bg-foreground/5 text-foreground/20 cursor-not-allowed"
+                                : "bg-foreground text-background hover:scale-[1.02] active:scale-[0.98] shadow-2xl"
                         )}
                     >
-                        {isAdding ? (
-                            <div className="w-5 h-5 border-2 border-background/30 border-t-background rounded-full animate-spin" />
-                        ) : (
-                            <>
-                                <ShoppingCart size={20} className="group-hover/buy:rotate-12 transition-transform" />
-                                <span>SINCRONIZAR A PEDIDO</span>
-                            </>
-                        )}
+                        {isAdding ? "PROCESANDO..." : "ADQUIRIR COMPONENTE"}
                     </button>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                    <button className="flex items-center justify-center gap-2 py-4 rounded-xl border border-white/10 bg-white/5 text-[10px] font-black uppercase tracking-[0.2em] text-white/60 hover:text-white hover:border-white/20 transition-all">
-                        <Heart size={14} />
+                    <button className="h-16 rounded-full border border-foreground/10 flex items-center justify-center gap-3 font-black uppercase italic tracking-widest text-[10px] text-muted-foreground hover:bg-foreground hover:text-background transition-all">
+                        <Heart size={16} />
                         FAVORITOS
                     </button>
-                    <button className="flex items-center justify-center gap-2 py-4 rounded-xl border border-white/10 bg-white/5 text-[10px] font-black uppercase tracking-[0.2em] text-white/60 hover:text-white hover:border-white/20 transition-all">
-                        <Package size={14} />
-                        GUÍA TÉCNICA
+                    <button className="h-16 rounded-full border border-foreground/10 flex items-center justify-center gap-3 font-black uppercase italic tracking-widest text-[10px] text-muted-foreground hover:bg-foreground hover:text-background transition-all">
+                        <Package size={16} />
+                        DETALLES
                     </button>
                 </div>
             </div>
 
-            {/* Technical Trust Markers */}
-            <div className="p-4 bg-zinc-950/50 border border-white/5 rounded-xl flex items-start gap-4 backdrop-blur-md">
-                <ShieldCheck className="text-emerald-500 flex-shrink-0" size={18} />
-                <div className="space-y-1">
-                    <p className="text-[9px] font-black text-white uppercase tracking-widest">CERTIFICACIÓN OSART_PRO</p>
-                    <p className="text-[8px] font-mono text-white/40 uppercase leading-relaxed">
-                        Este componente ha pasado las pruebas de conductividad y resistencia antes de ser etiquetado para su distribución.
-                    </p>
+            {/* Guarantee */}
+            <div className="p-8 border-l-4 border-emerald-500 bg-emerald-500/5">
+                <div className="flex items-center gap-3 mb-2">
+                    <ShieldCheck size={20} className="text-emerald-500" />
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">OSART_PROTECTION_PLAN</span>
                 </div>
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest leading-relaxed">
+                    Certificación de integridad hardware garantizada por 12 meses.
+                </p>
             </div>
         </div>
     );

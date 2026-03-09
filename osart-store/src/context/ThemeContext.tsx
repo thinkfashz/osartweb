@@ -2,17 +2,19 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 
-type Theme = 'dark' | 'light';
+export type Theme = 'dark' | 'light' | 'red';
 
 interface ThemeContextValue {
     theme: Theme;
-    toggleTheme: () => void;
+    setTheme: (theme: Theme) => void;
+    nextTheme: () => void;
     isDark: boolean;
 }
 
 const ThemeContext = createContext<ThemeContextValue>({
     theme: 'dark',
-    toggleTheme: () => { },
+    setTheme: () => { },
+    nextTheme: () => { },
     isDark: true,
 });
 
@@ -21,15 +23,25 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
     useEffect(() => {
         const stored = localStorage.getItem('osart_theme') as Theme | null;
-        if (stored === 'light' || stored === 'dark') {
+        if (stored === 'light' || stored === 'dark' || stored === 'red') {
             setTheme(stored);
             document.documentElement.setAttribute('data-theme', stored);
         }
     }, []);
 
-    const toggleTheme = useCallback(() => {
+    const updateTheme = (newTheme: Theme) => {
+        setTheme(newTheme);
+        localStorage.setItem('osart_theme', newTheme);
+        document.documentElement.setAttribute('data-theme', newTheme);
+    };
+
+    const nextTheme = useCallback(() => {
         setTheme(prev => {
-            const next = prev === 'dark' ? 'light' : 'dark';
+            let next: Theme;
+            if (prev === 'dark') next = 'light';
+            else if (prev === 'light') next = 'red';
+            else next = 'dark';
+
             localStorage.setItem('osart_theme', next);
             document.documentElement.setAttribute('data-theme', next);
             return next;
@@ -37,8 +49,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     return (
-        <ThemeContext.Provider value={{ theme, toggleTheme, isDark: theme === 'dark' }}>
-            <div data-theme={theme} className={theme === 'light' ? 'theme-light' : ''}>
+        <ThemeContext.Provider value={{ theme, setTheme: updateTheme, nextTheme, isDark: theme === 'dark' }}>
+            <div data-theme={theme} className={`min-h-screen transition-colors duration-500 theme-${theme}`}>
                 {children}
             </div>
         </ThemeContext.Provider>

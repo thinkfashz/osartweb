@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { ProductImage } from '@/lib/graphql/types';
-import { ImageIcon, Maximize2 } from 'lucide-react';
+import { SafeImage } from '@/components/ui/SafeImage';
 
 interface ProductGalleryProps {
     images: ProductImage[];
@@ -24,58 +24,62 @@ export function ProductGallery({ images }: ProductGalleryProps) {
 
     return (
         <div className="space-y-6">
-            <div className="aspect-square rounded-2xl bg-[#0a0a0a] border border-white/5 overflow-hidden relative group">
+            <div className="aspect-square rounded-[32px] bg-[#050505] border border-white/5 overflow-hidden relative group shadow-2xl">
                 {/* Structural Accents */}
-                <div className="absolute top-0 left-0 w-8 h-8 border-t border-l border-electric-blue/40 z-20" />
-                <div className="absolute bottom-0 right-0 w-8 h-8 border-b border-r border-electric-blue/40 z-20" />
+                <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-electric-blue/20 z-20 rounded-tl-[32px]" />
+                <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-electric-blue/20 z-20 rounded-br-[32px]" />
 
                 {/* Image Stage */}
                 <AnimatePresence mode="wait">
-                    <motion.img
+                    <motion.div
                         key={activeIndex}
-                        src={images[activeIndex].url}
-                        alt="Component View"
-                        initial={{ opacity: 0, scale: 1.05 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.95 }}
-                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                        className="w-full h-full object-contain p-8 lg:p-12 relative z-10 opacity-90 group-hover:opacity-100 transition-opacity"
-                    />
+                        initial={{ opacity: 0, scale: 0.95, filter: 'blur(10px)' }}
+                        animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                        exit={{ opacity: 0, scale: 1.05, filter: 'blur(10px)' }}
+                        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                        className="w-full h-full p-4 lg:p-8 relative z-10"
+                    >
+                        <SafeImage
+                            src={images[activeIndex].url}
+                            alt={`Product View ${activeIndex + 1}`}
+                            containerClassName="rounded-2xl"
+                            priority={true}
+                        />
+                    </motion.div>
                 </AnimatePresence>
 
                 {/* Technical Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none z-10" />
 
-                <div className="absolute top-6 right-6 flex flex-col items-end gap-1.5 pointer-events-none z-20">
-                    <div className="text-[7px] font-mono text-electric-blue uppercase tracking-[0.4em] bg-black/60 px-2 py-0.5 rounded-sm backdrop-blur-md">
-                        CAM_ACTIVE_CH_{activeIndex + 1}
+                <div className="absolute top-8 right-8 flex flex-col items-end gap-2 pointer-events-none z-20">
+                    <div className="text-[8px] font-mono text-electric-blue font-bold uppercase tracking-[0.5em] bg-black/80 px-3 py-1 rounded-full border border-white/5 backdrop-blur-md">
+                        CAM_CH_{activeIndex + 1}
                     </div>
                 </div>
 
-                <div className="absolute bottom-6 left-6 z-20">
-                    <button className="p-3 bg-black/60 hover:bg-electric-blue text-white transition-all rounded-lg border border-white/10 backdrop-blur-md group/btn">
-                        <Maximize2 size={16} className="group-hover/btn:scale-110 transition-transform" />
+                <div className="absolute bottom-8 left-8 z-20">
+                    <button className="w-12 h-12 flex items-center justify-center bg-black/80 hover:bg-electric-blue text-white transition-all rounded-2xl border border-white/10 backdrop-blur-md group/btn shadow-xl active:scale-90">
+                        <Maximize2 size={20} className="group-hover/btn:scale-120 transition-transform" />
                     </button>
                 </div>
             </div>
 
             {/* Thumbnail Navigation */}
-            <div className="flex gap-3 overflow-x-auto pb-4 no-scrollbar">
+            <div className="flex gap-4 overflow-x-auto pb-4 no-scrollbar">
                 {images.map((img, i) => (
                     <button
                         key={i}
                         onClick={() => setActiveIndex(i)}
                         className={cn(
-                            "relative flex-shrink-0 w-20 h-20 rounded-xl bg-zinc-900 border transition-all p-1 overflow-hidden group",
+                            "relative flex-shrink-0 w-24 h-24 rounded-[20px] bg-zinc-900 border-2 transition-all p-2 overflow-hidden group",
                             activeIndex === i
-                                ? "border-electric-blue shadow-[0_0_15px_rgba(0,240,255,0.2)]"
-                                : "border-white/5 hover:border-white/20 opacity-40 hover:opacity-100"
+                                ? "border-electric-blue shadow-[0_0_25px_rgba(0,240,255,0.2)] bg-zinc-900"
+                                : "border-white/5 hover:border-white/20 opacity-40 hover:opacity-100 bg-transparent"
                         )}
                     >
-                        <div className="absolute inset-0 bg-gradient-to-br from-white/[0.05] to-transparent" />
-                        <img src={img.url} alt={`View ${i + 1}`} className="w-full h-full object-contain relative z-10" />
+                        <SafeImage src={img.url} alt={`View ${i + 1}`} containerClassName="rounded-xl" />
                         {activeIndex === i && (
-                            <div className="absolute top-1 right-1 w-1 h-1 rounded-full bg-electric-blue animate-pulse z-20" />
+                            <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-electric-blue animate-pulse z-20 shadow-[0_0_8px_rgba(0,240,255,1)]" />
                         )}
                     </button>
                 ))}

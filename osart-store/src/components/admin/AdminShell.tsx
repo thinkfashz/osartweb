@@ -103,7 +103,37 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     if (role !== 'admin') return null;
 
     return (
-        <div className="flex h-screen bg-[#050505] text-white font-inter overflow-hidden relative">
+        <div className="flex h-screen bg-[#F8F9FE] dark:bg-[#050505] text-zinc-900 dark:text-white font-inter overflow-hidden relative">
+
+            {/* Rondón Animado: Background logic */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+                <motion.div
+                    animate={{
+                        x: [0, 100, 0],
+                        y: [0, -50, 0],
+                        scale: [1, 1.2, 1]
+                    }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                    className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-sky-200/40 dark:bg-sky-900/10 blur-[120px] rounded-full"
+                />
+                <motion.div
+                    animate={{
+                        x: [0, -80, 0],
+                        y: [0, 100, 0],
+                        scale: [1, 1.1, 1]
+                    }}
+                    transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                    className="absolute bottom-[10%] right-[5%] w-[35%] h-[35%] bg-cyan-200/30 dark:bg-cyan-900/10 blur-[100px] rounded-full"
+                />
+                <motion.div
+                    animate={{
+                        scale: [1, 1.3, 1],
+                        opacity: [0.3, 0.5, 0.3]
+                    }}
+                    transition={{ duration: 15, repeat: Infinity }}
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50%] h-[50%] bg-blue-100/20 dark:bg-blue-900/5 blur-[150px] rounded-full"
+                />
+            </div>
 
             {/* Mobile sidebar backdrop */}
             <AnimatePresence>
@@ -122,13 +152,13 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
             <AdminSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
 
             {/* Main column */}
-            <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative">
+            <div className="flex-1 flex flex-col min-w-0 overflow-hidden relative z-10">
                 <AdminTopbar
                     onMenuClick={() => setIsSidebarOpen(true)}
                     userEmail={user?.email}
                 />
 
-                <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-8 bg-zinc-950/50 custom-scrollbar pb-24 lg:pb-8">
+                <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 md:p-10 custom-scrollbar pb-24 lg:pb-10">
                     <AnimatePresence mode="sync">
                         <motion.div
                             key={pathname}
@@ -142,10 +172,6 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                         </motion.div>
                     </AnimatePresence>
                 </main>
-
-                {/* Ambient glows */}
-                <div className="absolute top-0 right-0 w-96 h-96 bg-electric-blue/5 blur-[120px] -z-10 pointer-events-none" />
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-zinc-900/5 blur-[100px] -z-10 pointer-events-none" />
             </div>
 
             {/* Mobile bottom navigation */}

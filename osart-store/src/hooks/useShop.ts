@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { AdminProduct, AdminCategory } from '@/types/admin';
 import { getCache, setCache } from '@/lib/storage';
-import { MOCK_LOCAL_PRODUCTS, MOCK_CATEGORIES } from '@/lib/mockData';
+import { MOCK_LOCAL_PRODUCTS, MOCK_CATEGORIES, MOCK_ORDERS } from '@/lib/mockData';
 
 const CACHE_KEY_PRODUCTS = 'osart_products_cache';
 const CACHE_KEY_CATEGORIES = 'osart_categories_cache';
@@ -265,6 +265,89 @@ export const useCategories = () => {
   const mutate = useCallback(async () => {
     await fetchCategories(true);
   }, [fetchCategories]);
+
+  return { data, loading, isValidating, error, dataSource, mutate };
+};
+export const useOrders = (userId?: string) => {
+  const [data, setData] = useState<{ orders: any[] } | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [isValidating, setIsValidating] = useState(false);
+  const [error, setError] = useState<Error | null>(null);
+  const [dataSource, setDataSource] = useState<'loading' | 'cache' | 'network' | 'mock' | 'custom_db'>('loading');
+
+  const fetchOrders = useCallback(async (isMounted: boolean = true) => {
+    const settings = getAppModeSettings();
+
+    // -- 1. DEMO MODE --
+    if (settings.mode === 'local') {
+      if (isMounted) {
+        setData({ orders: MOCK_ORDERS });
+        setDataSource('mock');
+        setLoading(false);
+        setIsValidating(false);
+        setError(null);
+      }
+      return;
+    }
+
+    // -- 2. REVALIDATE --
+    setIsValidating(true);
+    try {
+      if (!userId && !settings.url) {
+        setData({ orders: [] });
+        setDataSource('network');
+        return;
+      }
+
+      let orders: any[] = [];
+      let source: 'network' | 'custom_db' = 'network';
+
+      if (settings.url && settings.key) {
+        const queryUrl = new URL(`${settings.url}/rest/v1/orders`);
+        queryUrl.searchParams.append('select', '*,order_items(*,product:products(*))');
+        queryUrl.searchParams.append('order', 'created_at.desc');
+        if (userId) queryUrl.searchParams.append('user_id', `eq.${userId}`);
+
+        const res = await fetch(queryUrl.toString(), {
+          headers: { 'apikey': settings.key, 'Authorization': `Bearer ${settings.key}` }
+        });
+        if (!res.ok) throw new Error('Custom Database connection failed');
+        orders = await res.json();
+        source = 'custom_db';
+      } else {
+        const res = await fetch(`/api/orders?userId=${userId || ''}`);
+        if (!res.ok) throw new Error('Failed to fetch orders');
+        orders = await res.json();
+      }
+
+      if (!isMounted) return;
+      setData({ orders });
+      setDataSource(source);
+      setError(null);
+    } catch (err: any) {
+      console.error('Error fetching orders:', err);
+      if (isMounted && !data) {
+        setData({ orders: MOCK_ORDERS });
+        setDataSource('mock');
+        setError(err);
+      }
+    } finally {
+      if (isMounted) {
+        setLoading(false);
+        setIsValidating(false);
+      }
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchOrders(isMounted);
+    return () => { isMounted = false; };
+  }, [fetchOrders]);
+
+  const mutate = useCallback(async () => {
+    await fetchOrders(true);
+  }, [fetchOrders]);
 
   return { data, loading, isValidating, error, dataSource, mutate };
 };

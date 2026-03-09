@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Zap, ShoppingCart, ArrowUpRight, Tag } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/hooks/useCart';
@@ -14,7 +14,7 @@ interface FeaturedProduct {
     slug?: string;
     title?: string;
     name?: string;
-    price: number;
+    price?: number;
     description?: string;
     image_url?: string;
     category?: { name: string } | string;
@@ -28,7 +28,6 @@ interface FeaturedBannerProps {
 
 const FeaturedBanner: React.FC<FeaturedBannerProps> = ({ products }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [adding, setAdding] = useState(false);
     const { addToCart } = useCart();
     const [paused, setPaused] = useState(false);
 
@@ -38,7 +37,7 @@ const FeaturedBanner: React.FC<FeaturedBannerProps> = ({ products }) => {
 
     useEffect(() => {
         if (products.length <= 1 || paused) return;
-        const timer = setInterval(advance, 7000);
+        const timer = setInterval(advance, 8000);
         return () => clearInterval(timer);
     }, [products.length, paused, advance]);
 
@@ -46,234 +45,127 @@ const FeaturedBanner: React.FC<FeaturedBannerProps> = ({ products }) => {
 
     const p = products[currentIndex];
     const title = p.title || (p as any).name || '';
-    const categoryName =
-        (p as any).categoryData?.name ||
-        (typeof p.category === 'object' ? (p.category as any)?.name : p.category) ||
-        '';
     const slug = (p as any).slug || p.id;
-
-    const handleAddToCart = async () => {
-        setAdding(true);
-        try {
-            await addToCart(p as any, 1);
-            toast.success(`${title} añadido al carrito`);
-        } catch {
-            toast.error('Error al añadir al carrito');
-        } finally {
-            setAdding(false);
-        }
-    };
 
     return (
         <section
-            className="relative w-full bg-zinc-950 overflow-hidden min-h-[520px] lg:min-h-[680px] flex items-center"
+            className="relative w-full bg-background overflow-hidden min-h-[70vh] flex items-center py-20"
             onMouseEnter={() => setPaused(true)}
             onMouseLeave={() => setPaused(false)}
         >
-            {/* ── Retro background layers ── */}
-            <div className="absolute inset-0 retro-grid opacity-60 pointer-events-none" />
-            <div className="absolute inset-0 retro-scanlines opacity-30 pointer-events-none" />
-            <div className="absolute inset-0 pointer-events-none"
-                style={{ background: 'radial-gradient(ellipse 70% 60% at 70% 50%, rgba(0,229,255,0.06), transparent), radial-gradient(ellipse 50% 50% at 20% 50%, rgba(100,50,255,0.05), transparent)' }}
-            />
-
-            {/* Animated product BG image (blurred) */}
-            <AnimatePresence>
-                {p.image_url && (
-                    <motion.div
-                        key={`bg-${p.id}`}
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 1 }}
-                        className="absolute inset-0 pointer-events-none"
-                        style={{
-                            backgroundImage: `url(${p.image_url})`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            filter: 'blur(80px) saturate(0.3)',
-                            opacity: 0.07,
-                        }}
-                    />
-                )}
-            </AnimatePresence>
-
-            <div className="max-w-[1400px] mx-auto px-5 w-full relative z-10 py-16 lg:py-24">
+            <div className="max-w-[1400px] mx-auto px-5 w-full relative z-10">
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={p.id}
-                        initial={{ opacity: 0, x: 60 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -60 }}
-                        transition={{ duration: 0.55, ease: 'easeOut' }}
-                        className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.8 }}
+                        className="grid lg:grid-cols-2 gap-10 items-center"
                     >
-                        {/* ── Left: Content ── */}
+                        {/* Content */}
                         <div className="space-y-8 order-2 lg:order-1 text-center lg:text-left">
-                            {/* Featured badge */}
                             <motion.div
-                                initial={{ opacity: 0, y: 16 }}
+                                initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.1 }}
-                                className="inline-flex items-center gap-3 justify-center lg:justify-start"
+                                transition={{ delay: 0.2 }}
+                                className="inline-block text-[10px] font-black uppercase tracking-[0.4em] text-electric-blue"
                             >
-                                <div className="flex items-center gap-2 px-3 py-1.5 bg-electric-blue/10 border border-electric-blue/20 rounded-full">
-                                    <span className="flex h-1.5 w-1.5 rounded-full bg-electric-blue animate-ping" />
-                                    <span className="text-[9px] font-black uppercase tracking-[0.35em] text-electric-blue">Selección Destacada</span>
-                                </div>
-                                {categoryName && (
-                                    <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white/5 border border-white/10 rounded-full">
-                                        <Tag size={10} className="text-zinc-500" />
-                                        <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-500">{categoryName}</span>
-                                    </div>
-                                )}
+                                PREMIUM_SELECTION_FY24
                             </motion.div>
 
-                            {/* Title */}
                             <motion.h2
-                                initial={{ opacity: 0, y: 24 }}
+                                initial={{ opacity: 0, y: 30 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.18 }}
-                                className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter uppercase italic leading-[0.88] text-white"
+                                transition={{ delay: 0.3 }}
+                                className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter uppercase italic leading-[0.85] text-foreground"
                             >
                                 {title}
                             </motion.h2>
 
-                            {/* Description */}
                             <motion.p
-                                initial={{ opacity: 0, y: 16 }}
+                                initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.28 }}
-                                className="text-zinc-400 text-base lg:text-lg max-w-lg mx-auto lg:mx-0 leading-relaxed"
+                                transition={{ delay: 0.4 }}
+                                className="text-muted-foreground text-lg max-w-lg mx-auto lg:mx-0"
                             >
-                                {p.description || 'Componente de alta precisión certificado para reparaciones industriales críticas.'}
+                                {p.description || 'Ingeniería de vanguardia aplicada a componentes electrónicos de alta precisión.'}
                             </motion.p>
 
-                            {/* Price + CTAs */}
                             <motion.div
-                                initial={{ opacity: 0, y: 16 }}
+                                initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.38 }}
-                                className="flex flex-col sm:flex-row items-center gap-6 justify-center lg:justify-start"
+                                transition={{ delay: 0.5 }}
+                                className="flex flex-col sm:flex-row items-center gap-8 justify-center lg:justify-start"
                             >
-                                {/* Price block */}
-                                <div className="flex flex-col items-center lg:items-start">
-                                    <span className="text-[9px] font-bold text-zinc-600 uppercase tracking-widest mb-1">Precio Especial</span>
-                                    <span className="text-5xl font-black text-white italic tracking-tighter leading-none">
+                                <div className="flex flex-col">
+                                    <span className="text-4xl font-black text-foreground italic tracking-tighter">
                                         ${(p.price || 0).toLocaleString('es-CL')}
                                     </span>
+                                    <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Valor Unitario</span>
                                 </div>
 
-                                <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
-                                    {/* Primary CTA */}
-                                    <Link
-                                        href={`/product/${slug}`}
-                                        className="flex items-center gap-3 px-8 py-4 bg-white text-black rounded-2xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-electric-blue transition-all duration-200 shadow-lg hover:shadow-[0_0_30px_rgba(0,229,255,0.3)] active:scale-95 group"
-                                    >
-                                        Ver Producto
-                                        <ArrowUpRight size={16} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                                    </Link>
-
-                                    {/* Add to cart */}
-                                    <button
-                                        onClick={handleAddToCart}
-                                        disabled={adding}
-                                        className="flex items-center gap-2 px-6 py-4 bg-electric-blue/10 border border-electric-blue/30 text-electric-blue rounded-2xl font-black uppercase text-[10px] tracking-widest hover:bg-electric-blue hover:text-black transition-all duration-200 disabled:opacity-60 active:scale-95"
-                                    >
-                                        <ShoppingCart size={15} className={adding ? 'animate-bounce' : ''} />
-                                        {adding ? 'Añadiendo...' : 'Añadir'}
-                                    </button>
-                                </div>
+                                <Link
+                                    href={`/product/${slug}`}
+                                    className="bg-foreground text-background px-10 py-4 rounded-full font-black uppercase italic tracking-tighter text-xs flex items-center gap-3 hover:scale-105 transition-all"
+                                >
+                                    DETALLES DEL MODELO
+                                    <ArrowRight size={18} />
+                                </Link>
                             </motion.div>
                         </div>
 
-                        {/* ── Right: Product visual ── */}
+                        {/* Image */}
                         <motion.div
-                            initial={{ scale: 0.88, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            transition={{ delay: 0.08, duration: 0.7, ease: 'easeOut' }}
-                            className="relative order-1 lg:order-2 flex items-center justify-center"
+                            initial={{ opacity: 0, scale: 0.9, rotate: 5 }}
+                            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                            transition={{ duration: 1, ease: 'easeOut' }}
+                            className="order-1 lg:order-2 flex justify-center"
                         >
-                            {/* Orbit rings */}
-                            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                                <div className="w-[340px] h-[340px] border border-white/5 rounded-full animate-spin-slow" />
-                                <div className="absolute w-[280px] h-[280px] border border-electric-blue/8 rounded-full" style={{ animation: 'spinSlow 30s linear infinite reverse' }} />
-                                <div className="absolute w-[420px] h-[420px] border border-white/3 rounded-full hidden lg:block" />
-                            </div>
-
-                            {/* Glow halo */}
-                            <div className="absolute inset-10 bg-electric-blue/10 blur-[80px] rounded-full animate-pulse-glow pointer-events-none" />
-
-                            <div className="relative aspect-square w-full max-w-[380px] p-8">
-                                {p.image_url ? (
-                                    <SafeImage
-                                        src={p.image_url}
-                                        alt={title}
-                                        priority={true}
-                                        sizes="(max-width: 768px) 100vw, 380px"
-                                        className="object-contain drop-shadow-[0_20px_60px_rgba(0,229,255,0.25)]"
-                                    />
-                                ) : (
-                                    <div className="w-full h-full flex items-center justify-center">
-                                        <Zap size={180} className="text-electric-blue opacity-15 relative z-10 drop-shadow-[0_0_50px_rgba(0,229,255,0.3)]" />
-                                    </div>
-                                )}
+                            <div className="relative aspect-square w-full max-w-[450px] group">
+                                <div className="absolute inset-0 bg-electric-blue/5 rounded-full blur-3xl group-hover:bg-electric-blue/10 transition-colors" />
+                                <SafeImage
+                                    src={p.image_url}
+                                    alt={title}
+                                    priority={true}
+                                    className="object-contain drop-shadow-2xl transition-transform duration-700 group-hover:scale-105"
+                                />
                             </div>
                         </motion.div>
                     </motion.div>
                 </AnimatePresence>
             </div>
 
-            {/* ── Navigation arrows ── */}
+            {/* Navigation */}
             {products.length > 1 && (
-                <>
+                <div className="absolute bottom-10 right-10 flex gap-4 z-20">
                     <button
                         onClick={() => setCurrentIndex(i => (i === 0 ? products.length - 1 : i - 1))}
-                        className="absolute left-4 top-1/2 -translate-y-1/2 z-30 p-3 bg-zinc-900/80 border border-white/10 rounded-xl text-zinc-400 hover:text-white hover:border-electric-blue/30 transition-all backdrop-blur-md"
+                        className="w-12 h-12 rounded-full border border-foreground/10 flex items-center justify-center hover:bg-foreground hover:text-background transition-all"
                     >
                         <ChevronLeft size={20} />
                     </button>
                     <button
                         onClick={() => setCurrentIndex(i => (i === products.length - 1 ? 0 : i + 1))}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 z-30 p-3 bg-zinc-900/80 border border-white/10 rounded-xl text-zinc-400 hover:text-white hover:border-electric-blue/30 transition-all backdrop-blur-md"
+                        className="w-12 h-12 rounded-full border border-foreground/10 flex items-center justify-center hover:bg-foreground hover:text-background transition-all"
                     >
                         <ChevronRight size={20} />
                     </button>
-                </>
-            )}
-
-            {/* ── Dot pagination ── */}
-            {products.length > 1 && (
-                <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 z-30">
-                    {products.map((_, idx) => (
-                        <button
-                            key={idx}
-                            onClick={() => setCurrentIndex(idx)}
-                            className={cn(
-                                'h-1.5 rounded-full transition-all duration-400',
-                                currentIndex === idx
-                                    ? 'w-8 bg-electric-blue shadow-[0_0_8px_rgba(0,229,255,0.6)]'
-                                    : 'w-1.5 bg-zinc-700 hover:bg-zinc-500'
-                            )}
-                        />
-                    ))}
-                    {/* Progress bar */}
-                    <div className="ml-3 h-[2px] w-16 bg-white/5 rounded-full overflow-hidden">
-                        <motion.div
-                            key={currentIndex}
-                            initial={{ width: '0%' }}
-                            animate={{ width: '100%' }}
-                            transition={{ duration: 7, ease: 'linear' }}
-                            className="h-full bg-electric-blue/60"
-                        />
-                    </div>
                 </div>
             )}
 
-            {/* Product count chip */}
-            <div className="absolute top-6 right-6 z-30 text-[9px] font-mono text-zinc-600 bg-zinc-900/80 border border-white/5 px-3 py-1.5 rounded-full backdrop-blur-md">
-                {String(currentIndex + 1).padStart(2, '0')} / {String(products.length).padStart(2, '0')}
-            </div>
+            {/* Pagination Line */}
+            {products.length > 1 && (
+                <div className="absolute bottom-0 left-0 w-full h-1 bg-foreground/5 overflow-hidden">
+                    <motion.div
+                        key={currentIndex}
+                        initial={{ width: '0%' }}
+                        animate={{ width: '100%' }}
+                        transition={{ duration: 8, ease: 'linear' }}
+                        className="h-full bg-electric-blue"
+                    />
+                </div>
+            )}
         </section>
     );
 };

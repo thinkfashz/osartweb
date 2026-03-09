@@ -22,6 +22,8 @@ import {
 import { motion } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation';
+import LogoAnimado from './ui/LogoAnimado';
+import { cn } from '@/lib/utils';
 
 const NAV_ITEMS = [
     { name: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
@@ -59,14 +61,14 @@ export default function AdminSidebar({ isOpen, setIsOpen }: { isOpen: boolean, s
         <motion.aside
             initial={false}
             animate={{
-                width: isCollapsed ? 80 : 280,
-                x: isOpen ? 0 : (typeof window !== 'undefined' && window.innerWidth < 1024 ? -280 : 0)
+                width: isCollapsed ? 100 : 300,
+                x: isOpen ? 0 : (typeof window !== 'undefined' && window.innerWidth < 1024 ? -300 : 0)
             }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className={`
-                fixed inset-y-0 left-0 z-50 lg:relative lg:translate-x-0
-                h-full bg-zinc-950 border-r border-zinc-900/50 flex flex-col shadow-[20px_0_40px_rgba(0,0,0,0.4)] lg:shadow-none
-            `}
+            transition={{ type: "spring", damping: 30, stiffness: 200 }}
+            className={cn(
+                "fixed inset-y-0 left-0 z-50 lg:relative lg:translate-x-0 h-full flex flex-col transition-all",
+                "bg-white/80 dark:bg-zinc-950/80 backdrop-blur-2xl border-r border-zinc-200/50 dark:border-zinc-800/50 shadow-2xl shadow-sky-500/5"
+            )}
         >
             {/* Mobile Close Button */}
             <button
@@ -88,21 +90,8 @@ export default function AdminSidebar({ isOpen, setIsOpen }: { isOpen: boolean, s
             </button>
 
             {/* Logo Section */}
-            <div className={`p-8 mb-4 flex items-center gap-4 ${isCollapsed ? 'justify-center px-0' : ''} transition-all`}>
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-zinc-800 to-zinc-950 border border-zinc-700/50 flex items-center justify-center shrink-0 shadow-2xl relative overflow-hidden group">
-                    <ShieldCheck size={20} className="text-electric-blue relative z-10" />
-                    <div className="absolute inset-0 bg-electric-blue/10 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </div>
-                {!isCollapsed && (
-                    <div className="flex flex-col">
-                        <span className="font-black text-xl tracking-tighter text-white uppercase italic leading-none">
-                            OSART<span className="text-electric-blue font-light">PRO</span>
-                        </span>
-                        <span className="text-[8px] font-mono text-zinc-500 uppercase tracking-[0.3em] mt-1 pulse-slow">
-                            Nivel Crítico 01
-                        </span>
-                    </div>
-                )}
+            <div className={`p-8 mb-4 ${isCollapsed ? 'px-0 flex justify-center' : ''}`}>
+                <LogoAnimado collapsed={isCollapsed} />
             </div>
 
             {/* Navigation */}
@@ -133,16 +122,23 @@ export default function AdminSidebar({ isOpen, setIsOpen }: { isOpen: boolean, s
             </nav>
 
             {/* Status & Logout */}
-            <div className="p-4 mt-auto border-t border-zinc-900/50 bg-black/20 backdrop-blur-xl">
+            <div className="p-6 mt-auto border-t border-zinc-200/50 dark:border-zinc-800/50 bg-zinc-50/50 dark:bg-black/20">
                 {!isCollapsed && (
-                    <div className="px-4 py-3 mb-4 rounded-xl bg-zinc-900/50 border border-zinc-800/50 flex items-center gap-3">
-                        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                        <span className="text-[9px] font-mono text-zinc-400 uppercase tracking-widest">Sistema Operativo</span>
+                    <div className="px-4 py-3 mb-4 rounded-2xl bg-sky-50 dark:bg-sky-500/10 border border-sky-100 dark:border-sky-500/20 flex items-center gap-3">
+                        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                        <span className="text-[10px] font-bold text-sky-600 dark:text-sky-400 uppercase tracking-widest">Nodos Estables</span>
                     </div>
                 )}
-                <button onClick={handleLogout} className={`flex items-center gap-3 px-4 py-3 w-full text-zinc-500 hover:text-red-400 hover:bg-red-950/20 rounded-xl transition-all group ${isCollapsed ? 'justify-center' : ''}`}>
-                    <LogOut size={18} className="group-hover:-translate-x-1 transition-transform" />
-                    {!isCollapsed && <span className="font-black text-[10px] uppercase tracking-widest">Cerrar Sesión</span>}
+                <button
+                    onClick={handleLogout}
+                    className={cn(
+                        "flex items-center gap-3 px-4 py-3.5 w-full rounded-2xl transition-all group",
+                        "text-zinc-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10",
+                        isCollapsed && "justify-center"
+                    )}
+                >
+                    <LogOut size={20} className="group-hover:-translate-x-1 transition-transform" />
+                    {!isCollapsed && <span className="font-extrabold text-[11px] uppercase tracking-wider">Desconectar</span>}
                 </button>
             </div>
         </motion.aside>
@@ -154,14 +150,26 @@ const NavItem = ({ item, pathname, isCollapsed }: any) => {
     return (
         <Link
             href={item.path}
-            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all group relative overflow-hidden ${isActive
-                ? 'bg-zinc-100 text-black font-black'
-                : 'text-zinc-500 hover:text-zinc-200 hover:bg-zinc-900/50'
-                } ${isCollapsed ? 'justify-center px-0' : ''}`}
+            className={cn(
+                "flex items-center gap-3 px-5 py-3.5 rounded-2xl transition-all group relative overflow-hidden",
+                isActive
+                    ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/20'
+                    : 'text-zinc-500 hover:text-sky-600 hover:bg-sky-50 dark:hover:bg-sky-500/5',
+                isCollapsed && "justify-center px-0 mx-2"
+            )}
         >
-            <item.icon size={18} className={`${isActive ? 'text-black' : 'group-hover:text-electric-blue group-hover:scale-110 transition-all duration-300'}`} />
+            <item.icon
+                size={20}
+                className={cn(
+                    "transition-all duration-300",
+                    isActive ? 'scale-110' : 'group-hover:scale-110'
+                )}
+            />
             {!isCollapsed && (
-                <span className={`text-[10px] font-black uppercase tracking-widest transition-all ${isActive ? 'translate-x-1' : 'group-hover:translate-x-1'}`}>
+                <span className={cn(
+                    "text-[11px] font-extrabold uppercase tracking-widest transition-all",
+                    isActive ? "ml-1" : "group-hover:ml-1"
+                )}>
                     {item.name}
                 </span>
             )}
@@ -169,7 +177,8 @@ const NavItem = ({ item, pathname, isCollapsed }: any) => {
             {isActive && !isCollapsed && (
                 <motion.div
                     layoutId="nav-active"
-                    className="absolute right-0 top-0 bottom-0 w-1 bg-electric-blue"
+                    className="absolute left-0 top-3 bottom-3 w-1.5 bg-white rounded-r-full"
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 />
             )}
         </Link>

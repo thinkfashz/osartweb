@@ -71,38 +71,96 @@
     --font-size-2xl: clamp(1.5rem, 1.4rem + 0.75vw, 2.25rem);
     --font-size-3xl: clamp(2rem, 1.8rem + 1vw, 3.5rem);
     --container-padding: clamp(1rem, 0.5rem + 2vw, 2.5rem);
+
+    /* --- Saas Global Tokens --- */
+    --saas-primary: 200 90% 55%;
+    /* Sky Blue - #3ABEF9-ish */
+    --saas-primary-soft: 200 90% 95%;
+    --saas-bg: 230 40% 98%;
+    --saas-card: 0 0% 100%;
+    --saas-border: 230 15% 92%;
+    --saas-text-main: 230 25% 15%;
+    --saas-text-soft: 230 15% 45%;
+    --saas-success: 142 70% 45%;
+    --saas-warning: 38 90% 55%;
+  }
+
+  /* --- Saas Glass --- */
+  .saas-glass {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .saas-glass-dark {
+    background: rgba(15, 15, 20, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
   }
 
   /* ─── LIGHT THEME ─── */
   [data-theme="light"],
-  .theme-light [data-theme="light"],
   .theme-light {
-    --background: 0 0% 97%;
+    --background: 0 0% 100%;
     --foreground: 222 20% 10%;
-    --card: 0 0% 100%;
+    --card: 0 0% 98%;
     --card-foreground: 222 20% 10%;
     --popover: 0 0% 100%;
     --popover-foreground: 222 20% 10%;
     --primary: 222 20% 10%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 220 14% 92%;
+    --secondary: 220 14% 96%;
     --secondary-foreground: 222 20% 10%;
-    --muted: 220 14% 92%;
+    --muted: 220 14% 96%;
     --muted-foreground: 220 9% 45%;
-    --accent: 220 14% 92%;
+    --accent: 220 14% 96%;
     --accent-foreground: 222 20% 10%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 220 13% 86%;
-    --input: 220 13% 86%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
     --ring: 222 20% 10%;
-    --radius: 0.75rem;
-    --electric-blue: 186 100% 38%;
-    --electric-blue-glow: 186 100% 38% / 0.3;
-    --retro-grid-color: rgba(0, 150, 180, 0.06);
-    --scanline-color: rgba(0, 0, 0, 0.02);
-    --glow-primary: rgba(0, 150, 180, 0.08);
-    --glow-secondary: rgba(80, 30, 200, 0.06);
+    --radius: 0.25rem;
+    --electric-blue: 0 0% 0%;
+    --electric-blue-glow: 0 0% 0% / 0.1;
+    --retro-grid-color: rgba(0, 0, 0, 0.05);
+    --scanline-color: rgba(0, 0, 0, 0.01);
+    --glow-primary: rgba(0, 0, 0, 0.04);
+    --glow-secondary: rgba(0, 0, 0, 0.02);
+  }
+
+  /* ─── RED INTENSE THEME ─── */
+  [data-theme="red"],
+  .theme-red {
+    --background: 0 100% 50%;
+    /* Pure Red */
+    --foreground: 0 0% 100%;
+    --card: 0 100% 45%;
+    --card-foreground: 0 0% 100%;
+    --popover: 0 100% 45%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 100% 50%;
+    --secondary: 0 100% 40%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 0 100% 40%;
+    --muted-foreground: 0 100% 85%;
+    --accent: 0 0% 100%;
+    --accent-foreground: 0 100% 50%;
+    --destructive: 0 0% 10%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 0 100% 60%;
+    --input: 0 100% 60%;
+    --ring: 0 0% 100%;
+    --radius: 0.1rem;
+    --electric-blue: 0 0% 100%;
+    --electric-blue-glow: 0 0% 100% / 0.5;
+    --retro-grid-color: rgba(255, 255, 255, 0.1);
+    --scanline-color: rgba(0, 0, 0, 0.05);
+    --glow-primary: rgba(255, 255, 255, 0.2);
+    --glow-secondary: rgba(0, 0, 0, 0.1);
   }
 
   /* ─── Safe areas ─── */
@@ -128,6 +186,20 @@
   }
 }
 
+/*
+- [x] Research current styling and layout <!-- id: 0 -->
+- [x] Create task.md <!-- id: 7 -->
+- [x] Research existing theme implementation <!-- id: 1 -->
+- [x] Initialize Triple-Theme Infrastructure <!-- id: 3 -->
+- [x] Implement theme switcher in Navbar <!-- id: 4 -->
+- [x] Redesign Hero and Sections based on Behance reference <!-- id: 9 -->
+- [x] Update ProductCard redesign <!-- id: 10 -->
+- [x] Redesign FeaturedBanner and PurchasePanel <!-- id: 12 -->
+- [ ] Add sophisticated hover animations <!-- id: 5 -->
+- [ ] Verify DB/Admin integration for all components <!-- id: 11 -->
+- [x] Final polish and verification <!-- id: 6 -->
+*/
+
 @layer base {
   * {
     @apply border-border;
@@ -136,7 +208,7 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
-    transition: background-color 0.4s ease, color 0.4s ease;
+    transition: background-color 0.6s cubic-bezier(0.4, 0, 0.2, 1), color 0.4s ease;
   }
 }
 
@@ -285,6 +357,15 @@
   background: linear-gradient(90deg, transparent 0%, hsl(var(--electric-blue) / 0.15) 50%, transparent 100%);
   background-size: 200% auto;
   animation: shimmer 3s linear infinite;
+}
+
+.shimmer-animate {
+  background: linear-gradient(90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.05) 50%,
+      rgba(255, 255, 255, 0) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
 }
 
 /* ─── Navbar ─── */

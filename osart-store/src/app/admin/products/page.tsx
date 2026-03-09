@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
     WifiOff,
@@ -12,7 +12,6 @@ import {
     Layers,
     Filter,
     ArrowUpRight,
-    Search as SearchIcon,
     X,
     Database,
     CheckCircle2,
@@ -34,10 +33,10 @@ export default function ProductsPage() {
     const router = useRouter();
     const [search, setSearch] = useState('');
     const [selectedProduct, setSelectedProduct] = useState<AdminProduct | null>(null);
-    const [debouncedSearch, setDebouncedSearch] = React.useState('');
+    const [debouncedSearch, setDebouncedSearch] = useState('');
 
     // Debounce: only update debouncedSearch 300ms after user stops typing
-    React.useEffect(() => {
+    useEffect(() => {
         const timer = setTimeout(() => setDebouncedSearch(search), 300);
         return () => clearTimeout(timer);
     }, [search]);
@@ -57,7 +56,7 @@ export default function ProductsPage() {
     const products = data?.products || [];
 
     // Optional user feedback on background sync
-    React.useEffect(() => {
+    useEffect(() => {
         if (!initialLoading && !isValidating && dataSource === 'network') {
             // Optional: you can show a tiny non-intrusive toast that data was updated from server
             // toast.success('Catálogo sincronizado', { duration: 1500, style: { fontSize: '10px' } });
@@ -171,7 +170,7 @@ export default function ProductsPage() {
                 <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4 md:gap-6">
                     <div className="flex items-center gap-4 flex-1 w-full xl:max-w-2xl">
                         <div className="relative flex-1 group">
-                            <SearchIcon className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-300 group-focus-within:text-zinc-950 transition-colors" size={18} />
+                            <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-zinc-300 group-focus-within:text-zinc-950 transition-colors" size={18} />
                             <input
                                 type="text"
                                 placeholder="IDENTIFICAR SKU O PRODUCTO..."
@@ -311,7 +310,7 @@ export default function ProductsPage() {
                             <div className="border-t border-zinc-100 bg-zinc-950 p-4 shrink-0">
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-3">
-                                        {dataSource === 'live' ? (
+                                        {(dataSource === 'network' || dataSource === 'custom_db') ? (
                                             <div className="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center justify-center relative">
                                                 <div className="absolute inset-0 rounded-lg shadow-[0_0_10px_rgba(16,185,129,0.3)] animate-pulse" />
                                                 <Database size={14} />
@@ -327,22 +326,22 @@ export default function ProductsPage() {
                                             </p>
                                             <p className={cn(
                                                 "text-[11px] font-black uppercase tracking-widest",
-                                                dataSource === 'live' ? "text-emerald-400" : "text-orange-400"
+                                                (dataSource === 'network' || dataSource === 'custom_db') ? "text-emerald-400" : "text-orange-400"
                                             )}>
-                                                {dataSource === 'live' ? 'ONLINE (Sincronizado)' : 'OFFLINE (Modo Caché)'}
+                                                {(dataSource === 'network' || dataSource === 'custom_db') ? 'ONLINE (Sincronizado)' : 'OFFLINE (Modo Caché)'}
                                             </p>
                                         </div>
                                     </div>
                                     <div className="text-right">
                                         <p className="text-[8px] font-mono text-zinc-500 uppercase tracking-widest">Origen Transaccional</p>
                                         <div className="flex items-center justify-end gap-1.5 mt-0.5">
-                                            {dataSource === 'live' ? (
+                                            {(dataSource === 'network' || dataSource === 'custom_db') ? (
                                                 <CheckCircle2 size={10} className="text-blue-500" />
                                             ) : (
                                                 <Activity size={10} className="text-zinc-500" />
                                             )}
                                             <p className="text-[10px] font-mono font-bold text-zinc-300">
-                                                {dataSource === 'live' ? '/api/products' : 'localStorage'}
+                                                {(dataSource === 'network' || dataSource === 'custom_db') ? '/api/products' : (dataSource === 'mock' ? 'Demo Mode' : 'localStorage')}
                                             </p>
                                         </div>
                                     </div>

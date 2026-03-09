@@ -4,13 +4,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import Hero from "@/components/layout/Hero";
 import ProductCard from "@/components/shop/ProductCard";
 import FeaturedBanner from "@/components/shop/FeaturedBanner";
-import { supabase } from "@/lib/supabase-auth";
 import { Loader2, Zap, ShieldCheck, CreditCard, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
 import { useProducts } from '@/hooks/useShop';
-import { AdminProduct } from '@/types/admin';
+import { OfferLinks } from '@/components/shop/OfferLinks';
 
 // ─── Animate on scroll — uses native IntersectionObserver to avoid Turbopack HMR issues ───
 function AnimateIn({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
@@ -73,6 +72,9 @@ export default function Home() {
           <p className="text-sm font-mono text-zinc-500 uppercase tracking-widest">Inicializando Motor de Catálogo...</p>
         </div>
       )}
+
+      {/* ── Falabella-Style Utility Layers ── */}
+      <OfferLinks />
 
       {/* ── Mobile Advantage Bar ── */}
       <div className="lg:hidden bg-zinc-950 py-4 border-b border-white/5">
@@ -161,7 +163,7 @@ export default function Home() {
                 <div className="glass h-full p-10 hover:border-electric-blue/30 transition-all group relative overflow-hidden cursor-pointer">
                   {/* Corner scanline accent */}
                   <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-electric-blue/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="absolute top-0 right-0 p-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="absolute top-0 right-0 p-3 opacity-1 group-hover:opacity-100 transition-opacity">
                     <div className="text-[7px] font-mono text-electric-blue/40 uppercase tracking-[0.3em] rotate-90 origin-right whitespace-nowrap">SEC_ZONE_{i + 1}</div>
                   </div>
 

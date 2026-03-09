@@ -25,7 +25,7 @@ const Navbar = () => {
     const [scrolled, setScrolled] = useState(false);
     const { user, signOut } = useAuth();
     const { itemCount } = useCart();
-    const { theme, toggleTheme, isDark } = useTheme();
+    const { theme, nextTheme } = useTheme();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -67,20 +67,26 @@ const Navbar = () => {
                             )}
                         </button>
 
-                        {/* Theme Toggle */}
+                        {/* 3-Way Theme Switcher */}
                         <button
-                            onClick={toggleTheme}
+                            onClick={nextTheme}
                             aria-label="Cambiar tema"
-                            className="relative p-2 rounded-lg text-muted-foreground hover:text-foreground transition-colors active:scale-90"
+                            className="relative p-2.5 rounded-full border border-foreground/10 hover:border-foreground/30 transition-all active:scale-90 flex items-center justify-center overflow-hidden"
                         >
                             <AnimatePresence mode="wait" initial={false}>
-                                {isDark ? (
-                                    <motion.span key="sun" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }}>
-                                        <Sun size={18} />
+                                {theme === 'dark' && (
+                                    <motion.span key="dark" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -20, opacity: 0 }} transition={{ duration: 0.2 }}>
+                                        <Moon size={16} className="text-white" />
                                     </motion.span>
-                                ) : (
-                                    <motion.span key="moon" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}>
-                                        <Moon size={18} />
+                                )}
+                                {theme === 'light' && (
+                                    <motion.span key="light" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -20, opacity: 0 }} transition={{ duration: 0.2 }}>
+                                        <Sun size={16} className="text-black" />
+                                    </motion.span>
+                                )}
+                                {theme === 'red' && (
+                                    <motion.span key="red" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -20, opacity: 0 }} transition={{ duration: 0.2 }}>
+                                        <Zap size={16} className="text-white" fill="white" />
                                     </motion.span>
                                 )}
                             </AnimatePresence>
