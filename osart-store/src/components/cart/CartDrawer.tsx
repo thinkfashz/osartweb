@@ -37,7 +37,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                     >
                         <div className="flex items-center justify-between p-6 border-b border-white/5">
                             <div className="flex items-center gap-3">
-                                <ShoppingBag className="text-electric-blue w-5 h-5" />
+                                <ShoppingBag className="text-sky-500 w-5 h-5" />
                                 <h2 className="text-lg font-bold tracking-tight uppercase font-mono italic">Protocolo_Carga</h2>
                             </div>
                             <button onClick={onClose} className="p-2 hover:bg-white/5 rounded-full transition-colors">
@@ -104,7 +104,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                                         <Plus className="w-3 h-3" />
                                                     </button>
                                                 </div>
-                                                <p className="text-sm font-black font-mono text-electric-blue italic">
+                                                <p className="text-sm font-black font-mono text-sky-500 italic">
                                                     ${((item.product?.price || 0) * (item.quantity || 0)).toLocaleString('es-CL')}
                                                 </p>
                                             </div>
@@ -131,7 +131,7 @@ export function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                                 <Link
                                     href="/checkout"
                                     onClick={onClose}
-                                    className="relative group block w-full py-5 bg-electric-blue text-black text-center font-black uppercase italic tracking-[.3em] overflow-hidden transition-all hover:scale-[1.02] active:scale-[0.98]"
+                                    className="relative group block w-full py-5 bg-sky-500 text-black text-center font-black uppercase italic tracking-[.3em] overflow-hidden transition-all hover:scale-[1.02] active:scale-[0.98]"
                                 >
                                     <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-20 transition-opacity" />
                                     <span className="relative z-10 flex items-center justify-center gap-3">

@@ -13,7 +13,7 @@ const MobileNavLink = ({ href, onClick, children, variant = 'default' }: { href:
     <Link
         href={href}
         onClick={onClick}
-        className={`text-2xl font-black uppercase italic tracking-tighter transition-all active:translate-x-2 ${variant === 'accent' ? 'text-electric-blue' : 'text-white'}`}
+        className={`text-2xl font-black uppercase italic tracking-tighter transition-all active:translate-x-2 ${variant === 'accent' ? 'text-sky-500' : 'text-zinc-900 dark:text-white'}`}
     >
         {children}
     </Link>
@@ -37,31 +37,31 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 safe-area-pt ${scrolled ? 'py-4 bg-background/80 backdrop-blur-xl border-b border-white/5 shadow-lg' : 'py-6 bg-transparent'}`}>
+            <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 safe-area-pt ${scrolled ? 'py-4 bg-white/70 dark:bg-zinc-950/70 backdrop-blur-2xl border-b border-zinc-200/50 dark:border-zinc-800/50 shadow-2xl' : 'py-6 bg-transparent'}`}>
                 <div className="max-w-[1400px] mx-auto px-5 md:px-10 flex items-center justify-between">
                     {/* Logo */}
                     <Link href="/" className="text-xl md:text-2xl font-black tracking-tighter flex items-center gap-2 group">
-                        <span className="text-white">OSART</span>
-                        <span className="w-1.5 h-1.5 rounded-full bg-electric-blue group-hover:scale-150 transition-transform duration-300 neon-glow" />
+                        <span className="text-zinc-900 dark:text-white capitalize">Osart</span>
+                        <span className="w-1.5 h-1.5 rounded-full bg-sky-500 group-hover:scale-150 transition-transform duration-300 shadow-[0_0_10px_rgba(14,165,233,0.5)]" />
                     </Link>
 
                     {/* Desktop Menu */}
                     <div className="hidden lg:flex items-center gap-10">
-                        <Link href="/catalog" className="navbar-link">Catálogo</Link>
-                        <Link href="/services" className="navbar-link">Servicios</Link>
-                        <Link href="/about" className="navbar-link">Nosotros</Link>
-                        <Link href="/admin" className="text-[10px] font-bold uppercase tracking-widest text-electric-blue hover:text-white transition-colors">Admin</Link>
+                        <Link href="/catalog" className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-500 hover:text-sky-500 transition-colors">Catálogo</Link>
+                        <Link href="/services" className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-500 hover:text-sky-500 transition-colors">Servicios</Link>
+                        <Link href="/about" className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-500 hover:text-sky-500 transition-colors">Nosotros</Link>
+                        <Link href="/admin" className="text-[10px] font-black uppercase tracking-[0.2em] px-4 py-1.5 rounded-full bg-sky-500/10 text-sky-500 hover:bg-sky-500 hover:text-white transition-all">Consola Admin</Link>
                     </div>
 
                     {/* Desktop Icons */}
                     <div className="hidden lg:flex items-center gap-6">
                         <button
                             onClick={() => setIsCartOpen(true)}
-                            className="relative group p-2 transition-transform active:scale-95"
+                            className="relative group p-2 transition-transform active:scale-95 bg-zinc-100 dark:bg-white/5 rounded-xl border border-transparent hover:border-sky-500/30 transition-all"
                         >
-                            <ShoppingCart size={20} className="text-muted-foreground group-hover:text-white transition-colors" />
+                            <ShoppingCart size={18} className="text-zinc-600 dark:text-zinc-400 group-hover:text-sky-500 transition-colors" />
                             {itemCount > 0 && (
-                                <span className="absolute -top-1 -right-1 w-4 h-4 bg-electric-blue text-background text-[10px] font-black rounded-full flex items-center justify-center animate-in zoom-in duration-300">
+                                <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-sky-500 text-white text-[9px] font-black rounded-full flex items-center justify-center shadow-lg shadow-sky-500/20 border-2 border-white dark:border-zinc-950">
                                     {itemCount}
                                 </span>
                             )}
@@ -93,17 +93,20 @@ const Navbar = () => {
                         </button>
 
                         {user ? (
-                            <div className="flex items-center gap-4 border-l border-white/10 pl-6">
+                            <div className="flex items-center gap-4 border-l border-zinc-200 dark:border-white/10 pl-6">
                                 <Link
                                     href="/profile"
                                     className="flex items-center gap-2 group/user"
                                 >
-                                    <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-electric-blue group-hover/user:bg-electric-blue/10 group-hover/user:border-electric-blue/30 transition-all">
-                                        <User size={14} />
+                                    <div className="w-10 h-10 rounded-xl bg-sky-500 text-white flex items-center justify-center shadow-lg shadow-sky-500/20 group-hover/user:scale-105 transition-all">
+                                        <User size={16} />
                                     </div>
                                     <div className="flex flex-col">
-                                        <span className="text-[8px] font-black uppercase tracking-[0.2em] text-zinc-500 group-hover/user:text-white transition-colors">OPERARIO_ACTIVO</span>
-                                        <span className="text-[10px] font-black uppercase tracking-widest text-white truncate max-w-[100px]">{user.email?.split('@')[0]}</span>
+                                        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-emerald-500 flex items-center gap-1">
+                                            <span className="w-1 h-1 rounded-full bg-current animate-pulse" />
+                                            Activo
+                                        </span>
+                                        <span className="text-[11px] font-black uppercase tracking-widest text-zinc-900 dark:text-white truncate max-w-[100px]">{user.email?.split('@')[0]}</span>
                                     </div>
                                 </Link>
                                 <button
@@ -128,15 +131,15 @@ const Navbar = () => {
                             onClick={() => setIsCartOpen(true)}
                             className="relative p-2 active:scale-90"
                         >
-                            <ShoppingCart size={22} className="text-white" />
+                            <ShoppingCart size={22} className="text-zinc-900 dark:text-white" />
                             {itemCount > 0 && (
-                                <span className="absolute 0 right-0 w-4 h-4 bg-electric-blue text-background text-[10px] font-black rounded-full flex items-center justify-center">
+                                <span className="absolute 0 right-0 w-4 h-4 bg-sky-500 text-white text-[10px] font-black rounded-full flex items-center justify-center">
                                     {itemCount}
                                 </span>
                             )}
                         </button>
                         <button
-                            className="p-2 text-white bg-white/5 rounded-lg active:scale-90 transition-transform"
+                            className="p-2 text-zinc-900 dark:text-white bg-zinc-100 dark:bg-white/5 rounded-xl active:scale-90 transition-transform"
                             onClick={() => setIsOpen(!isOpen)}
                         >
                             {isOpen ? <X size={24} /> : <Menu size={24} />}
@@ -176,7 +179,7 @@ const Navbar = () => {
                                                     className="flex items-center gap-3 px-4 py-3 text-xs font-black uppercase italic tracking-widest text-white/60 hover:text-white hover:bg-white/5 transition-all"
                                                     onClick={() => setIsOpen(false)}
                                                 >
-                                                    <Terminal size={14} className="text-electric-blue" />
+                                                    <Terminal size={14} className="text-sky-500" />
                                                     Panel de Control
                                                 </Link>
                                                 <Link
@@ -200,7 +203,7 @@ const Navbar = () => {
                                         <Link
                                             href="/login"
                                             onClick={() => setIsOpen(false)}
-                                            className="neon-button w-full text-center flex items-center justify-center gap-3 py-4"
+                                            className="w-full flex items-center justify-center gap-3 py-4 bg-sky-500 text-white rounded-2xl font-black uppercase tracking-[0.2em] text-xs shadow-lg shadow-sky-500/20"
                                         >
                                             <User size={18} />
                                             Acceso de Usuario

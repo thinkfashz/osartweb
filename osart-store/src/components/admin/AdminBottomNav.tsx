@@ -51,7 +51,7 @@ export default function AdminBottomNav({ onMenuClick }: { onMenuClick: () => voi
                             className={`flex flex-col items-center justify-center w-full h-full gap-1 transition-colors relative group ${isActive ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
                                 }`}
                         >
-                            <item.icon size={20} className={`transition-transform duration-300 ${isActive ? '-translate-y-1 text-electric-blue' : 'group-active:scale-95'}`} />
+                            <item.icon size={20} className={`transition-transform duration-300 ${isActive ? '-translate-y-1 text-sky-500' : 'group-active:scale-95'}`} />
 
                             <span className={`text-[9px] font-black uppercase tracking-widest transition-all duration-300 ${isActive ? 'translate-y-0 opacity-100' : 'translate-y-2 opacity-0'
                                 }`}>
@@ -62,7 +62,7 @@ export default function AdminBottomNav({ onMenuClick }: { onMenuClick: () => voi
                             {isActive && (
                                 <motion.div
                                     layoutId="bottom-nav-active"
-                                    className="absolute bottom-1 w-1 h-1 rounded-full bg-electric-blue shadow-[0_0_10px_rgba(0,229,255,0.5)]"
+                                    className="absolute bottom-1 w-1 h-1 rounded-full bg-sky-500 shadow-[0_0_10px_rgba(0,229,255,0.5)]"
                                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                                 />
                             )}

@@ -101,9 +101,9 @@ export default function CheckoutPage() {
                 <p className="text-zinc-500 font-mono text-sm mb-8 text-center max-w-xs">No se han detectado componentes en el búfer de salida.</p>
                 <button
                     onClick={() => router.push('/catalog')}
-                    className="group relative px-8 py-4 bg-transparent border border-electric-blue text-electric-blue font-black uppercase tracking-widest overflow-hidden transition-all hover:text-black"
+                    className="group relative px-8 py-4 bg-transparent border border-sky-500 text-sky-500 font-black uppercase tracking-widest overflow-hidden transition-all hover:text-black"
                 >
-                    <div className="absolute inset-0 bg-electric-blue translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                    <div className="absolute inset-0 bg-sky-500 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                     <span className="relative z-10 flex items-center gap-2">
                         Retornar al Catálogo <ArrowRight className="w-4 h-4" />
                     </span>
@@ -123,20 +123,20 @@ export default function CheckoutPage() {
                             <motion.div
                                 initial={false}
                                 animate={{
-                                    borderColor: idx <= currentStep ? 'var(--electric-blue)' : 'var(--zinc-800)',
-                                    color: idx <= currentStep ? 'var(--electric-blue)' : 'var(--zinc-600)',
+                                    borderColor: idx <= currentStep ? 'var(--sky-500)' : 'var(--zinc-800)',
+                                    color: idx <= currentStep ? 'var(--sky-500)' : 'var(--zinc-600)',
                                     backgroundColor: idx <= currentStep ? 'rgba(0, 243, 255, 0.05)' : 'rgba(0, 0, 0, 0)'
                                 }}
                                 className={cn(
                                     "w-12 h-12 rounded-none flex items-center justify-center border-2 transition-all",
-                                    idx < currentStep && "bg-electric-blue text-black border-electric-blue"
+                                    idx < currentStep && "bg-sky-500 text-black border-sky-500"
                                 )}
                             >
                                 {idx < currentStep ? <CheckCircle className="w-6 h-6" /> : <step.icon className="w-5 h-5" />}
                             </motion.div>
                             <span className={cn(
                                 "text-[10px] uppercase mt-3 tracking-[0.15em] font-black font-mono",
-                                idx <= currentStep ? 'text-electric-blue' : 'text-zinc-600'
+                                idx <= currentStep ? 'text-sky-500' : 'text-zinc-600'
                             )}>
                                 {step.title}
                             </span>
@@ -173,7 +173,7 @@ export default function CheckoutPage() {
                                                     placeholder="NOMBRE COMPLETO"
                                                     value={formData.name}
                                                     onChange={(e) => setFormData({ ...formData, name: e.target.value.toUpperCase() })}
-                                                    className="w-full bg-black border border-zinc-800 p-4 rounded-none text-white focus:border-electric-blue outline-none transition-colors font-mono text-sm placeholder:text-zinc-700"
+                                                    className="w-full bg-black border border-zinc-800 p-4 rounded-none text-white focus:border-sky-500 outline-none transition-colors font-mono text-sm placeholder:text-zinc-700"
                                                 />
                                             </div>
                                             <div className="space-y-1.5">
@@ -183,7 +183,7 @@ export default function CheckoutPage() {
                                                     placeholder="EMAIL@DOMAIN.COM"
                                                     value={formData.email}
                                                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                                    className="w-full bg-black border border-zinc-800 p-4 rounded-none text-white focus:border-electric-blue outline-none transition-colors font-mono text-sm placeholder:text-zinc-700"
+                                                    className="w-full bg-black border border-zinc-800 p-4 rounded-none text-white focus:border-sky-500 outline-none transition-colors font-mono text-sm placeholder:text-zinc-700"
                                                 />
                                             </div>
                                             <div className="space-y-1.5 relative">
@@ -194,7 +194,7 @@ export default function CheckoutPage() {
                                                         placeholder="CALLE, NUMERACIÓN, DEPTO"
                                                         value={formData.address}
                                                         onChange={(e) => setFormData({ ...formData, address: e.target.value.toUpperCase() })}
-                                                        className="w-full bg-black border border-zinc-800 p-4 rounded-none text-white focus:border-electric-blue outline-none transition-colors font-mono text-sm placeholder:text-zinc-700 pl-12"
+                                                        className="w-full bg-black border border-zinc-800 p-4 rounded-none text-white focus:border-sky-500 outline-none transition-colors font-mono text-sm placeholder:text-zinc-700 pl-12"
                                                     />
                                                     <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600" />
                                                 </div>
@@ -206,7 +206,7 @@ export default function CheckoutPage() {
                                                     placeholder="SANTIAGO, CHILE"
                                                     value={formData.city}
                                                     onChange={(e) => setFormData({ ...formData, city: e.target.value.toUpperCase() })}
-                                                    className="w-full bg-black border border-zinc-800 p-4 rounded-none text-white focus:border-electric-blue outline-none transition-colors font-mono text-sm placeholder:text-zinc-700"
+                                                    className="w-full bg-black border border-zinc-800 p-4 rounded-none text-white focus:border-sky-500 outline-none transition-colors font-mono text-sm placeholder:text-zinc-700"
                                                 />
                                             </div>
                                         </div>
@@ -215,7 +215,7 @@ export default function CheckoutPage() {
                                     <button
                                         onClick={handleNext}
                                         disabled={!formData.name || !formData.address || !formData.email}
-                                        className="group w-full py-5 bg-electric-blue text-black font-black uppercase tracking-[0.25em] transition-all disabled:opacity-30 flex items-center justify-center gap-3 active:scale-[0.98]"
+                                        className="group w-full py-5 bg-sky-500 text-black font-black uppercase tracking-[0.25em] transition-all disabled:opacity-30 flex items-center justify-center gap-3 active:scale-[0.98]"
                                     >
                                         Proceder al Pago <ArrowRight className="w-5 h-5" />
                                     </button>
@@ -242,8 +242,8 @@ export default function CheckoutPage() {
                                     <div className="bg-zinc-900/30 border border-zinc-800 p-8 space-y-6">
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-5">
-                                                <div className="w-12 h-12 bg-electric-blue/10 border border-electric-blue/20 flex items-center justify-center">
-                                                    <ShieldCheck className="w-6 h-6 text-electric-blue" />
+                                                <div className="w-12 h-12 bg-sky-500/10 border border-sky-500/20 flex items-center justify-center">
+                                                    <ShieldCheck className="w-6 h-6 text-sky-500" />
                                                 </div>
                                                 <div>
                                                     <p className="font-black uppercase tracking-widest text-sm">Transacción Encriptada</p>
@@ -271,7 +271,7 @@ export default function CheckoutPage() {
                                     <button
                                         onClick={handleNext}
                                         disabled={orderLoading}
-                                        className="group w-full py-5 bg-electric-blue text-black font-black uppercase tracking-[0.25em] transition-all disabled:opacity-30 relative overflow-hidden active:scale-[0.98]"
+                                        className="group w-full py-5 bg-sky-500 text-black font-black uppercase tracking-[0.25em] transition-all disabled:opacity-30 relative overflow-hidden active:scale-[0.98]"
                                     >
                                         <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 skew-x-[-20deg]" />
                                         <span className="relative z-10 flex items-center justify-center gap-3">
@@ -290,9 +290,9 @@ export default function CheckoutPage() {
                                     className="text-center py-16 bg-zinc-900/20 border border-zinc-800/50"
                                 >
                                     <div className="relative w-24 h-24 mx-auto mb-8">
-                                        <div className="absolute inset-0 bg-electric-blue/20 rounded-full blur-2xl animate-pulse" />
-                                        <div className="relative w-full h-full bg-black border-2 border-electric-blue flex items-center justify-center">
-                                            <CheckCircle className="w-12 h-12 text-electric-blue" />
+                                        <div className="absolute inset-0 bg-sky-500/20 rounded-full blur-2xl animate-pulse" />
+                                        <div className="relative w-full h-full bg-black border-2 border-sky-500 flex items-center justify-center">
+                                            <CheckCircle className="w-12 h-12 text-sky-500" />
                                         </div>
                                     </div>
                                     <h2 className="text-4xl font-black uppercase tracking-[0.2em] text-white mb-4">Misión Cumplida</h2>
@@ -303,7 +303,7 @@ export default function CheckoutPage() {
                                     <div className="max-w-xs mx-auto space-y-4">
                                         <Link
                                             href="/catalog"
-                                            className="block w-full py-4 bg-electric-blue text-black font-black uppercase tracking-widest text-xs transition-transform hover:scale-105"
+                                            className="block w-full py-4 bg-sky-500 text-black font-black uppercase tracking-widest text-xs transition-transform hover:scale-105"
                                         >
                                             Nueva Operación
                                         </Link>
@@ -327,7 +327,7 @@ export default function CheckoutPage() {
                                 <div className="absolute bottom-0 left-0 w-12 h-12 border-b border-l border-zinc-700" />
 
                                 <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-500 mb-8 font-mono flex items-center gap-3">
-                                    <div className="w-1.5 h-1.5 bg-electric-blue" /> Búfer de Orden
+                                    <div className="w-1.5 h-1.5 bg-sky-500" /> Búfer de Orden
                                 </h3>
 
                                 <div className="space-y-6 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
@@ -361,8 +361,8 @@ export default function CheckoutPage() {
                                     </div>
                                     {discount > 0 && (
                                         <div className="flex justify-between text-[11px] font-mono">
-                                            <span className="text-electric-blue">DESCUENTO (CUPÓN)</span>
-                                            <span className="text-electric-blue">-${discount.toLocaleString()}</span>
+                                            <span className="text-sky-500">DESCUENTO (CUPÓN)</span>
+                                            <span className="text-sky-500">-${discount.toLocaleString()}</span>
                                         </div>
                                     )}
                                     <div className="flex justify-between text-[11px] font-mono">
@@ -371,7 +371,7 @@ export default function CheckoutPage() {
                                     </div>
                                     <div className="pt-4 flex justify-between items-end">
                                         <div className="flex flex-col">
-                                            <span className="text-[10px] font-black text-electric-blue tracking-widest font-mono">TOTAL_FINAL</span>
+                                            <span className="text-[10px] font-black text-sky-500 tracking-widest font-mono">TOTAL_FINAL</span>
                                         </div>
                                         <span className="text-2xl font-black font-mono text-white tracking-tighter">
                                             <span className="text-sm mr-1 text-zinc-600">$</span>

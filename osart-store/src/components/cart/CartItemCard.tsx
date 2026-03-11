@@ -35,7 +35,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({ item, onUpdateQty, onRemove
                     <div className="flex justify-between items-start gap-3">
                         <Link
                             href={`/product/${item.product.slug}`}
-                            className="font-black text-sm sm:text-lg hover:text-electric-blue transition-colors uppercase italic tracking-tighter truncate"
+                            className="font-black text-sm sm:text-lg hover:text-sky-500 transition-colors uppercase italic tracking-tighter truncate"
                         >
                             {item.product.name}
                         </Link>
@@ -60,7 +60,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({ item, onUpdateQty, onRemove
                                 <Minus size={14} />
                             </button>
                             <div className="w-8 sm:w-10 text-center text-xs sm:text-sm font-black mono flex items-center justify-center">
-                                {isUpdating ? <Loader2 size={12} className="animate-spin text-electric-blue" /> : item.quantity}
+                                {isUpdating ? <Loader2 size={12} className="animate-spin text-sky-500" /> : item.quantity}
                             </div>
                             <button
                                 onClick={() => onUpdateQty(item.productId, item.quantity + 1)}

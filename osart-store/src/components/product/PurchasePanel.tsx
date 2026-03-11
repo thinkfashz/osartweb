@@ -38,7 +38,7 @@ export function PurchasePanel({ product: rawProduct }: PurchasePanelProps) {
         <div className="space-y-12">
             <div className="space-y-6">
                 <div className="flex items-center gap-4">
-                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-electric-blue">
+                    <span className="text-[10px] font-black uppercase tracking-[0.4em] text-sky-500">
                         {product.brand || 'OSART_INDUSTRIAL'}
                     </span>
                     <span className="text-[9px] font-mono text-muted-foreground">
@@ -81,7 +81,7 @@ export function PurchasePanel({ product: rawProduct }: PurchasePanelProps) {
                 </div>
                 <div className="flex flex-col gap-1">
                     <span className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">DESPACHO</span>
-                    <div className="flex items-center gap-2 text-electric-blue">
+                    <div className="flex items-center gap-2 text-sky-500">
                         <Zap size={14} fill="currentColor" />
                         <span className="text-sm font-black uppercase italic tracking-tighter">EXPRESS_PRIORITY</span>
                     </div>

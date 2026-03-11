@@ -32,8 +32,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
         <div className="min-h-screen bg-zinc-950 pt-32 pb-20 flex items-center justify-center">
             <div className="flex flex-col items-center gap-6">
                 <div className="relative">
-                    <Loader2 className="animate-spin text-electric-blue" size={48} />
-                    <div className="absolute inset-0 bg-electric-blue/20 blur-xl animate-pulse" />
+                    <Loader2 className="animate-spin text-sky-500" size={48} />
+                    <div className="absolute inset-0 bg-sky-500/20 blur-xl animate-pulse" />
                 </div>
                 <div className="text-center">
                     <p className="text-[10px] font-black text-white uppercase tracking-[0.3em] mb-2">Protocolo de Enlace Activo</p>
@@ -57,7 +57,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
             <div className="flex gap-4">
                 <button
                     onClick={() => retry()}
-                    className="px-8 py-4 bg-white text-black font-black uppercase italic tracking-widest hover:bg-electric-blue hover:text-white transition-all rounded-xl"
+                    className="px-8 py-4 bg-white text-black font-black uppercase italic tracking-widest hover:bg-sky-500 hover:text-white transition-all rounded-xl"
                 >
                     Reintentar Protocolo
                 </button>
@@ -74,21 +74,21 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
     return (
         <div className="min-h-screen bg-zinc-950 pt-28 pb-20 overflow-hidden relative">
             {/* Ambient Lighting */}
-            <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-electric-blue/5 blur-[120px] -z-10 pointer-events-none" />
+            <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-sky-500/5 blur-[120px] -z-10 pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-blue-600/5 blur-[100px] -z-10 pointer-events-none" />
 
             <div className="max-w-[1400px] mx-auto px-5 md:px-10">
                 {/* Header / Breadcrumbs */}
                 <div className="flex flex-wrap items-center justify-between gap-6 mb-16">
                     <nav className="flex items-center gap-2 text-[8px] font-black uppercase tracking-[0.2em] text-white/30">
-                        <Link href="/" className="hover:text-electric-blue flex items-center gap-1 transition-colors">
+                        <Link href="/" className="hover:text-sky-500 flex items-center gap-1 transition-colors">
                             <Home size={10} />
                             RAIZ
                         </Link>
                         <ChevronRight size={10} />
-                        <Link href="/catalog" className="hover:text-electric-blue transition-colors">INVENTARIO</Link>
+                        <Link href="/catalog" className="hover:text-sky-500 transition-colors">INVENTARIO</Link>
                         <ChevronRight size={10} />
-                        <span className="text-electric-blue/80 italic">{product.name}</span>
+                        <span className="text-sky-500/80 italic">{product.name}</span>
                     </nav>
 
                     <div className="flex items-center gap-4">
@@ -132,8 +132,8 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
                         <div className="flex items-end justify-between mb-12">
                             <div className="space-y-2">
                                 <div className="flex items-center gap-2">
-                                    <div className="w-1.5 h-1.5 bg-electric-blue rounded-full animate-pulse" />
-                                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-electric-blue">Sistemas Compatibles</span>
+                                    <div className="w-1.5 h-1.5 bg-sky-500 rounded-full animate-pulse" />
+                                    <span className="text-[10px] font-black uppercase tracking-[0.3em] text-sky-500">Sistemas Compatibles</span>
                                 </div>
                                 <h2 className="text-3xl font-black uppercase italic tracking-tighter text-white">Componentes Relacionados</h2>
                             </div>
@@ -150,7 +150,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
             </div>
 
             {/* Bottom Guard Line */}
-            <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-electric-blue/10 to-transparent" />
+            <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-sky-500/10 to-transparent" />
         </div>
     );
 }

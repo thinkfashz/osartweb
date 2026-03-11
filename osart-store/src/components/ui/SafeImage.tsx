@@ -31,10 +31,10 @@ export function SafeImage({
 
     if (!src || hasError) {
         return (
-            <div className={cn("w-full h-full flex flex-col items-center justify-center gap-3 bg-zinc-900/60 text-zinc-700", containerClassName, fallbackClassName)}>
-                <Package size={fallbackIconSize} className="group-hover:text-electric-blue/50 transition-colors" />
-                <span className="text-[9px] font-mono uppercase tracking-widest px-4 text-center">
-                    {hasError ? 'Imagen no disponible' : 'Sin imagen'}
+            <div className={cn("w-full h-full flex flex-col items-center justify-center gap-3 bg-zinc-100 dark:bg-zinc-900/50 text-zinc-400 dark:text-zinc-600", containerClassName, fallbackClassName)}>
+                <Package size={fallbackIconSize} className="group-hover:text-sky-500/50 transition-colors" />
+                <span className="text-[10px] font-black uppercase tracking-widest px-4 text-center opacity-50">
+                    {hasError ? 'Imagen No Disponible' : 'Sin Imagen'}
                 </span>
             </div>
         );
@@ -42,14 +42,13 @@ export function SafeImage({
 
     return (
         <div className={cn("relative w-full h-full overflow-hidden bg-zinc-900/20 group/safe-img", containerClassName)}>
-            {/* Shimmer / Skeleton Layer */}
+            {/* Loading / Shimmer Layer */}
             {isLoading && (
-                <div className="absolute inset-0 z-10">
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.03] to-transparent shimmer-animate" />
-                    <div className="flex items-center justify-center w-full h-full">
-                        <div className="w-12 h-12 rounded-full border border-electric-blue/10 flex items-center justify-center">
-                            <div className="w-8 h-8 rounded-full border-t-2 border-electric-blue animate-spin opacity-40" />
-                        </div>
+                <div className="absolute inset-0 z-10 flex items-center justify-center">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-zinc-200/10 dark:via-white/5 to-transparent shimmer-animate" />
+                    <div className="relative w-12 h-12">
+                        <div className="absolute inset-0 rounded-full border-2 border-sky-500/10 animate-ping" />
+                        <div className="relative w-full h-full rounded-full border-t-2 border-sky-500 animate-spin" />
                     </div>
                 </div>
             )}
@@ -61,9 +60,9 @@ export function SafeImage({
                 priority={priority}
                 sizes={sizes}
                 className={cn(
-                    'object-contain p-4 lg:p-8 transition-all duration-700 transition-opacity',
+                    'object-contain transition-all duration-700',
                     className,
-                    isLoading ? 'opacity-0 scale-95 blur-sm' : 'opacity-100 scale-100 blur-0'
+                    isLoading ? 'opacity-0 scale-90 blur-xl' : 'opacity-100 scale-100 blur-0'
                 )}
                 onLoad={() => setIsLoading(false)}
                 onError={() => {

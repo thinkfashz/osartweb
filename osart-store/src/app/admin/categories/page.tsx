@@ -79,14 +79,14 @@ function CategoryModal({
                         className="relative w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-3xl overflow-hidden shadow-2xl"
                     >
                         {/* Corner accents */}
-                        <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-electric-blue/40 rounded-tl-3xl" />
-                        <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-electric-blue/40 rounded-br-3xl" />
+                        <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-sky-500/40 rounded-tl-3xl" />
+                        <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-sky-500/40 rounded-br-3xl" />
 
                         <div className="p-8 space-y-6">
                             {/* Header */}
                             <div className="flex items-start justify-between">
                                 <div className="space-y-1">
-                                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-electric-blue">
+                                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-sky-500">
                                         <Tag size={12} />
                                         {editing ? 'Editar Categoría' : 'Nueva Categoría'}
                                     </div>
@@ -106,7 +106,7 @@ function CategoryModal({
                                     <input
                                         type="text" value={form.name} onChange={set('name')} required
                                         placeholder="Ej: Microcontroladores"
-                                        className="w-full bg-zinc-950 border border-zinc-800 focus:border-electric-blue rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none transition-all"
+                                        className="w-full bg-zinc-950 border border-zinc-800 focus:border-sky-500 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none transition-all"
                                     />
                                     {form.name && (
                                         <p className="text-[9px] text-zinc-600 font-mono px-1">
@@ -122,7 +122,7 @@ function CategoryModal({
                                         value={form.description} onChange={set('description')}
                                         placeholder="Descripción de la categoría..."
                                         rows={2}
-                                        className="w-full bg-zinc-950 border border-zinc-800 focus:border-electric-blue rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none transition-all resize-none"
+                                        className="w-full bg-zinc-950 border border-zinc-800 focus:border-sky-500 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none transition-all resize-none"
                                     />
                                 </div>
 
@@ -131,7 +131,7 @@ function CategoryModal({
                                     <label className="text-[9px] font-black uppercase tracking-widest text-zinc-400">Categoría Padre (opcional)</label>
                                     <select
                                         value={form.parent_id} onChange={set('parent_id')}
-                                        className="w-full bg-zinc-950 border border-zinc-800 focus:border-electric-blue rounded-xl px-4 py-3 text-sm text-white outline-none transition-all"
+                                        className="w-full bg-zinc-950 border border-zinc-800 focus:border-sky-500 rounded-xl px-4 py-3 text-sm text-white outline-none transition-all"
                                     >
                                         <option value="">— Sin categoría padre —</option>
                                         {parentOptions.map(c => (
@@ -146,7 +146,7 @@ function CategoryModal({
                                     <input
                                         type="url" value={form.image_url} onChange={set('image_url')}
                                         placeholder="https://..."
-                                        className="w-full bg-zinc-950 border border-zinc-800 focus:border-electric-blue rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none transition-all"
+                                        className="w-full bg-zinc-950 border border-zinc-800 focus:border-sky-500 rounded-xl px-4 py-3 text-sm text-white placeholder-zinc-600 outline-none transition-all"
                                     />
                                 </div>
 
@@ -157,7 +157,7 @@ function CategoryModal({
                                         Cancelar
                                     </button>
                                     <button type="submit" disabled={isSaving}
-                                        className="flex-1 py-3 rounded-xl bg-white text-black text-[10px] font-black uppercase tracking-widest hover:bg-electric-blue hover:text-black transition-all flex items-center justify-center gap-2 disabled:opacity-50">
+                                        className="flex-1 py-3 rounded-xl bg-white text-black text-[10px] font-black uppercase tracking-widest hover:bg-sky-500 hover:text-black transition-all flex items-center justify-center gap-2 disabled:opacity-50">
                                         {isSaving ? <Loader2 size={14} className="animate-spin" /> : null}
                                         {isSaving ? 'Guardando...' : (editing ? 'Actualizar' : 'Crear')}
                                     </button>
@@ -246,8 +246,8 @@ export default function CategoriesPage() {
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
                     <div className="space-y-2">
                         <div className="flex items-center gap-2">
-                            <div className="w-1.5 h-1.5 rounded-full bg-electric-blue animate-pulse" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-electric-blue">Sistema de Clasificación</span>
+                            <div className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-sky-500">Sistema de Clasificación</span>
                         </div>
                         <h1 className="text-4xl md:text-5xl font-black uppercase italic tracking-tighter text-white leading-none">
                             Categorías
@@ -274,7 +274,7 @@ export default function CategoriesPage() {
                         </button>
                         {/* Create */}
                         <button onClick={openCreate}
-                            className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-white text-black text-[10px] font-black uppercase tracking-widest hover:bg-electric-blue transition-colors shadow-lg shrink-0">
+                            className="flex items-center gap-2 px-5 py-3 rounded-2xl bg-white text-black text-[10px] font-black uppercase tracking-widest hover:bg-sky-500 transition-colors shadow-lg shrink-0">
                             <Plus size={16} />
                             <span className="hidden sm:inline">Nueva</span>
                         </button>
@@ -289,7 +289,7 @@ export default function CategoriesPage() {
                         { label: 'Productos Indexados', value: categories.reduce((a: number, c: AdminCategory) => a + (c.productCount || 0), 0), icon: Package },
                     ].map(stat => (
                         <div key={stat.label} className="bg-zinc-900/60 border border-zinc-800 rounded-2xl p-5 flex items-center gap-4">
-                            <div className="w-10 h-10 bg-zinc-800 rounded-xl flex items-center justify-center text-electric-blue shrink-0">
+                            <div className="w-10 h-10 bg-zinc-800 rounded-xl flex items-center justify-center text-sky-500 shrink-0">
                                 <stat.icon size={18} />
                             </div>
                             <div>
@@ -330,7 +330,7 @@ export default function CategoriesPage() {
                                 </p>
                                 {!search && (
                                     <button onClick={openCreate}
-                                        className="mt-4 px-6 py-3 rounded-xl bg-electric-blue/10 text-electric-blue text-[10px] font-black uppercase tracking-widest hover:bg-electric-blue/20 transition-all">
+                                        className="mt-4 px-6 py-3 rounded-xl bg-sky-500/10 text-sky-500 text-[10px] font-black uppercase tracking-widest hover:bg-sky-500/20 transition-all">
                                         Crear primera categoría
                                     </button>
                                 )}
@@ -349,7 +349,7 @@ export default function CategoriesPage() {
                                         {/* Name + Slug */}
                                         <div className="col-span-4 min-w-0">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-9 h-9 bg-zinc-800 rounded-xl flex items-center justify-center text-electric-blue shrink-0 text-[11px] font-black border border-zinc-700">
+                                                <div className="w-9 h-9 bg-zinc-800 rounded-xl flex items-center justify-center text-sky-500 shrink-0 text-[11px] font-black border border-zinc-700">
                                                     {cat.name.substring(0, 2).toUpperCase()}
                                                 </div>
                                                 <div className="min-w-0">
@@ -369,7 +369,7 @@ export default function CategoriesPage() {
                                         {/* Parent */}
                                         <div className="col-span-2 hidden sm:flex justify-center">
                                             {cat.parent_id ? (
-                                                <span className="px-3 py-1 rounded-full bg-electric-blue/10 text-electric-blue text-[9px] font-black uppercase tracking-wider border border-electric-blue/20">
+                                                <span className="px-3 py-1 rounded-full bg-sky-500/10 text-sky-500 text-[9px] font-black uppercase tracking-wider border border-sky-500/20">
                                                     {parentMap[cat.parent_id] || '—'}
                                                 </span>
                                             ) : (

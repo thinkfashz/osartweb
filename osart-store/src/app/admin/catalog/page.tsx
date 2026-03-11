@@ -60,7 +60,7 @@ export default function CatalogPage() {
                         title="Valor del Catálogo"
                         value="$4.2M"
                         icon={BarChart3}
-                        color="electric-blue"
+                        color="sky-500"
                         description="Estimación total"
                     />
                     <StatCard

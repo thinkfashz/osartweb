@@ -36,7 +36,7 @@ const SuccessPage = () => {
                 <div className="flex flex-col sm:flex-row justify-between items-center gap-6">
                     <div className="flex items-center gap-4">
                         <div className="w-12 h-12 bg-zinc-950 rounded-xl flex items-center justify-center border border-white/5">
-                            <Package size={24} className="text-electric-blue" />
+                            <Package size={24} className="text-sky-500" />
                         </div>
                         <div>
                             <p className="text-[10px] text-text-muted uppercase font-bold tracking-widest">Nº de Orden</p>
@@ -60,7 +60,7 @@ const SuccessPage = () => {
                 className="mt-12 flex flex-wrap gap-6 justify-center"
             >
                 <Link href="/" className="neon-button px-12 py-4">Volver al Inicio</Link>
-                <Link href="/catalog" className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-text-muted hover:text-electric-blue transition-colors group">
+                <Link href="/catalog" className="flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-text-muted hover:text-sky-500 transition-colors group">
                     Seguir Comprando <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                 </Link>
             </motion.div>

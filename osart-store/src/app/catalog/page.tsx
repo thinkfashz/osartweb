@@ -44,12 +44,12 @@ const CatalogPage = () => {
         <div className="space-y-10">
             <section>
                 <div className="flex items-center gap-3 mb-6">
-                    <div className="w-1.5 h-1.5 bg-electric-blue rounded-full shadow-[0_0_8px_rgba(0,240,255,1)]" />
-                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-white">
-                        Sistemas de Red
+                    <div className="w-1.5 h-1.5 bg-sky-500 rounded-full shadow-[0_0_8px_rgba(14,165,233,1)]" />
+                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-900 dark:text-white">
+                        Categorías
                     </h3>
                 </div>
-                <ul className="space-y-1.5">
+                <ul className="space-y-2">
                     <li>
                         <button
                             onClick={() => {
@@ -57,18 +57,18 @@ const CatalogPage = () => {
                                 setIsMobileFiltersOpen(false);
                             }}
                             className={cn(
-                                "text-[10px] w-full text-left px-4 py-3 border transition-all flex items-center justify-between group rounded-lg",
+                                "text-[10px] w-full text-left px-5 py-4 border transition-all flex items-center justify-between group rounded-[1.25rem]",
                                 !selectedCategory
-                                    ? "bg-electric-blue/10 border-electric-blue/30 text-electric-blue font-black italic shadow-[inset_0_0_20px_rgba(0,240,255,0.05)]"
-                                    : "bg-zinc-900/30 border-white/5 text-zinc-500 hover:border-white/20 hover:text-white"
+                                    ? "bg-sky-500/10 border-sky-500/30 text-sky-600 dark:text-sky-400 font-black shadow-[inset_0_0_20px_rgba(14,165,233,0.05)]"
+                                    : "bg-zinc-100 dark:bg-zinc-900/30 border-zinc-200 dark:border-white/5 text-zinc-500 hover:border-sky-500/20 hover:text-sky-500"
                             )}
                         >
-                            <span className="tracking-widest">TODOS LOS NODOS</span>
-                            <div className={cn("w-1 h-1 rounded-full", !selectedCategory ? "bg-electric-blue animate-pulse" : "bg-zinc-800")} />
+                            <span className="tracking-widest capitalize">Todos los Productos</span>
+                            <div className={cn("w-1.5 h-1.5 rounded-fullTransition-all", !selectedCategory ? "bg-sky-500 animate-pulse" : "bg-zinc-300 dark:bg-zinc-800")} />
                         </button>
                     </li>
                     {catLoading ? (
-                        <div className="flex justify-center py-4"><Loader2 className="animate-spin text-electric-blue/40" size={16} /></div>
+                        <div className="flex justify-center py-4"><Loader2 className="animate-spin text-sky-500/40" size={16} /></div>
                     ) : categories.map((cat: any) => (
                         <li key={cat.id}>
                             <button
@@ -77,63 +77,62 @@ const CatalogPage = () => {
                                     setIsMobileFiltersOpen(false);
                                 }}
                                 className={cn(
-                                    "text-[10px] w-full text-left px-4 py-3 border transition-all flex items-center justify-between group rounded-lg",
+                                    "text-[10px] w-full text-left px-5 py-4 border transition-all flex items-center justify-between group rounded-[1.25rem]",
                                     selectedCategory === cat.id
-                                        ? "bg-electric-blue/10 border-electric-blue/30 text-electric-blue font-black italic shadow-[inset_0_0_20px_rgba(0,240,255,0.05)]"
-                                        : "bg-zinc-900/30 border-white/5 text-zinc-500 hover:border-white/20 hover:text-white"
+                                        ? "bg-sky-500/10 border-sky-500/30 text-sky-600 dark:text-sky-400 font-black shadow-[inset_0_0_20px_rgba(14,165,233,0.05)]"
+                                        : "bg-zinc-100 dark:bg-zinc-900/30 border-zinc-200 dark:border-white/5 text-zinc-500 hover:border-sky-500/20 hover:text-sky-500"
                                 )}
                             >
                                 <span className="uppercase tracking-widest">{cat.name}</span>
-                                <div className={cn("w-1 h-1 rounded-full", selectedCategory === cat.id ? "bg-electric-blue animate-pulse" : "bg-zinc-800")} />
+                                <div className={cn("w-1.5 h-1.5 rounded-full transition-all", selectedCategory === cat.id ? "bg-sky-500 animate-pulse" : "bg-zinc-300 dark:bg-zinc-800")} />
                             </button>
                         </li>
                     ))}
                 </ul>
             </section>
 
-            <section className="pt-8 border-t border-white/5">
+            <section className="pt-8 border-t border-zinc-200 dark:border-white/5">
                 <div className="flex items-center gap-3 mb-6">
-                    <div className="w-1.5 h-1.5 bg-zinc-700 rounded-full" />
-                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-white/60">
+                    <div className="w-1.5 h-1.5 bg-zinc-300 dark:bg-zinc-700 rounded-full" />
+                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-900 dark:text-white/60">
                         Parámetros Técnicos
                     </h3>
                 </div>
                 <div className="space-y-4">
                     {[
-                        { label: 'DISPONIBILIDAD_HW', icon: Package, count: 'STOCK' },
-                        { label: 'OFERTAS_SISTEMA', icon: Zap, count: '% OFF' },
-                        { label: 'NUEVOS_PROTOCOLOS', icon: Activity, count: 'NEW' }
+                        { label: 'DISPONIBILIDAD', icon: Package, count: 'STOCK' },
+                        { label: 'OFERTAS', icon: Zap, count: '% OFF' },
+                        { label: 'NOVEDADES', icon: Activity, count: 'NEW' }
                     ].map(filter => (
-                        <label key={filter.label} className="flex flex-col gap-2 p-4 bg-zinc-900/50 border border-white/5 rounded-xl cursor-pointer group hover:bg-zinc-900 transition-all">
+                        <label key={filter.label} className="flex flex-col gap-2 p-5 bg-zinc-100 dark:bg-zinc-900/50 border border-zinc-200 dark:border-white/5 rounded-2xl cursor-pointer group hover:bg-white dark:hover:bg-zinc-900 transition-all shadow-sm">
                             <div className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
-                                    <filter.icon size={12} className="text-zinc-600 group-hover:text-electric-blue transition-colors" />
-                                    <span className="text-[9px] font-black text-zinc-500 uppercase tracking-widest group-hover:text-white transition-colors">{filter.label}</span>
+                                    <filter.icon size={12} className="text-zinc-400 group-hover:text-sky-500 transition-colors" />
+                                    <span className="text-[9px] font-black text-zinc-500 uppercase tracking-widest group-hover:text-zinc-900 dark:group-hover:text-white transition-colors">{filter.label}</span>
                                 </div>
-                                <div className="w-3 h-3 border border-white/10 rounded-sm flex items-center justify-center group-hover:border-electric-blue/50 transition-colors">
-                                    <div className="w-1.5 h-1.5 bg-electric-blue scale-0 group-hover:scale-100 transition-transform rounded-[1px]" />
+                                <div className="w-4 h-4 border border-zinc-300 dark:border-white/10 rounded-md flex items-center justify-center group-hover:border-sky-500/50 transition-colors">
+                                    <div className="w-2 h-2 bg-sky-500 scale-0 group-hover:scale-100 transition-transform rounded-[2px]" />
                                 </div>
                             </div>
-                            <div className="text-[8px] font-mono text-zinc-700 uppercase tracking-tighter">Status: {filter.count}</div>
                         </label>
                     ))}
                 </div>
             </section>
 
             {/* System Stats Sidebar Widget */}
-            <section className="pt-8 border-t border-white/5">
-                <div className="p-4 bg-zinc-950 border border-white/5 rounded-xl space-y-4">
+            <section className="pt-8 border-t border-zinc-200 dark:border-white/5">
+                <div className="p-5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-white/5 rounded-2xl space-y-4 shadow-sm">
                     <div className="flex items-center gap-2">
                         <Gauge size={14} className="text-emerald-500" />
-                        <span className="text-[9px] font-black text-emerald-500/80 uppercase tracking-widest">Estado del Buffer</span>
+                        <span className="text-[9px] font-black text-emerald-600 dark:text-emerald-500/80 uppercase tracking-widest">Optimización de Carga</span>
                     </div>
                     <div className="space-y-2">
-                        <div className="flex justify-between text-[8px] font-mono text-zinc-500">
+                        <div className="flex justify-between text-[8px] font-bold text-zinc-500">
                             <span>RECURSOS</span>
                             <span>84%</span>
                         </div>
-                        <div className="h-1 bg-zinc-900 rounded-full overflow-hidden">
-                            <div className="h-full bg-emerald-500/40 w-[84%]" />
+                        <div className="h-1 bg-zinc-200 dark:bg-zinc-800 rounded-full overflow-hidden">
+                            <div className="h-full bg-emerald-500 w-[84%]" />
                         </div>
                     </div>
                 </div>
@@ -142,22 +141,22 @@ const CatalogPage = () => {
     );
 
     return (
-        <div className="bg-zinc-950 min-h-screen text-white pb-20 selection:bg-electric-blue selection:text-background">
+        <div className="bg-white dark:bg-zinc-950 min-h-screen text-zinc-900 dark:text-white pb-20 selection:bg-sky-500/30">
             {/* Top Console Bar */}
-            <div className="sticky top-0 z-40 bg-zinc-950/90 backdrop-blur-2xl border-b border-white/5 py-4 lg:py-8 px-5">
+            <div className="sticky top-0 z-40 bg-white/70 dark:bg-zinc-950/70 backdrop-blur-2xl border-b border-zinc-200/50 dark:border-zinc-800/50 py-4 lg:py-8 px-5">
                 <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-6">
 
                     <div className="flex items-center gap-6 flex-1">
                         <div className="hidden xl:flex flex-col">
-                            <h1 className="text-2xl font-black uppercase italic tracking-tighter text-white leading-none mb-1">
-                                SISTEMA_BASE
+                            <h1 className="text-2xl font-black tracking-tighter text-zinc-900 dark:text-white leading-none mb-1">
+                                CATÁLOGO
                             </h1>
-                            <div className="flex items-center gap-2 text-[8px] font-mono text-electric-blue uppercase tracking-widest">
+                            <div className="flex items-center gap-2 text-[9px] font-black text-sky-500 uppercase tracking-widest">
                                 <span className="relative flex h-2 w-2">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-electric-blue opacity-75"></span>
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-electric-blue"></span>
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-500 opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-sky-500"></span>
                                 </span>
-                                SCANNER_HW_ACTIVO
+                                SCANNER ACTIVO
                             </div>
                         </div>
 
@@ -165,36 +164,31 @@ const CatalogPage = () => {
                         <div className="relative flex-1 group">
                             <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
                                 {isSearching ? (
-                                    <Loader2 className="animate-spin text-electric-blue" size={14} />
+                                    <Loader2 className="animate-spin text-sky-500" size={14} />
                                 ) : (
-                                    <Search className="text-zinc-600 group-focus-within:text-electric-blue transition-colors" size={14} />
+                                    <Search className="text-zinc-400 group-focus-within:text-sky-500 transition-colors" size={14} />
                                 )}
                             </div>
                             <input
                                 type="text"
-                                placeholder="INGRESAR CÓDIGO DE COMPONENTE O NOMBRE..."
+                                placeholder="BUSCAR REPUESTO O COMPONENTE..."
                                 value={search}
                                 onChange={(e) => setSearch(e.target.value)}
-                                className="w-full bg-zinc-900/40 border border-white/5 rounded-xl py-4 pl-12 pr-4 text-[11px] font-mono focus:bg-zinc-900 focus:border-electric-blue/30 focus:ring-4 focus:ring-electric-blue/5 outline-none transition-all placeholder:text-zinc-800 tracking-[0.2em] uppercase italic"
+                                className="w-full bg-zinc-100 dark:bg-zinc-900/40 border border-zinc-200 dark:border-white/5 rounded-2xl py-4 pl-12 pr-4 text-[11px] font-bold focus:bg-white dark:focus:bg-zinc-900 focus:border-sky-500/30 focus:ring-4 focus:ring-sky-500/5 outline-none transition-all placeholder:text-zinc-400 dark:placeholder:text-zinc-800 tracking-widest uppercase"
                             />
-                            <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-                                <div className="hidden sm:block text-[8px] font-mono text-zinc-700 uppercase">Input: UTF-8</div>
-                                <div className="w-px h-3 bg-white/10 mx-1 hidden sm:block" />
-                                <div className="bg-white/5 border border-white/10 rounded px-1.5 py-0.5 text-[8px] font-mono text-zinc-500 uppercase">Enter</div>
-                            </div>
                         </div>
                     </div>
 
-                    <div className="flex items-center justify-between lg:justify-end gap-6 border-t lg:border-t-0 border-white/5 pt-4 lg:pt-0">
+                    <div className="flex items-center justify-between lg:justify-end gap-6 border-t lg:border-t-0 border-zinc-200 dark:border-white/5 pt-4 lg:pt-0">
                         <div className="flex items-center gap-8">
                             <div className="flex flex-col items-start lg:items-end">
-                                <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Unidades</span>
-                                <span className="text-xl font-black text-white italic tracking-tighter">{products.length}</span>
+                                <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Unidades</span>
+                                <span className="text-xl font-black text-zinc-900 dark:text-white tracking-tighter">{products.length}</span>
                             </div>
                             <div className="flex flex-col items-start lg:items-end min-w-[100px]">
-                                <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Latencia</span>
+                                <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Estado</span>
                                 <div className="flex items-center gap-2">
-                                    <div className="text-xl font-black text-emerald-500 italic tracking-tighter">{latency}ms</div>
+                                    <div className="text-xl font-black text-emerald-500 tracking-tighter">Online</div>
                                     <Wifi size={14} className="text-emerald-500/50" />
                                 </div>
                             </div>
@@ -202,9 +196,9 @@ const CatalogPage = () => {
 
                         <button
                             onClick={() => setIsMobileFiltersOpen(true)}
-                            className="lg:hidden flex items-center gap-2 px-6 py-3 bg-zinc-900 border border-white/10 rounded-xl text-[10px] font-black uppercase italic tracking-widest text-white active:scale-95 transition-all"
+                            className="lg:hidden flex items-center gap-2 px-6 py-3 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-white/10 rounded-2xl text-[10px] font-black uppercase tracking-widest text-zinc-900 dark:text-white active:scale-95 transition-all shadow-sm"
                         >
-                            <SlidersHorizontal size={14} className="text-electric-blue" />
+                            <SlidersHorizontal size={14} className="text-sky-500" />
                             FILTROS
                         </button>
                     </div>
@@ -231,17 +225,17 @@ const CatalogPage = () => {
                                     className="flex flex-col items-center justify-center py-40 gap-8"
                                 >
                                     <div className="relative group">
-                                        <div className="absolute -inset-4 bg-electric-blue/10 blur-2xl group-hover:bg-electric-blue/20 transition-all duration-1000 animate-pulse" />
-                                        <Loader2 className="animate-spin text-electric-blue relative" size={64} strokeWidth={1} />
+                                        <div className="absolute -inset-8 bg-sky-500/10 blur-3xl group-hover:bg-sky-500/20 transition-all duration-1000 animate-pulse" />
+                                        <Loader2 className="animate-spin text-sky-500 relative" size={48} strokeWidth={1.5} />
                                     </div>
                                     <div className="text-center space-y-3">
-                                        <p className="text-xs font-black text-white uppercase tracking-[0.4em] mb-2 animate-pulse">Sincronizando Archivos de Sistema</p>
-                                        <div className="flex items-center justify-center gap-4 text-[9px] font-mono text-zinc-600 uppercase tracking-widest">
-                                            <span>DB_FETCH</span>
-                                            <div className="w-1 h-1 rounded-full bg-zinc-800" />
-                                            <span>ENCRYPT_STREAMS</span>
-                                            <div className="w-1 h-1 rounded-full bg-zinc-800" />
-                                            <span>RENDER_GRID</span>
+                                        <p className="text-xs font-black text-zinc-900 dark:text-white uppercase tracking-[0.2em] mb-2">Sincronizando Catálogo</p>
+                                        <div className="flex items-center justify-center gap-4 text-[9px] font-bold text-zinc-400 uppercase tracking-widest">
+                                            <span>SPOOLING</span>
+                                            <div className="w-1 h-1 rounded-full bg-zinc-200 dark:bg-zinc-800" />
+                                            <span>FETCH_ASSETS</span>
+                                            <div className="w-1 h-1 rounded-full bg-zinc-200 dark:bg-zinc-800" />
+                                            <span>GRID_INIT</span>
                                         </div>
                                     </div>
                                 </motion.div>
@@ -259,18 +253,18 @@ const CatalogPage = () => {
                                 <motion.div
                                     initial={{ opacity: 0 }}
                                     animate={{ opacity: 1 }}
-                                    className="flex flex-col items-center justify-center py-40 bg-zinc-900/20 border-2 border-dashed border-white/5 rounded-[40px]"
+                                    className="flex flex-col items-center justify-center py-40 bg-zinc-50 dark:bg-zinc-900/20 border-2 border-dashed border-zinc-200 dark:border-white/5 rounded-[40px]"
                                 >
-                                    <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center text-zinc-800 mb-8 border border-white/5">
-                                        <Terminal size={48} />
+                                    <div className="w-24 h-24 bg-white dark:bg-white/5 rounded-3xl flex items-center justify-center text-zinc-300 dark:text-zinc-800 mb-8 border border-zinc-200 dark:border-white/5 shadow-sm">
+                                        <Search size={48} />
                                     </div>
-                                    <h3 className="text-2xl font-black uppercase italic tracking-tighter text-zinc-500 mb-2">Error de Lectura</h3>
-                                    <p className="text-[10px] font-mono text-zinc-700 uppercase tracking-widest max-w-[300px] text-center">Búsqueda no devolvió resultados válidos para los parámetros actuales.</p>
+                                    <h3 className="text-2xl font-black tracking-tighter text-zinc-400 dark:text-zinc-500 mb-2">Sin Resultados</h3>
+                                    <p className="text-[10px] font-bold text-zinc-400 dark:text-zinc-700 uppercase tracking-widest max-w-[300px] text-center">No encontramos componentes con esos parámetros.</p>
                                     <button
                                         onClick={() => { setSearch(''); setSelectedCategory(null); }}
-                                        className="mt-10 text-[10px] font-black uppercase italic tracking-widest text-electric-blue border-b border-electric-blue/30 pb-1 hover:border-electric-blue transition-all"
+                                        className="mt-10 text-[10px] font-black uppercase tracking-widest text-sky-500 border-b-2 border-sky-500/30 pb-1 hover:border-sky-500 transition-all"
                                     >
-                                        RESETEAR SISTEMA DE BÚSQUEDA
+                                        RESETEAR BÚSQUEDA
                                     </button>
                                 </motion.div>
                             )}
@@ -295,18 +289,18 @@ const CatalogPage = () => {
                             animate={{ y: 0 }}
                             exit={{ y: '100%' }}
                             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
-                            className="fixed inset-x-0 bottom-0 h-[85vh] bg-zinc-950 border-t border-white/10 p-8 z-[60] overflow-y-auto rounded-t-[40px]"
+                            className="fixed inset-x-0 bottom-0 h-[85vh] bg-white dark:bg-zinc-950 border-t border-zinc-200 dark:border-white/10 p-8 z-[60] overflow-y-auto rounded-t-[40px] shadow-2xl"
                         >
                             <div className="flex items-center justify-between mb-12">
                                 <div className="space-y-1">
-                                    <h2 className="text-2xl font-black uppercase italic tracking-tighter text-white">Configuración</h2>
-                                    <p className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest leading-none">Ajustar parámetros de filtrado</p>
+                                    <h2 className="text-2xl font-black tracking-tighter text-zinc-900 dark:text-white">FILTROS</h2>
+                                    <p className="text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest leading-none">Ajustar parámetros de búsqueda</p>
                                 </div>
                                 <button
                                     onClick={() => setIsMobileFiltersOpen(false)}
-                                    className="w-12 h-12 flex items-center justify-center bg-white/5 border border-white/10 rounded-2xl active:scale-90 transition-transform"
+                                    className="w-12 h-12 flex items-center justify-center bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-white/10 rounded-2xl active:scale-90 transition-transform shadow-sm"
                                 >
-                                    <X size={24} />
+                                    <X size={24} className="text-zinc-900 dark:text-white" />
                                 </button>
                             </div>
 
@@ -314,9 +308,9 @@ const CatalogPage = () => {
                                 <FilterContent />
                                 <button
                                     onClick={() => setIsMobileFiltersOpen(false)}
-                                    className="w-full bg-electric-blue text-background font-black text-xs uppercase italic tracking-[0.3em] py-5 rounded-2xl shadow-[0_0_30px_rgba(0,240,255,0.4)] active:scale-95 transition-all"
+                                    className="w-full bg-sky-500 text-white font-black text-xs uppercase tracking-[0.2em] py-5 rounded-2xl shadow-lg shadow-sky-500/20 active:scale-95 transition-all"
                                 >
-                                    COMANDAR CAMBIO
+                                    APLICAR FILTROS
                                 </button>
                             </div>
                         </motion.div>

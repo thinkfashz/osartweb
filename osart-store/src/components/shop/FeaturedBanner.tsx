@@ -69,9 +69,9 @@ const FeaturedBanner: React.FC<FeaturedBannerProps> = ({ products }) => {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.2 }}
-                                className="inline-block text-[10px] font-black uppercase tracking-[0.4em] text-electric-blue"
+                                className="inline-block text-[10px] font-black uppercase tracking-[0.4em] text-sky-500"
                             >
-                                PREMIUM_SELECTION_FY24
+                                PREMIUM SELECTION 2026
                             </motion.div>
 
                             <motion.h2
@@ -107,7 +107,7 @@ const FeaturedBanner: React.FC<FeaturedBannerProps> = ({ products }) => {
 
                                 <Link
                                     href={`/product/${slug}`}
-                                    className="bg-foreground text-background px-10 py-4 rounded-full font-black uppercase italic tracking-tighter text-xs flex items-center gap-3 hover:scale-105 transition-all"
+                                    className="bg-sky-500 text-white px-10 py-4 rounded-3xl font-black uppercase tracking-widest text-xs flex items-center gap-3 hover:scale-105 transition-all shadow-lg shadow-sky-500/20"
                                 >
                                     DETALLES DEL MODELO
                                     <ArrowRight size={18} />
@@ -117,13 +117,13 @@ const FeaturedBanner: React.FC<FeaturedBannerProps> = ({ products }) => {
 
                         {/* Image */}
                         <motion.div
-                            initial={{ opacity: 0, scale: 0.9, rotate: 5 }}
-                            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
                             transition={{ duration: 1, ease: 'easeOut' }}
                             className="order-1 lg:order-2 flex justify-center"
                         >
-                            <div className="relative aspect-square w-full max-w-[450px] group">
-                                <div className="absolute inset-0 bg-electric-blue/5 rounded-full blur-3xl group-hover:bg-electric-blue/10 transition-colors" />
+                            <div className="relative aspect-square w-full max-w-[500px] group">
+                                <div className="absolute inset-x-0 bottom-0 top-1/2 bg-sky-500/10 blur-[120px] rounded-full group-hover:bg-sky-500/20 transition-colors" />
                                 <SafeImage
                                     src={p.image_url}
                                     alt={title}
@@ -162,7 +162,7 @@ const FeaturedBanner: React.FC<FeaturedBannerProps> = ({ products }) => {
                         initial={{ width: '0%' }}
                         animate={{ width: '100%' }}
                         transition={{ duration: 8, ease: 'linear' }}
-                        className="h-full bg-electric-blue"
+                        className="h-full bg-sky-500 shadow-[0_0_10px_rgba(14,165,233,0.5)]"
                     />
                 </div>
             )}

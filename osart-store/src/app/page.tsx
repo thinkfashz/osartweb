@@ -68,7 +68,7 @@ export default function Home() {
       {!loading && featuredProducts.length === 0 && <Hero />}
       {loading && (
         <div className="w-full h-[60vh] flex flex-col items-center justify-center bg-zinc-950">
-          <Loader2 className="animate-spin text-electric-blue mb-4" size={40} />
+          <Loader2 className="animate-spin text-sky-500 mb-4" size={40} />
           <p className="text-sm font-mono text-zinc-500 uppercase tracking-widest">Inicializando Motor de Catálogo...</p>
         </div>
       )}
@@ -85,7 +85,7 @@ export default function Home() {
             { icon: CreditCard, label: 'Pago Seguro' },
           ].map(({ icon: Icon, label }) => (
             <div key={label} className="flex items-center gap-2 flex-shrink-0">
-              <Icon size={14} className="text-electric-blue" />
+              <Icon size={14} className="text-sky-500" />
               <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">{label}</span>
             </div>
           ))}
@@ -93,17 +93,23 @@ export default function Home() {
       </div>
 
       {/* ── Products Grid ── */}
-      <section className="py-20 lg:py-32 bg-background relative overflow-hidden">
-        {/* Retro background for this section */}
-        <div className="absolute inset-0 retro-grid opacity-60 pointer-events-none" />
+      <section className="py-24 lg:py-32 bg-white dark:bg-zinc-950 relative overflow-hidden">
+        {/* Modern Dot Pattern */}
+        <div className="absolute inset-0 opacity-[0.2] dark:opacity-[0.1] pointer-events-none"
+          style={{ backgroundImage: 'radial-gradient(#0ea5e9 0.5px, transparent 0.5px)', backgroundSize: '24px 24px' }} />
         <div className="absolute inset-0 pointer-events-none"
-          style={{ background: 'radial-gradient(ellipse 80% 40% at 50% 100%, hsl(var(--electric-blue) / 0.04), transparent)' }} />
+          style={{ background: 'radial-gradient(ellipse 60% 40% at 50% 100%, rgba(14, 165, 233, 0.05), transparent)' }} />
 
         <div className="max-w-[1200px] mx-auto px-5 relative z-10">
-          <AnimateIn className="flex items-end justify-between mb-16 px-4 sm:px-0">
-            <div className="space-y-2">
-              <span className="text-xs font-bold uppercase tracking-[0.3em] text-electric-blue">Catálogo Dinámico</span>
-              <h2 className="text-3xl lg:text-5xl font-black tracking-tighter uppercase italic text-foreground leading-none">Últimas Adiciones</h2>
+          <AnimateIn className="flex flex-col md:flex-row md:items-end justify-between mb-20 px-4 sm:px-0 gap-6">
+            <div className="space-y-3">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-sky-500/10 border border-sky-500/20 rounded-full">
+                <div className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" />
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-sky-600 dark:text-sky-400">Catálogo Dinámico</span>
+              </div>
+              <h2 className="text-4xl lg:text-6xl font-black tracking-tighter text-zinc-900 dark:text-white leading-none">
+                Lo Último en <span className="text-sky-500 italic">Inventario</span>.
+              </h2>
             </div>
             <Link href="/catalog" className="hidden sm:flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors group">
               Explorar Todo <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
@@ -112,7 +118,7 @@ export default function Home() {
 
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20 gap-4">
-              <Loader2 className="animate-spin text-electric-blue" size={48} />
+              <Loader2 className="animate-spin text-sky-500" size={48} />
               <p className="text-sm text-muted-foreground uppercase font-bold tracking-widest">Sincronizando Inventario...</p>
             </div>
           ) : (
@@ -145,35 +151,33 @@ export default function Home() {
       </section>
 
       {/* ── Category Highlights ── */}
-      <section className="py-24 bg-zinc-950 border-y border-white/5 relative overflow-hidden">
-        <div className="absolute inset-0 retro-grid pointer-events-none" />
-        <div className="absolute inset-0 retro-glow-bg opacity-50 pointer-events-none" />
-        <div className="absolute inset-0 opacity-[0.015] pointer-events-none"
-          style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }} />
+      <section className="py-24 bg-zinc-50 dark:bg-zinc-950 border-y border-zinc-200/50 dark:border-zinc-800/50 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.3] dark:opacity-[0.1] pointer-events-none"
+          style={{ backgroundImage: 'radial-gradient(#0ea5e9 0.5px, transparent 0.5px)', backgroundSize: '48px 48px' }} />
+        <div className="absolute inset-0 opacity-[0.05] pointer-events-none"
+          style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, #0ea5e9 1px, transparent 0)', backgroundSize: '40px 40px' }} />
 
         <div className="max-w-[1200px] mx-auto px-5 relative z-10">
-          <AnimateIn className="text-center mb-14">
-            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-electric-blue block mb-3">Segmentos de Hardware</span>
-            <h2 className="text-3xl lg:text-4xl font-black uppercase italic tracking-tighter text-white">Zonas del Sistema</h2>
+          <AnimateIn className="text-center mb-16">
+            <span className="text-[10px] font-black uppercase tracking-[0.4em] text-sky-500 block mb-4">Segmentos de Hardware</span>
+            <h2 className="text-4xl lg:text-5xl font-black tracking-tighter text-zinc-900 dark:text-white uppercase italic">Zonas del Sistema</h2>
           </AnimateIn>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {CATEGORY_CARDS.map((cat, i) => (
               <AnimateIn key={i} delay={i * 0.1}>
-                <div className="glass h-full p-10 hover:border-electric-blue/30 transition-all group relative overflow-hidden cursor-pointer">
-                  {/* Corner scanline accent */}
-                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-electric-blue/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                  <div className="absolute top-0 right-0 p-3 opacity-1 group-hover:opacity-100 transition-opacity">
-                    <div className="text-[7px] font-mono text-electric-blue/40 uppercase tracking-[0.3em] rotate-90 origin-right whitespace-nowrap">SEC_ZONE_{i + 1}</div>
+                <div className="bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl h-full p-12 rounded-[2.5rem] border border-zinc-200/50 dark:border-zinc-800/50 hover:border-sky-500/30 transition-all group relative overflow-hidden cursor-pointer shadow-sm hover:shadow-2xl hover:shadow-sky-500/5">
+                  <div className="absolute top-0 left-0 w-full h-1.5 bg-sky-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute top-0 right-0 p-6 opacity-40 group-hover:opacity-100 transition-opacity">
+                    <div className="text-[8px] font-black text-sky-500 uppercase tracking-[0.3em] rotate-90 origin-right whitespace-nowrap">NODE_SYSTEM_{i + 1}</div>
                   </div>
 
-                  <span className="text-[9px] font-black uppercase tracking-[0.3em] text-electric-blue/60 mb-4 block">{cat.tag}</span>
-                  <h3 className="text-2xl font-black mb-4 uppercase italic tracking-tighter text-white group-hover:text-electric-blue transition-colors">{cat.title}</h3>
-                  <p className="text-sm text-zinc-500 leading-relaxed mb-8">{cat.desc}</p>
-                  <Link href={cat.href} className="text-[10px] font-black uppercase tracking-[0.2em] text-white flex items-center gap-3 group/link">
-                    Acceder a Nodo <ChevronRight size={14} className="text-electric-blue group-hover/link:translate-x-1 transition-transform" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-sky-500/60 mb-6 block">{cat.tag}</span>
+                  <h3 className="text-2xl font-black mb-4 tracking-tighter text-zinc-900 dark:text-white group-hover:text-sky-500 transition-colors">{cat.title}</h3>
+                  <p className="text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed mb-10 font-medium">{cat.desc}</p>
+                  <Link href={cat.href} className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-900 dark:text-white flex items-center gap-3 group/link">
+                    Acceder al Nodo <ChevronRight size={14} className="text-sky-500 group-hover/link:translate-x-1 transition-transform" />
                   </Link>
-                  <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
                 </div>
               </AnimateIn>
             ))}
@@ -183,14 +187,17 @@ export default function Home() {
 
       {/* ── Value Proposition ── */}
       <section className="py-24 lg:py-40 bg-background relative overflow-hidden">
-        <div className="absolute inset-0 retro-grid opacity-50 pointer-events-none" />
+        <div className="absolute inset-0 opacity-20 pointer-events-none"
+          style={{ backgroundImage: 'radial-gradient(#0ea5e9 0.5px, transparent 0.5px)', backgroundSize: '32px 32px' }} />
 
         <div className="max-w-[1200px] mx-auto px-5 relative z-10">
           <div className="grid lg:grid-cols-2 gap-20 items-center">
-            <AnimateIn className="space-y-8">
+            <AnimateIn className="space-y-10">
               <div className="space-y-4">
-                <span className="text-xs font-bold uppercase tracking-[0.4em] text-electric-blue">¿Por qué OSART?</span>
-                <h2 className="text-4xl lg:text-7xl font-black tracking-tighter uppercase italic leading-none text-foreground">El Estándar Industrial en Repuestos</h2>
+                <span className="text-xs font-bold uppercase tracking-[0.4em] text-sky-500">¿Por qué OSART?</span>
+                <h2 className="text-5xl lg:text-7xl font-black tracking-tighter leading-[0.9] text-zinc-900 dark:text-white">
+                  El Estándar <span className="text-sky-500 italic">Premium</span> en Repuestos.
+                </h2>
               </div>
               <p className="text-muted-foreground text-lg leading-relaxed lg:max-w-xl">
                 No somos solo una tienda. Somos tu brazo logístico para asegurar que cada reparación que sale de tu taller sea perfecta.
@@ -208,10 +215,10 @@ export default function Home() {
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.15 }}
-                    className="flex gap-4 group"
+                    className="flex gap-5 group p-6 bg-zinc-50 dark:bg-white/5 rounded-3xl border border-transparent hover:border-sky-500/20 transition-all"
                   >
-                    <div className="w-12 h-12 bg-electric-blue/10 rounded-xl flex items-center justify-center flex-shrink-0 text-electric-blue border border-electric-blue/20 group-hover:bg-electric-blue/20 transition-all">
-                      <Icon size={22} />
+                    <div className="w-14 h-14 bg-sky-500/10 rounded-2xl flex items-center justify-center flex-shrink-0 text-sky-500 border border-sky-500/20 group-hover:bg-sky-500 group-hover:text-white transition-all shadow-lg shadow-sky-500/10">
+                      <Icon size={24} />
                     </div>
                     <div>
                       <h4 className="font-bold uppercase tracking-tight mb-1 text-foreground">{title}</h4>
@@ -224,18 +231,15 @@ export default function Home() {
 
             <AnimateIn delay={0.15} className="relative">
               {/* Glow halo */}
-              <div className="absolute -inset-10 bg-electric-blue/15 blur-[100px] rounded-full -z-10 animate-pulse-glow" />
-              <div className="glass aspect-video lg:aspect-square flex items-center justify-center relative border-electric-blue/10 overflow-hidden">
-                {/* Shimmer */}
-                <div className="absolute inset-0 animate-shimmer opacity-30 pointer-events-none" />
-                <div className="absolute inset-0 retro-scanlines opacity-30 pointer-events-none" />
+              <div className="absolute -inset-10 bg-sky-500/10 blur-[120px] rounded-full -z-10 animate-pulse" />
+              <div className="bg-white/50 dark:bg-zinc-900/50 backdrop-blur-2xl aspect-video lg:aspect-square flex items-center justify-center relative border border-zinc-200 dark:border-zinc-800 rounded-[3rem] overflow-hidden shadow-2xl">
 
-                <div className="text-center p-12 relative z-10">
-                  <CreditCard size={80} className="text-white opacity-10 mx-auto mb-6" />
-                  <span className="text-[10px] font-bold uppercase tracking-[0.5em] text-electric-blue block mb-4">Partner Tecnológico</span>
-                  <h3 className="text-3xl font-black uppercase italic tracking-tighter text-white">Precios Mayoristas</h3>
-                  <p className="mt-4 text-sm text-muted-foreground">Regístrate como servicio técnico y accede a nuestra lista de precios exclusiva para profesionales.</p>
-                  <Link href="/register" className="neon-button inline-flex mt-8 uppercase tracking-widest text-[10px] font-black italic">
+                <div className="text-center p-14 relative z-10">
+                  <CreditCard size={80} className="text-sky-500 opacity-10 mx-auto mb-8" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.5em] text-sky-500 block mb-6">Partner Tecnológico</span>
+                  <h3 className="text-4xl lg:text-5xl font-black tracking-tighter text-zinc-900 dark:text-white leading-tight">Precios <br /><span className="text-sky-500 uppercase italic">Mayoristas</span></h3>
+                  <p className="mt-6 text-sm text-zinc-500 dark:text-zinc-400 font-medium">Regístrate como servicio técnico y accede a nuestra lista de precios exclusiva para profesionales.</p>
+                  <Link href="/register" className="inline-flex mt-10 px-12 py-4 bg-sky-500 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-lg shadow-sky-500/30 hover:bg-sky-600 hover:scale-105 transition-all">
                     Aplicar Cuenta Pro
                   </Link>
                 </div>

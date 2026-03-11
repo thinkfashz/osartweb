@@ -16,7 +16,7 @@ export default function StockKpis({ stats }: { stats: any }) {
                 value={String(stats.totalSkus || 0)}
                 description="Tipos de hardware único"
                 icon={Zap}
-                color="electric-blue"
+                color="sky-500"
             />
             <StatCard
                 title="Alertas Críticas"

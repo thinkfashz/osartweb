@@ -17,7 +17,7 @@ const StickyCheckoutBar: React.FC<StickyCheckoutBarProps> = ({ total, itemCount,
                     <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
                         {itemCount} {itemCount === 1 ? 'Producto' : 'Productos'}
                     </span>
-                    <span className="text-xl font-black text-electric-blue italic tracking-tighter">
+                    <span className="text-xl font-black text-sky-500 italic tracking-tighter">
                         ${(total || 0).toLocaleString('es-CL')}
                     </span>
                 </div>

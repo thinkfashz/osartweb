@@ -17,7 +17,9 @@ import {
     ShieldCheck,
     Zap,
     Layers,
-    Webhook
+    Webhook,
+    Layout,
+    Video
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
@@ -27,6 +29,8 @@ import { cn } from '@/lib/utils';
 
 const NAV_ITEMS = [
     { name: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
+    { name: 'Storefront', icon: Layout, path: '/admin/storefront' },
+    { name: 'Marketing Studio', icon: Video, path: '/admin/marketing' },
     { name: 'Productos', icon: Package, path: '/admin/products' },
     { name: 'Categorías', icon: Layers, path: '/admin/categories' },
     { name: 'Stock en Vivo', icon: TrendingUp, path: '/admin/stock' },
@@ -84,7 +88,7 @@ export default function AdminSidebar({ isOpen, setIsOpen }: { isOpen: boolean, s
                 className="absolute -right-3 top-20 bg-zinc-900 border border-zinc-800 rounded-full p-1.5 shadow-xl hover:bg-zinc-800 hover:border-zinc-700 transition-all hidden lg:flex items-center justify-center z-50 group interactive-focus"
             >
                 {isCollapsed ?
-                    <Menu size={11} className="text-zinc-400 group-hover:text-electric-blue transition-colors" /> :
+                    <Menu size={11} className="text-zinc-400 group-hover:text-sky-500 transition-colors" /> :
                     <X size={11} className="text-zinc-400 group-hover:text-red-400 transition-colors" />
                 }
             </button>

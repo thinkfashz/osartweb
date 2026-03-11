@@ -132,8 +132,8 @@ export default function SettingsPage() {
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
                     <div className="space-y-2">
                         <div className="flex items-center gap-2">
-                            <div className="w-1.5 h-1.5 rounded-full bg-electric-blue animate-pulse" />
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-electric-blue">Panel de Control</span>
+                            <div className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" />
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-sky-500">Panel de Control</span>
                         </div>
                         <h1 className="text-4xl md:text-5xl font-black uppercase italic tracking-tighter text-white leading-none">
                             Configuración
@@ -145,7 +145,7 @@ export default function SettingsPage() {
                     <button
                         onClick={handleSave}
                         disabled={saving || !dirty}
-                        className={`flex items-center gap-3 px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all shadow-lg disabled:opacity-40 ${dirty ? 'bg-white text-black hover:bg-electric-blue' : 'bg-zinc-800 text-zinc-500 cursor-not-allowed'}`}
+                        className={`flex items-center gap-3 px-8 py-4 rounded-2xl font-black uppercase text-[10px] tracking-widest transition-all shadow-lg disabled:opacity-40 ${dirty ? 'bg-white text-black hover:bg-sky-500' : 'bg-zinc-800 text-zinc-500 cursor-not-allowed'}`}
                     >
                         {saving ? <Loader2 size={16} className="animate-spin" />
                             : saved ? <Check size={16} className="text-emerald-500" />
@@ -157,7 +157,7 @@ export default function SettingsPage() {
                 {/* User info card */}
                 <div className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 flex items-center gap-5">
                     <div className="w-14 h-14 bg-zinc-800 rounded-2xl grid place-items-center border border-zinc-700 shrink-0">
-                        <User size={24} className="text-electric-blue" />
+                        <User size={24} className="text-sky-500" />
                     </div>
                     <div className="flex-1 min-w-0">
                         <p className="font-black text-white uppercase italic text-lg tracking-tighter truncate">
@@ -249,7 +249,7 @@ export default function SettingsPage() {
                     <SettingGroup
                         title="Rendimiento y Notificaciones"
                         icon={Zap}
-                        color="bg-electric-blue/20 text-electric-blue"
+                        color="bg-sky-500/20 text-sky-500"
                         rows={PERFORMANCE_SETTINGS}
                     />
                 </div>

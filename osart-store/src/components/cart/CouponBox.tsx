@@ -28,13 +28,13 @@ const CouponBox: React.FC<CouponBoxProps> = ({ onApply, appliedCoupon }) => {
     return (
         <div className="glass p-5 bg-zinc-900/40 border-white/5 mt-4">
             <div className="flex items-center gap-2 mb-4">
-                <Ticket size={16} className="text-electric-blue" />
+                <Ticket size={16} className="text-sky-500" />
                 <span className="text-xs font-bold uppercase tracking-widest italic">Códigos de Descuento</span>
             </div>
 
             {appliedCoupon ? (
-                <div className="flex items-center justify-between bg-electric-blue/10 border border-electric-blue/30 rounded-lg px-4 py-2">
-                    <span className="text-xs font-black text-electric-blue uppercase">{appliedCoupon.code}</span>
+                <div className="flex items-center justify-between bg-sky-500/10 border border-sky-500/30 rounded-lg px-4 py-2">
+                    <span className="text-xs font-black text-sky-500 uppercase">{appliedCoupon.code}</span>
                     <span className="text-[10px] font-bold text-green-500">APLICADO (-{(appliedCoupon.discount * 100)}%)</span>
                 </div>
             ) : (
@@ -44,14 +44,14 @@ const CouponBox: React.FC<CouponBoxProps> = ({ onApply, appliedCoupon }) => {
                         value={code}
                         onChange={(e) => setCode(e.target.value)}
                         placeholder="CÓDIGO"
-                        className="flex-grow bg-zinc-950 border border-white/10 rounded-lg px-4 py-2 text-xs font-mono uppercase focus:border-electric-blue outline-none transition-colors"
+                        className="flex-grow bg-zinc-950 border border-white/10 rounded-lg px-4 py-2 text-xs font-mono uppercase focus:border-sky-500 outline-none transition-colors"
                     />
                     <button
                         type="submit"
                         disabled={isApplying || !code.trim()}
                         className="bg-zinc-800 hover:bg-zinc-700 disabled:opacity-50 text-white rounded-lg px-4 flex items-center justify-center transition-colors"
                     >
-                        {isApplying ? <Loader2 size={16} className="animate-spin text-electric-blue" /> : <Send size={16} />}
+                        {isApplying ? <Loader2 size={16} className="animate-spin text-sky-500" /> : <Send size={16} />}
                     </button>
                 </form>
             )}

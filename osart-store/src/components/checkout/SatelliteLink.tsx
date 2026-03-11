@@ -148,10 +148,10 @@ export const SatelliteLink: React.FC<SatelliteLinkProps> = ({ onLocationFound })
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95 }}
                         onClick={handleAction}
-                        className="group relative w-full py-6 glass border border-zinc-800 rounded-xl overflow-hidden flex items-center justify-center gap-4 transition-all hover:border-electric-blue/40"
+                        className="group relative w-full py-6 glass border border-zinc-800 rounded-xl overflow-hidden flex items-center justify-center gap-4 transition-all hover:border-sky-500/40"
                     >
-                        <div className="absolute inset-0 bg-gradient-to-r from-electric-blue/0 via-electric-blue/5 to-electric-blue/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                        <Satellite className="w-5 h-5 text-zinc-500 group-hover:text-electric-blue group-hover:rotate-12 transition-all" />
+                        <div className="absolute inset-0 bg-gradient-to-r from-sky-500/0 via-sky-500/5 to-sky-500/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                        <Satellite className="w-5 h-5 text-zinc-500 group-hover:text-sky-500 group-hover:rotate-12 transition-all" />
                         <span className="text-xs font-black uppercase tracking-[0.4em] text-zinc-400 group-hover:text-white">Establecer Enlace de Precisión</span>
                     </motion.button>
                 ) : (
@@ -160,7 +160,7 @@ export const SatelliteLink: React.FC<SatelliteLinkProps> = ({ onLocationFound })
                         initial={{ opacity: 0, height: 0 }}
                         animate={{ opacity: 1, height: 'auto' }}
                         exit={{ opacity: 0, height: 0 }}
-                        className={`glass border ${status === 'error' ? 'border-red-500/30' : 'border-electric-blue/30'} rounded-2xl p-6 relative overflow-hidden bg-zinc-950/40 backdrop-blur-xl shadow-2xl`}
+                        className={`glass border ${status === 'error' ? 'border-red-500/30' : 'border-sky-500/30'} rounded-2xl p-6 relative overflow-hidden bg-zinc-950/40 backdrop-blur-xl shadow-2xl`}
                     >
                         {/* Status Bar */}
                         <div className="flex justify-between items-center mb-6 pt-2">
@@ -175,7 +175,7 @@ export const SatelliteLink: React.FC<SatelliteLinkProps> = ({ onLocationFound })
                                 </span>
                             </div>
                             <div className="flex items-center gap-2 text-white/80 font-mono text-sm font-bold">
-                                <Clock className="w-4 h-4 text-electric-blue" />
+                                <Clock className="w-4 h-4 text-sky-500" />
                                 {currentTime}
                             </div>
                         </div>
@@ -202,7 +202,7 @@ export const SatelliteLink: React.FC<SatelliteLinkProps> = ({ onLocationFound })
                                 {/* Location Section */}
                                 <div className="space-y-4">
                                     <div className="flex items-center gap-3">
-                                        <MapPin className="w-5 h-5 text-electric-blue" />
+                                        <MapPin className="w-5 h-5 text-sky-500" />
                                         <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Ubicación Actual</span>
                                     </div>
                                     <div className="pl-8">
@@ -230,7 +230,7 @@ export const SatelliteLink: React.FC<SatelliteLinkProps> = ({ onLocationFound })
                                 {/* Weather Section */}
                                 <div className="space-y-4 border-l border-zinc-900 md:pl-8">
                                     <div className="flex items-center gap-3">
-                                        <Thermometer className="w-5 h-5 text-electric-blue" />
+                                        <Thermometer className="w-5 h-5 text-sky-500" />
                                         <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Clima Local</span>
                                     </div>
                                     <div className="pl-8 flex items-center gap-6">
@@ -264,7 +264,7 @@ export const SatelliteLink: React.FC<SatelliteLinkProps> = ({ onLocationFound })
                                     initial={{ y: 20, opacity: 0 }}
                                     animate={{ y: 0, opacity: 1 }}
                                     onClick={applyLocation}
-                                    className="w-full mt-8 py-4 bg-electric-blue hover:bg-white text-black font-black uppercase text-xs tracking-[0.2em] transition-all rounded-lg flex items-center justify-center gap-3 group shadow-[0_0_20px_rgba(0,163,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]"
+                                    className="w-full mt-8 py-4 bg-sky-500 hover:bg-white text-black font-black uppercase text-xs tracking-[0.2em] transition-all rounded-lg flex items-center justify-center gap-3 group shadow-[0_0_20px_rgba(0,163,255,0.3)] hover:shadow-[0_0_30px_rgba(255,255,255,0.2)]"
                                 >
                                     Autocompletar Dirección
                                     <Check className="w-4 h-4" />
@@ -275,7 +275,7 @@ export const SatelliteLink: React.FC<SatelliteLinkProps> = ({ onLocationFound })
                         {/* Scan Line Animation */}
                         {status === 'scanning' && (
                             <motion.div
-                                className="absolute top-0 left-0 w-full h-[2px] bg-electric-blue z-50 pointer-events-none blur-sm"
+                                className="absolute top-0 left-0 w-full h-[2px] bg-sky-500 z-50 pointer-events-none blur-sm"
                                 animate={{ top: ['0%', '100%'] }}
                                 transition={{ repeat: Infinity, duration: 1.5, ease: "linear" }}
                             />

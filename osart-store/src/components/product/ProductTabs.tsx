@@ -30,7 +30,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
                         onClick={() => setActiveTab(tab.id as any)}
                         className={cn(
                             "flex items-center gap-2 px-6 py-4 text-[10px] font-black uppercase tracking-[0.2em] transition-all relative group",
-                            activeTab === tab.id ? "text-electric-blue" : "text-white/40 hover:text-white"
+                            activeTab === tab.id ? "text-sky-500" : "text-white/40 hover:text-white"
                         )}
                     >
                         {tab.icon}
@@ -38,7 +38,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
                         {activeTab === tab.id && (
                             <motion.div
                                 layoutId="activeTabPDP"
-                                className="absolute bottom-0 left-0 right-0 h-0.5 bg-electric-blue shadow-[0_0_10px_rgba(0,240,255,0.5)]"
+                                className="absolute bottom-0 left-0 right-0 h-0.5 bg-sky-500 shadow-[0_0_10px_rgba(0,240,255,0.5)]"
                             />
                         )}
                     </button>
@@ -57,7 +57,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
                     {activeTab === 'desc' && (
                         <div className="max-w-4xl space-y-8">
                             <div className="flex items-start gap-4">
-                                <div className="w-1 h-8 bg-electric-blue/40 mt-1" />
+                                <div className="w-1 h-8 bg-sky-500/40 mt-1" />
                                 <p className="text-white/70 leading-relaxed text-lg font-medium italic">
                                     "{product.description || "Este componente de alta precisión ha sido validado para su integración en sistemas críticos. Cada unidad pasa por un riguroso proceso de control de calidad antes del despacho."}"
                                 </p>
@@ -65,7 +65,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
 
                             <div className="grid sm:grid-cols-2 gap-6 pt-8">
                                 <div className="p-6 bg-zinc-900/30 border border-white/5 rounded-xl space-y-3">
-                                    <div className="flex items-center gap-2 text-electric-blue">
+                                    <div className="flex items-center gap-2 text-sky-500">
                                         <Box size={16} />
                                         <h4 className="text-[10px] font-black uppercase tracking-widest">Integridad Estructural</h4>
                                     </div>
@@ -89,7 +89,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
                     {activeTab === 'specs' && product.specs && (
                         <div className="max-w-3xl overflow-hidden rounded-xl border border-white/10 bg-[#0a0a0a]">
                             <div className="p-4 bg-zinc-900/50 border-b border-white/10 flex justify-between items-center">
-                                <span className="text-[10px] font-mono text-electric-blue/60 uppercase tracking-widest">Registro de Componente V3.2</span>
+                                <span className="text-[10px] font-mono text-sky-500/60 uppercase tracking-widest">Registro de Componente V3.2</span>
                                 <div className="flex gap-1">
                                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/50" />
                                     <div className="w-1.5 h-1.5 rounded-full bg-emerald-500/50" />
@@ -112,7 +112,7 @@ export function ProductTabs({ product }: ProductTabsProps) {
                     {activeTab === 'shipping' && (
                         <div className="grid md:grid-cols-2 gap-8 max-w-4xl">
                             <div className="bg-zinc-900/40 p-10 rounded-2xl border border-white/5 group hover:border-white/20 transition-all">
-                                <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center text-electric-blue border border-white/10 mb-6 font-mono font-bold text-xs">A-1</div>
+                                <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center text-sky-500 border border-white/10 mb-6 font-mono font-bold text-xs">A-1</div>
                                 <h4 className="text-xs font-black uppercase tracking-[0.3em] text-white mb-4">Garantía Certificada</h4>
                                 <p className="text-[11px] text-white/40 leading-relaxed font-mono uppercase">
                                     Cobertura total por 180 ciclos solares (6 meses). Soporte técnico prioritario en caso de anomalías de hardware detectadas bajo uso nominal.

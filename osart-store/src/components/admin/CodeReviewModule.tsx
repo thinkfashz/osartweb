@@ -89,14 +89,14 @@ const CodeReviewModule = () => {
                                     "w-1.5",
                                     error.type === 'error' ? 'bg-red-500 shadow-[0_0_20px_rgba(239,68,68,0.3)]' :
                                         error.type === 'performance' ? 'bg-amber-500 shadow-[0_0_20px_rgba(245,158,11,0.3)]' :
-                                            'bg-electric-blue shadow-[0_0_20px_rgba(0,210,255,0.3)]'
+                                            'bg-sky-500 shadow-[0_0_20px_rgba(0,210,255,0.3)]'
                                 )} />
                                 <div className="p-6 flex-1">
                                     <div className="flex items-center justify-between mb-4">
                                         <div className="flex items-center gap-3">
                                             {error.type === 'error' && <ShieldAlert size={16} className="text-red-500" />}
                                             {error.type === 'performance' && <Zap size={16} className="text-amber-500" />}
-                                            {error.type === 'connection' && <Cpu size={16} className="text-electric-blue" />}
+                                            {error.type === 'connection' && <Cpu size={16} className="text-sky-500" />}
                                             <span className="text-[10px] font-mono font-black uppercase tracking-widest text-zinc-500">{error.type}</span>
                                         </div>
                                         <span className="text-[9px] font-mono text-zinc-600 uppercase tracking-widest">{error.timestamp}</span>
@@ -107,7 +107,7 @@ const CodeReviewModule = () => {
                                     {error.file && (
                                         <div className="flex items-center gap-2 mb-6">
                                             <Terminal size={14} className="text-zinc-600" />
-                                            <code className="text-[11px] font-mono text-electric-blue bg-electric-blue/5 border border-electric-blue/10 px-2 py-0.5 rounded">
+                                            <code className="text-[11px] font-mono text-sky-500 bg-sky-500/5 border border-sky-500/10 px-2 py-0.5 rounded">
                                                 {error.file}:{error.line}
                                             </code>
                                         </div>

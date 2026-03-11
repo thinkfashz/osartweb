@@ -94,7 +94,7 @@ const OrderCard = ({ order }: { order: any }) => {
                             onClick={() => setIsExpanded(!isExpanded)}
                             className={cn(
                                 "w-12 h-12 rounded-2xl border border-white/5 bg-white/5 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-white/10 transition-all",
-                                isExpanded && "rotate-90 bg-electric-blue/10 border-electric-blue/20 text-electric-blue"
+                                isExpanded && "rotate-90 bg-sky-500/10 border-sky-500/20 text-sky-500"
                             )}
                         >
                             <ChevronRight size={20} />
@@ -192,7 +192,7 @@ export default function OrdersPage() {
         <PageTransition>
             <div className="min-h-screen bg-zinc-950 pt-32 pb-20 px-5 relative overflow-hidden">
                 {/* Background Ambient Glows */}
-                <div className="absolute top-0 right-0 w-1/3 h-1/2 bg-electric-blue/5 blur-[120px] -z-10 animate-pulse" />
+                <div className="absolute top-0 right-0 w-1/3 h-1/2 bg-sky-500/5 blur-[120px] -z-10 animate-pulse" />
                 <div className="absolute bottom-0 left-0 w-1/4 h-1/3 bg-blue-600/5 blur-[100px] -z-10" />
 
                 <div className="max-w-5xl mx-auto space-y-12">
@@ -200,8 +200,8 @@ export default function OrdersPage() {
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
                         <div className="space-y-3">
                             <div className="flex items-center gap-3">
-                                <div className="w-2 h-2 rounded-full bg-electric-blue animate-ping" />
-                                <span className="text-[10px] font-black text-electric-blue uppercase tracking-[0.4em]">Historial de Protocolos</span>
+                                <div className="w-2 h-2 rounded-full bg-sky-500 animate-ping" />
+                                <span className="text-[10px] font-black text-sky-500 uppercase tracking-[0.4em]">Historial de Protocolos</span>
                             </div>
                             <h1 className="text-5xl md:text-6xl font-black text-white uppercase italic tracking-tighter leading-none">
                                 Mis Órdenes
@@ -212,7 +212,7 @@ export default function OrdersPage() {
                         </div>
                         <div className="flex items-center gap-4">
                             <div className="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col items-center min-w-[100px] relative overflow-hidden group">
-                                <div className="absolute inset-0 bg-electric-blue/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
+                                <div className="absolute inset-0 bg-sky-500/10 translate-y-full group-hover:translate-y-0 transition-transform duration-500" />
                                 <span className="text-[10px] font-black text-zinc-500 uppercase tracking-widest mb-1 relative z-10">Total Envíos</span>
                                 <span className="text-2xl font-black text-white italic tracking-tighter relative z-10">{orders.length}</span>
                             </div>
@@ -250,7 +250,7 @@ export default function OrdersPage() {
                                 </div>
                                 <Link
                                     href="/catalog"
-                                    className="px-10 py-5 bg-white text-black font-black uppercase italic tracking-[0.2em] text-[11px] rounded-2xl hover:bg-electric-blue hover:text-white transition-all shadow-[0_20px_40px_rgba(0,0,0,0.3)] active:scale-95"
+                                    className="px-10 py-5 bg-white text-black font-black uppercase italic tracking-[0.2em] text-[11px] rounded-2xl hover:bg-sky-500 hover:text-white transition-all shadow-[0_20px_40px_rgba(0,0,0,0.3)] active:scale-95"
                                 >
                                     Iniciar Adquisición
                                 </Link>

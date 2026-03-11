@@ -13,7 +13,7 @@ export default function WishlistPage() {
     if (loading) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-background">
-                <Loader2 className="animate-spin text-electric-blue" size={48} />
+                <Loader2 className="animate-spin text-sky-500" size={48} />
                 <p className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500 animate-pulse">
                     Accediendo a Memoria de Hardware...
                 </p>
@@ -29,7 +29,7 @@ export default function WishlistPage() {
                 <div className="mb-12 sm:mb-20">
                     <Link
                         href="/catalog"
-                        className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 hover:text-electric-blue transition-colors mb-8 group"
+                        className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 hover:text-sky-500 transition-colors mb-8 group"
                     >
                         <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
                         Retornar al Nodo de Suministro
@@ -38,11 +38,11 @@ export default function WishlistPage() {
                     <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-8">
                         <div className="space-y-4">
                             <div className="flex items-center gap-3">
-                                <Heart size={16} className="text-electric-blue" fill="currentColor" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-electric-blue">Almacenamiento Local</span>
+                                <Heart size={16} className="text-sky-500" fill="currentColor" />
+                                <span className="text-[10px] font-black uppercase tracking-[0.4em] text-sky-500">Almacenamiento Local</span>
                             </div>
                             <h1 className="text-5xl sm:text-8xl font-black uppercase italic tracking-tighter leading-none text-white">
-                                Hardware <span className="text-electric-blue">Reservado</span>
+                                Hardware <span className="text-sky-500">Reservado</span>
                             </h1>
                             <div className="flex items-center gap-4 pl-1">
                                 <div className="h-px w-12 bg-white/10" />
@@ -54,7 +54,7 @@ export default function WishlistPage() {
 
                         {wishlist.length > 0 && (
                             <div className="hidden sm:flex items-center gap-4 py-3 px-5 bg-white/5 border border-white/10 rounded-xl">
-                                <Zap size={16} className="text-electric-blue" />
+                                <Zap size={16} className="text-sky-500" />
                                 <span className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">
                                     Disponibilidad Crítica Monitoreada
                                 </span>
@@ -73,7 +73,7 @@ export default function WishlistPage() {
                             className="flex flex-col items-center justify-center py-32 sm:py-48 text-center space-y-8"
                         >
                             <div className="relative">
-                                <div className="absolute inset-0 bg-electric-blue/10 blur-[60px] rounded-full" />
+                                <div className="absolute inset-0 bg-sky-500/10 blur-[60px] rounded-full" />
                                 <PackageSearch size={80} className="text-zinc-800 relative z-10" />
                             </div>
                             <div className="space-y-4 max-w-md mx-auto">

@@ -36,7 +36,7 @@ const CartPage = () => {
     if (loading && items.length === 0) {
         return (
             <div className="min-h-[60vh] flex flex-col items-center justify-center gap-4">
-                <Loader2 className="animate-spin text-electric-blue" size={48} />
+                <Loader2 className="animate-spin text-sky-500" size={48} />
                 <p className="text-xs font-black uppercase tracking-[0.3em] text-muted-foreground animate-pulse">
                     Sincronizando Inventario...
                 </p>
@@ -55,7 +55,7 @@ const CartPage = () => {
                 <div className="mb-10 sm:mb-12">
                     <Link
                         href="/catalog"
-                        className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-electric-blue transition-colors mb-6 group"
+                        className="inline-flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-sky-500 transition-colors mb-6 group"
                     >
                         <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
                         Volver al Catálogo
@@ -63,7 +63,7 @@ const CartPage = () => {
 
                     <h1 className="text-4xl sm:text-6xl font-black flex flex-wrap items-baseline gap-x-4 uppercase italic tracking-tighter leading-none">
                         <span className="text-white">Tu</span>
-                        <span className="text-electric-blue">Carrito</span>
+                        <span className="text-sky-500">Carrito</span>
                         <span className="text-sm not-italic font-bold text-muted-foreground tracking-widest mt-2 sm:mt-0 font-mono">
                             [LVL:01_QTY:{itemCount}]
                         </span>

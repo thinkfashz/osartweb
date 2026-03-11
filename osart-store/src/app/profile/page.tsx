@@ -103,8 +103,8 @@ export default function ProfilePage() {
                         [ERROR_403]: SESIÓN NO DETECTADA EN EL NODO ACTUAL.<br />
                         SE REQUIERE AUTORIZACIÓN NIVEL 1 PARA ACCEDER AL PANEL.
                     </p>
-                    <Link href="/login" className="group relative px-12 py-5 bg-white text-black font-black uppercase italic tracking-[0.2em] overflow-hidden transition-all hover:bg-electric-blue block w-full text-center">
-                        <div className="absolute inset-0 bg-electric-blue translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                    <Link href="/login" className="group relative px-12 py-5 bg-white text-black font-black uppercase italic tracking-[0.2em] overflow-hidden transition-all hover:bg-sky-500 block w-full text-center">
+                        <div className="absolute inset-0 bg-sky-500 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
                         <span className="relative z-10">Sincronizar Credenciales</span>
                     </Link>
                 </div>
@@ -118,7 +118,7 @@ export default function ProfilePage() {
     return (
         <div className="min-h-screen bg-zinc-950 pt-28 pb-20 relative overflow-hidden">
             {/* Ambient Background */}
-            <div className="absolute top-0 right-0 w-1/4 h-1/4 bg-electric-blue/5 blur-[120px] -z-10" />
+            <div className="absolute top-0 right-0 w-1/4 h-1/4 bg-sky-500/5 blur-[120px] -z-10" />
             <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-blue-600/5 blur-[120px] -z-10" />
 
             <div className="max-w-7xl mx-auto px-6">
@@ -130,14 +130,14 @@ export default function ProfilePage() {
                             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500">Terminal de Operario Activa</span>
                         </div>
                         <h1 className="text-5xl lg:text-7xl font-black uppercase italic tracking-tighter text-white leading-[0.8]">
-                            Panel de <br /> <span className="text-electric-blue">Control</span>
+                            Panel de <br /> <span className="text-sky-500">Control</span>
                         </h1>
                     </div>
 
                     <div className="flex items-center gap-6 p-4 bg-zinc-900/50 border border-white/5 rounded-2xl backdrop-blur-md">
                         <div className="w-16 h-16 rounded-xl bg-zinc-800 border border-white/10 flex items-center justify-center text-white/50 relative group">
                             <UserIcon size={32} />
-                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-electric-blue rounded-lg flex items-center justify-center text-[10px] font-black text-background">
+                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-sky-500 rounded-lg flex items-center justify-center text-[10px] font-black text-background">
                                 {currentLevel}
                             </div>
                         </div>
@@ -165,7 +165,7 @@ export default function ProfilePage() {
                                 <div className="text-2xl font-black text-white italic tracking-tighter">NIVEL {currentLevel} - OPERARIO SENIOR</div>
                             </div>
                             <div className="text-right">
-                                <span className="text-3xl font-black text-electric-blue tracking-tighter">{(profile?.knowledge_points || 0).toLocaleString()}</span>
+                                <span className="text-3xl font-black text-sky-500 tracking-tighter">{(profile?.knowledge_points || 0).toLocaleString()}</span>
                                 <span className="text-[10px] font-mono text-white/20 ml-2">XP_TOT</span>
                             </div>
                         </div>
@@ -175,7 +175,7 @@ export default function ProfilePage() {
                                 <motion.div
                                     initial={{ width: 0 }}
                                     animate={{ width: `${xpProgress}%` }}
-                                    className="h-full bg-gradient-to-r from-blue-600 to-electric-blue rounded-full relative shadow-[0_0_15px_rgba(0,240,255,0.3)]"
+                                    className="h-full bg-gradient-to-r from-blue-600 to-sky-500 rounded-full relative shadow-[0_0_15px_rgba(0,240,255,0.3)]"
                                 >
                                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20" />
                                 </motion.div>
@@ -205,7 +205,7 @@ export default function ProfilePage() {
                     {/* Quick Info */}
                     <div className="p-8 bg-zinc-900 border border-white/10 rounded-2xl flex flex-col justify-between">
                         <div className="space-y-6">
-                            <div className="flex items-center gap-3 text-electric-blue">
+                            <div className="flex items-center gap-3 text-sky-500">
                                 <Cpu size={20} />
                                 <h3 className="text-[10px] font-black uppercase tracking-[0.3em]">Sincronización Total</h3>
                             </div>
@@ -237,8 +237,8 @@ export default function ProfilePage() {
                     <div className="flex items-end justify-between">
                         <div className="space-y-2">
                             <div className="flex items-center gap-2">
-                                <div className="w-1.5 h-1.5 bg-electric-blue rounded-full" />
-                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-electric-blue">LOG_DE_SISTEMA</span>
+                                <div className="w-1.5 h-1.5 bg-sky-500 rounded-full" />
+                                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-sky-500">LOG_DE_SISTEMA</span>
                             </div>
                             <h2 className="text-3xl font-black uppercase italic tracking-tighter text-white">Historial de Despachos</h2>
                         </div>
@@ -266,7 +266,7 @@ export default function ProfilePage() {
                                     className="group bg-zinc-900 border border-white/5 hover:border-white/20 rounded-2xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 transition-all"
                                 >
                                     <div className="flex items-center gap-6">
-                                        <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center text-electric-blue border border-white/10">
+                                        <div className="w-12 h-12 bg-white/5 rounded-xl flex items-center justify-center text-sky-500 border border-white/10">
                                             <History size={20} />
                                         </div>
                                         <div className="space-y-1">
@@ -298,7 +298,7 @@ export default function ProfilePage() {
                                             )}>
                                                 {order.status === 'completed' ? 'Sincronizado' : 'En Tránsito'}
                                             </div>
-                                            <button className="p-3 bg-white/5 border border-white/10 rounded-lg text-white/40 group-hover:text-electric-blue group-hover:border-electric-blue/40 transition-all">
+                                            <button className="p-3 bg-white/5 border border-white/10 rounded-lg text-white/40 group-hover:text-sky-500 group-hover:border-sky-500/40 transition-all">
                                                 <ChevronRight size={16} />
                                             </button>
                                         </div>

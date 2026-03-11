@@ -5,59 +5,88 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useTheme } from '@/context/ThemeContext';
+import { useStorefront } from '@/context/StorefrontContext';
 
 const Hero = () => {
     const { theme } = useTheme();
+    const { settings } = useStorefront();
+
+    // Split title to keep the italic style on 'Mueve' if present, otherwise just show it
+    const renderTitle = () => {
+        const parts = settings.hero_title.split(/(Mueve)/i);
+        return parts.map((part, i) =>
+            part.toLowerCase() === 'mueve'
+                ? <span key={i} className="text-sky-500 italic" style={{ color: settings.primary_color }}>{part}</span>
+                : part
+        );
+    };
 
     return (
-        <section className="relative w-full min-h-[85vh] flex items-center justify-center overflow-hidden py-20 px-5">
-            {/* Background elements that adapt to theme */}
-            <div className="absolute inset-0 opacity-20 pointer-events-none">
-                <div className="absolute inset-0 retro-grid" />
-                <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/40 to-background" />
+        <section className="relative w-full min-h-screen flex items-center justify-center overflow-hidden py-32 px-5 bg-white dark:bg-zinc-950">
+            {/* Rondón Animado: Background logic */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+                <motion.div
+                    animate={{
+                        x: [0, 50, 0],
+                        y: [0, -30, 0],
+                        scale: [1, 1.1, 1]
+                    }}
+                    transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                    className="absolute top-[10%] left-[10%] w-[30%] h-[30%] bg-sky-200/40 dark:bg-sky-900/10 blur-[120px] rounded-full"
+                    style={{ backgroundColor: `${settings.primary_color}40` }}
+                />
+                <motion.div
+                    animate={{
+                        x: [0, -40, 0],
+                        y: [0, 60, 0],
+                        scale: [1, 1.05, 1]
+                    }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                    className="absolute bottom-[20%] right-[10%] w-[25%] h-[25%] bg-cyan-200/30 dark:bg-cyan-900/10 blur-[100px] rounded-full"
+                    style={{ backgroundColor: `${settings.secondary_color}30` }}
+                />
             </div>
 
-            <div className="max-w-[1200px] w-full mx-auto relative z-10 text-center">
+            <div className="max-w-[1200px] w-full mx-auto relative z-10">
                 <motion.div
                     initial={{ opacity: 0, y: 40 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
                     className="flex flex-col items-center gap-6"
                 >
-                    {/* Minimalist Badge */}
-                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-foreground/5 border border-foreground/10 rounded-full">
-                        <span className="w-1.5 h-1.5 rounded-full bg-electric-blue animate-pulse shadow-[0_0_8px_var(--electric-blue)]" />
-                        <span className="text-[9px] font-black uppercase tracking-[0.3em] text-foreground/70">
-                            OSART_INDUSTRIAL_SYSTEM_V4.0
+                    {/* Modern Badge */}
+                    <div className="inline-flex items-center gap-2 px-4 py-2 bg-sky-500/10 dark:bg-sky-500/5 border border-sky-500/20 rounded-full" style={{ borderColor: `${settings.primary_color}33`, backgroundColor: `${settings.primary_color}1a` }}>
+                        <span className="w-2 h-2 rounded-full bg-sky-500 animate-pulse" style={{ backgroundColor: settings.primary_color, boxShadow: `0 0 10px ${settings.primary_color}` }} />
+                        <span className="text-[10px] font-black uppercase tracking-[0.25em] text-sky-600 dark:text-sky-400" style={{ color: settings.primary_color }}>
+                            OSART DIGITAL SYSTEMS 2026
                         </span>
                     </div>
 
                     {/* Massive Bold Heading */}
-                    <h1 className="text-6xl md:text-8xl lg:text-[10rem] font-black tracking-tighter uppercase italic leading-[0.85] text-foreground">
-                        Precision <br />
-                        <span className="text-electric-blue outline-text">Electronics</span>
+                    <h1 className="text-6xl md:text-8xl lg:text-[9rem] font-black tracking-tighter leading-[0.9] text-zinc-900 dark:text-white max-w-4xl text-center">
+                        {renderTitle()}
                     </h1>
 
                     {/* Subheadline */}
-                    <p className="max-w-2xl text-lg md:text-xl text-muted-foreground font-medium leading-relaxed mt-4">
-                        Componentes de alta fidelidad para servicios técnicos de élite.
-                        Ingeniería táctica aplicada a cada reparación.
+                    <p className="max-w-xl text-lg md:text-xl text-zinc-500 dark:text-zinc-400 font-medium leading-relaxed mt-6 text-center whitespace-pre-line">
+                        {settings.hero_subtitle}
                     </p>
 
-                    {/* Minimalist Actions */}
-                    <div className="flex flex-wrap items-center justify-center gap-6 mt-10">
+                    {/* Premium Actions */}
+                    <div className="flex flex-wrap items-center justify-center gap-6 mt-12">
                         <Link
                             href="/catalog"
-                            className="bg-foreground text-background px-12 py-5 rounded-full font-black uppercase italic tracking-tighter text-sm hover:scale-105 transition-all flex items-center gap-3 active:scale-95"
+                            className="bg-sky-500 text-white px-12 py-5 rounded-[2rem] font-black uppercase tracking-widest text-xs hover:scale-105 hover:bg-sky-600 transition-all flex items-center gap-3 active:scale-95 shadow-2xl shadow-sky-500/30"
+                            style={{ backgroundColor: settings.primary_color, boxShadow: `0 20px 40px ${settings.primary_color}4d` }}
                         >
-                            EXPLORAR CATÁLOGO
+                            Ver Catálogo Completo
                             <ArrowRight size={18} />
                         </Link>
                         <Link
                             href="/about"
-                            className="text-foreground border-b-2 border-foreground/20 hover:border-foreground transition-all py-2 font-black uppercase tracking-widest text-[10px]"
+                            className="text-zinc-900 dark:text-white px-12 py-5 border border-zinc-200 dark:border-zinc-800 rounded-[2rem] font-black uppercase tracking-widest text-xs hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
                         >
-                            NUESTRA MISIÓN
+                            Nuestra Misión
                         </Link>
                     </div>
                 </motion.div>

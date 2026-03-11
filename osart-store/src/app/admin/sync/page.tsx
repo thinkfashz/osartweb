@@ -126,12 +126,12 @@ export default function SyncPage() {
     };
 
     const statusColor = (s: SyncEvent['status']) =>
-        s === 'success' ? 'text-emerald-400' : s === 'error' ? 'text-red-400' : 'text-electric-blue';
+        s === 'success' ? 'text-emerald-400' : s === 'error' ? 'text-red-400' : 'text-sky-500';
 
     const StatusIcon = ({ status }: { status: SyncEvent['status'] }) => {
         if (status === 'success') return <CheckCircle2 size={16} className="text-emerald-400" />;
         if (status === 'error') return <XCircle size={16} className="text-red-400" />;
-        return <Loader2 size={16} className="animate-spin text-electric-blue" />;
+        return <Loader2 size={16} className="animate-spin text-sky-500" />;
     };
 
     return (
@@ -141,8 +141,8 @@ export default function SyncPage() {
                 <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
                     <div className="space-y-2">
                         <div className="flex items-center gap-2">
-                            <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${syncing ? 'bg-electric-blue' : 'bg-emerald-500'}`} />
-                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-electric-blue">Puente de Datos OSART</span>
+                            <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${syncing ? 'bg-sky-500' : 'bg-emerald-500'}`} />
+                            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-sky-500">Puente de Datos OSART</span>
                         </div>
                         <h1 className="text-4xl md:text-5xl font-black uppercase italic tracking-tighter text-white leading-none">
                             Sincronización
@@ -155,7 +155,7 @@ export default function SyncPage() {
                         <button
                             onClick={handleSync}
                             disabled={syncing}
-                            className="flex-1 lg:flex-none flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-white text-black font-black uppercase text-[10px] tracking-widest hover:bg-electric-blue transition-all disabled:opacity-60 shadow-lg"
+                            className="flex-1 lg:flex-none flex items-center justify-center gap-3 px-8 py-4 rounded-2xl bg-white text-black font-black uppercase text-[10px] tracking-widest hover:bg-sky-500 transition-all disabled:opacity-60 shadow-lg"
                         >
                             <RefreshCcw size={16} className={syncing ? 'animate-spin' : ''} />
                             {syncing ? 'Sincronizando...' : 'Forzar Sync'}
@@ -262,7 +262,7 @@ export default function SyncPage() {
                         {/* Network Status */}
                         <div className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 space-y-5">
                             <h3 className="text-[10px] font-black uppercase tracking-widest text-white flex items-center gap-2">
-                                <Activity size={14} className="text-electric-blue" />
+                                <Activity size={14} className="text-sky-500" />
                                 Estado de Red
                             </h3>
                             {[

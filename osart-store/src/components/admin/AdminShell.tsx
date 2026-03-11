@@ -87,9 +87,9 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         return (
             <div className="h-screen w-full bg-zinc-950 flex flex-col items-center justify-center gap-6">
                 <div className="relative w-16 h-16">
-                    <div className="absolute inset-0 w-16 h-16 border-2 border-zinc-800 border-t-electric-blue rounded-2xl animate-spin" />
+                    <div className="absolute inset-0 w-16 h-16 border-2 border-zinc-800 border-t-sky-500 rounded-2xl animate-spin" />
                     <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-2 h-2 rounded-full bg-electric-blue" />
+                        <div className="w-2 h-2 rounded-full bg-sky-500" />
                     </div>
                 </div>
                 <p className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">

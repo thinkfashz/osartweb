@@ -15,7 +15,7 @@ const CartSummary: React.FC<CartSummaryProps> = ({ subtotal, discount, total, on
     const finalTotal = total + shipping;
 
     return (
-        <div className="glass p-6 sm:p-8 bg-zinc-950/80 border-electric-blue/20 backdrop-blur-xl">
+        <div className="glass p-6 sm:p-8 bg-zinc-950/80 border-sky-500/20 backdrop-blur-xl">
             <h2 className="text-xl font-black mb-6 pb-4 border-b border-white/5 uppercase italic tracking-tighter">
                 Orden de Servicio
             </h2>
@@ -35,7 +35,7 @@ const CartSummary: React.FC<CartSummaryProps> = ({ subtotal, discount, total, on
 
                 <div className="flex justify-between text-muted-foreground">
                     <span className="text-[10px] font-bold uppercase tracking-[0.2em]">Logística / Envío</span>
-                    <span className={`font-mono font-bold ${shipping === 0 ? 'text-electric-blue' : 'text-white'}`}>
+                    <span className={`font-mono font-bold ${shipping === 0 ? 'text-sky-500' : 'text-white'}`}>
                         {shipping === 0 ? 'BONIFICADO' : `$${shipping.toLocaleString('es-CL')}`}
                     </span>
                 </div>
@@ -43,7 +43,7 @@ const CartSummary: React.FC<CartSummaryProps> = ({ subtotal, discount, total, on
                 <div className="pt-4 mt-2 border-t border-white/5">
                     <div className="flex justify-between text-white">
                         <span className="text-2xl font-black uppercase italic tracking-tighter">Total</span>
-                        <span className="text-3xl font-black text-electric-blue italic tracking-tighter">
+                        <span className="text-3xl font-black text-sky-500 italic tracking-tighter">
                             ${(finalTotal || 0).toLocaleString('es-CL')}
                         </span>
                     </div>
@@ -60,11 +60,11 @@ const CartSummary: React.FC<CartSummaryProps> = ({ subtotal, discount, total, on
 
             <div className="mt-8 space-y-4 pt-6 border-t border-white/5">
                 <div className="flex items-center gap-3 text-[10px] text-muted-foreground uppercase font-bold tracking-[0.2em]">
-                    <ShieldCheck size={16} className="text-electric-blue shrink-0" />
+                    <ShieldCheck size={16} className="text-sky-500 shrink-0" />
                     <span>Garantía de Hardware OSART</span>
                 </div>
                 <div className="flex items-center gap-3 text-[10px] text-muted-foreground uppercase font-bold tracking-[0.2em]">
-                    <Truck size={16} className="text-electric-blue shrink-0" />
+                    <Truck size={16} className="text-sky-500 shrink-0" />
                     <span>Seguimiento en Tiempo Real</span>
                 </div>
             </div>

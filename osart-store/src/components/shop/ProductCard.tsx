@@ -26,6 +26,24 @@ const ProductCard: React.FC<ProductCardProps> = ({ product: rawProduct }) => {
     const { wishlist } = useWishlist();
     const [adding, setAdding] = useState(false);
 
+    // 3D Tilt & Dynamic Glow State
+    const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+    const [isHovered, setIsHovered] = useState(false);
+
+    const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        // Normalize for Tilt (-1 to 1)
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = (y - centerY) / 20; // Subtle tilt intensity
+        const rotateY = (centerX - x) / 20;
+
+        setMousePos({ x, y, rotateX, rotateY } as any);
+    };
+
     const isFavorited = wishlist.some((item: any) => item.productId === product.id);
     const imgSrc = product.images?.[0]?.url ?? product.image_url ?? null;
     const isOutOfStock = product.stock === 0 || product.stock_quantity === 0;
@@ -59,52 +77,95 @@ const ProductCard: React.FC<ProductCardProps> = ({ product: rawProduct }) => {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="group relative flex flex-col bg-card border border-foreground/5 hover:border-foreground/10 transition-all duration-500 overflow-hidden"
+            onMouseMove={handleMouseMove}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => {
+                setIsHovered(false);
+                setMousePos({ x: 0, y: 0, rotateX: 0, rotateY: 0 } as any);
+            }}
+            animate={{
+                rotateX: (mousePos as any).rotateX || 0,
+                rotateY: (mousePos as any).rotateY || 0,
+                scale: isHovered ? 1.02 : 1,
+            }}
+            style={{
+                transformStyle: 'preserve-3d',
+                perspective: 1000
+            }}
+            className="group relative flex flex-col bg-white dark:bg-zinc-900/50 rounded-[2.5rem] border border-zinc-200/50 dark:border-zinc-800/50 hover:border-sky-500/30 transition-all duration-300 overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-sky-500/10"
         >
+            {/* Dynamic Cursor Glow */}
+            <AnimatePresence>
+                {isHovered && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="absolute pointer-events-none z-0"
+                        style={{
+                            left: mousePos.x,
+                            top: mousePos.y,
+                            width: '300px',
+                            height: '300px',
+                            background: 'radial-gradient(circle, rgba(14, 165, 233, 0.15) 0%, transparent 70%)',
+                            transform: 'translate(-50%, -50%)',
+                        }}
+                    />
+                )}
+            </AnimatePresence>
             {/* Image Container with Hover Reveal */}
-            <div className="relative aspect-square overflow-hidden bg-muted/20">
+            <div className="relative aspect-square overflow-hidden bg-zinc-100 dark:bg-zinc-950/50 flex items-center justify-center">
+                {/* Subtle Center Glow */}
+                <div className="absolute w-1/2 h-1/2 bg-sky-500/10 blur-[100px] rounded-full pointer-events-none" />
+
                 <SafeImage
                     src={imgSrc}
                     alt={product.name}
+                    style={{
+                        transform: isHovered
+                            ? `translateZ(50px) rotateX(${(mousePos as any).rotateX * 1.5}deg) rotateY(${(mousePos as any).rotateY * 1.5}deg)`
+                            : 'translateZ(0px)',
+                    }}
                     className={cn(
-                        'w-full h-full object-cover transition-transform duration-700 ease-[0.23, 1, 0.32, 1]',
-                        'group-hover:scale-105',
+                        'w-full h-full object-contain p-6 transition-transform duration-500 ease-out',
                         isOutOfStock && 'grayscale opacity-50'
                     )}
                 />
 
                 {/* Badges */}
-                <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
+                <div className="absolute top-6 left-6 z-20 flex flex-col gap-2">
                     {product.discount_tag && (
-                        <span className="bg-foreground text-background text-[8px] font-black px-2 py-0.5 uppercase tracking-widest italic">
+                        <span className="bg-sky-500 text-white text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest shadow-lg shadow-sky-500/20">
                             -{product.discount_tag}
                         </span>
                     )}
                 </div>
 
-                {/* Wishlist Toggle (Always visible but subtle) */}
+                {/* Wishlist Toggle */}
                 <button
                     onClick={handleToggleWishlist}
                     className={cn(
-                        "absolute top-4 right-4 z-20 p-2 rounded-full transition-all duration-300",
-                        isFavorited ? "text-red-500" : "text-foreground/40 hover:text-foreground"
+                        "absolute top-6 right-6 z-20 p-2.5 rounded-xl transition-all duration-300 backdrop-blur-md",
+                        isFavorited
+                            ? "bg-red-500 text-white shadow-lg shadow-red-500/20"
+                            : "bg-black/20 text-white/70 hover:text-white hover:bg-black/40"
                     )}
                 >
-                    <Heart size={18} fill={isFavorited ? "currentColor" : "none"} />
+                    <Heart size={16} fill={isFavorited ? "currentColor" : "none"} />
                 </button>
 
                 {/* Hover Reveal Actions */}
-                <div className="absolute inset-0 bg-background/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4 z-30">
+                <div className="absolute inset-0 bg-sky-950/20 backdrop-blur-[4px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4 z-30">
                     <Link
                         href={`/product/${product.slug}`}
-                        className="w-12 h-12 rounded-full bg-foreground text-background flex items-center justify-center hover:scale-110 transition-transform active:scale-95"
+                        className="w-14 h-14 rounded-2xl bg-white text-zinc-900 flex items-center justify-center hover:scale-110 transition-transform active:scale-95 shadow-xl"
                     >
                         <Search size={20} />
                     </Link>
                     <button
                         onClick={handleAddToCart}
                         disabled={adding || isOutOfStock}
-                        className="w-12 h-12 rounded-full bg-electric-blue text-white flex items-center justify-center hover:scale-110 transition-transform active:scale-95 disabled:opacity-50"
+                        className="w-14 h-14 rounded-2xl bg-sky-500 text-white flex items-center justify-center hover:scale-110 transition-transform active:scale-95 disabled:opacity-50 shadow-xl shadow-sky-500/20"
                     >
                         <ShoppingCart size={20} />
                     </button>
@@ -112,31 +173,31 @@ const ProductCard: React.FC<ProductCardProps> = ({ product: rawProduct }) => {
             </div>
 
             {/* Content */}
-            <div className="p-5 space-y-3">
+            <div className="p-8 space-y-4">
                 <div className="space-y-1">
-                    <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.2em]">
-                        {product.brand || 'OSART_INDUSTRIAL'}
+                    <span className="text-[10px] font-black text-sky-500 uppercase tracking-[0.25em]">
+                        {product.brand || 'Osart Premium'}
                     </span>
                     <Link href={`/product/${product.slug}`} className="block">
-                        <h3 className="text-xl font-black text-foreground uppercase italic tracking-tighter leading-tight group-hover:underline transition-all line-clamp-1">
+                        <h3 className="text-xl font-black text-zinc-900 dark:text-white tracking-tight group-hover:text-sky-500 transition-all line-clamp-1">
                             {product.name}
                         </h3>
                     </Link>
                 </div>
 
-                <div className="flex items-baseline justify-between pt-2">
-                    <div className="flex items-baseline gap-2">
-                        <span className="text-2xl font-black text-foreground italic tracking-tighter">
+                <div className="flex items-center justify-between">
+                    <div className="flex flex-col">
+                        <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Precio Hoy</span>
+                        <span className="text-2xl font-black text-zinc-900 dark:text-white tracking-tighter">
                             ${(product.price * 1000).toLocaleString('es-CL')}
                         </span>
-                        {product.original_price && (
-                            <span className="text-xs text-muted-foreground line-through decoration-red-500/50">
-                                ${(product.original_price * 1000).toLocaleString('es-CL')}
-                            </span>
-                        )}
                     </div>
-                    {isOutOfStock && (
-                        <span className="text-[10px] font-black text-red-500 uppercase tracking-widest">OUT_OF_STOCK</span>
+                    {isOutOfStock ? (
+                        <span className="px-3 py-1 bg-red-500/10 text-red-500 text-[9px] font-black rounded-full uppercase tracking-widest">Sin Stock</span>
+                    ) : (
+                        <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-500">
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                        </div>
                     )}
                 </div>
             </div>

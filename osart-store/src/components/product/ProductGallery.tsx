@@ -26,8 +26,8 @@ export function ProductGallery({ images }: ProductGalleryProps) {
         <div className="space-y-6">
             <div className="aspect-square rounded-[32px] bg-[#050505] border border-white/5 overflow-hidden relative group shadow-2xl">
                 {/* Structural Accents */}
-                <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-electric-blue/20 z-20 rounded-tl-[32px]" />
-                <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-electric-blue/20 z-20 rounded-br-[32px]" />
+                <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-sky-500/20 z-20 rounded-tl-[32px]" />
+                <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-sky-500/20 z-20 rounded-br-[32px]" />
 
                 {/* Image Stage */}
                 <AnimatePresence mode="wait">
@@ -52,13 +52,13 @@ export function ProductGallery({ images }: ProductGalleryProps) {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none z-10" />
 
                 <div className="absolute top-8 right-8 flex flex-col items-end gap-2 pointer-events-none z-20">
-                    <div className="text-[8px] font-mono text-electric-blue font-bold uppercase tracking-[0.5em] bg-black/80 px-3 py-1 rounded-full border border-white/5 backdrop-blur-md">
+                    <div className="text-[8px] font-mono text-sky-500 font-bold uppercase tracking-[0.5em] bg-black/80 px-3 py-1 rounded-full border border-white/5 backdrop-blur-md">
                         CAM_CH_{activeIndex + 1}
                     </div>
                 </div>
 
                 <div className="absolute bottom-8 left-8 z-20">
-                    <button className="w-12 h-12 flex items-center justify-center bg-black/80 hover:bg-electric-blue text-white transition-all rounded-2xl border border-white/10 backdrop-blur-md group/btn shadow-xl active:scale-90">
+                    <button className="w-12 h-12 flex items-center justify-center bg-black/80 hover:bg-sky-500 text-white transition-all rounded-2xl border border-white/10 backdrop-blur-md group/btn shadow-xl active:scale-90">
                         <Maximize2 size={20} className="group-hover/btn:scale-120 transition-transform" />
                     </button>
                 </div>
@@ -73,13 +73,13 @@ export function ProductGallery({ images }: ProductGalleryProps) {
                         className={cn(
                             "relative flex-shrink-0 w-24 h-24 rounded-[20px] bg-zinc-900 border-2 transition-all p-2 overflow-hidden group",
                             activeIndex === i
-                                ? "border-electric-blue shadow-[0_0_25px_rgba(0,240,255,0.2)] bg-zinc-900"
+                                ? "border-sky-500 shadow-[0_0_25px_rgba(0,240,255,0.2)] bg-zinc-900"
                                 : "border-white/5 hover:border-white/20 opacity-40 hover:opacity-100 bg-transparent"
                         )}
                     >
                         <SafeImage src={img.url} alt={`View ${i + 1}`} containerClassName="rounded-xl" />
                         {activeIndex === i && (
-                            <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-electric-blue animate-pulse z-20 shadow-[0_0_8px_rgba(0,240,255,1)]" />
+                            <div className="absolute top-2 right-2 w-2 h-2 rounded-full bg-sky-500 animate-pulse z-20 shadow-[0_0_8px_rgba(0,240,255,1)]" />
                         )}
                     </button>
                 ))}
