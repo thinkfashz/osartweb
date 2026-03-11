@@ -39,8 +39,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es" className="bg-black">
-      <body className="flex flex-col min-h-screen safe-area-pb overflow-x-hidden bg-[#050505] text-white">
+    <html lang="es">
+      <body className="flex flex-col min-h-screen safe-area-pb overflow-x-hidden transition-colors duration-500">
         <Providers>
           <ThemeProvider>
             <TopUtilityBar />

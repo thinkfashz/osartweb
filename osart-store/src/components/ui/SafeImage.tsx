@@ -31,9 +31,9 @@ export function SafeImage({
 
     if (!src || hasError) {
         return (
-            <div className={cn("w-full h-full flex flex-col items-center justify-center gap-3 bg-zinc-100 dark:bg-zinc-900/50 text-zinc-400 dark:text-zinc-600", containerClassName, fallbackClassName)}>
-                <Package size={fallbackIconSize} className="group-hover:text-sky-500/50 transition-colors" />
-                <span className="text-[10px] font-black uppercase tracking-widest px-4 text-center opacity-50">
+            <div className={cn("w-full h-full flex flex-col items-center justify-center gap-3 bg-muted/30 text-muted-foreground", containerClassName, fallbackClassName)}>
+                <Package size={fallbackIconSize} className="opacity-40 group-hover:text-sky-500 transition-colors" />
+                <span className="text-[10px] font-black uppercase tracking-widest px-4 text-center opacity-70 text-readability">
                     {hasError ? 'Imagen No Disponible' : 'Sin Imagen'}
                 </span>
             </div>
@@ -41,7 +41,7 @@ export function SafeImage({
     }
 
     return (
-        <div className={cn("relative w-full h-full overflow-hidden bg-zinc-900/20 group/safe-img", containerClassName)}>
+        <div className={cn("relative w-full h-full overflow-hidden bg-background/5 group/safe-img", containerClassName)}>
             {/* Loading / Shimmer Layer */}
             {isLoading && (
                 <div className="absolute inset-0 z-10 flex items-center justify-center">

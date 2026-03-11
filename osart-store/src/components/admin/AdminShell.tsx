@@ -103,7 +103,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     if (role !== 'admin') return null;
 
     return (
-        <div className="flex h-screen bg-[#F8F9FE] dark:bg-[#050505] text-zinc-900 dark:text-white font-inter overflow-hidden relative">
+        <div className="flex h-screen bg-background text-foreground font-inter overflow-hidden relative transition-colors duration-500">
 
             {/* Rondón Animado: Background logic */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
@@ -114,7 +114,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                         scale: [1, 1.2, 1]
                     }}
                     transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                    className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-sky-200/40 dark:bg-sky-900/10 blur-[120px] rounded-full"
+                    className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-sky-400/10 dark:bg-sky-900/10 blur-[120px] rounded-full"
                 />
                 <motion.div
                     animate={{
@@ -123,15 +123,15 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                         scale: [1, 1.1, 1]
                     }}
                     transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-                    className="absolute bottom-[10%] right-[5%] w-[35%] h-[35%] bg-cyan-200/30 dark:bg-cyan-900/10 blur-[100px] rounded-full"
+                    className="absolute bottom-[10%] right-[5%] w-[35%] h-[35%] bg-cyan-400/10 dark:bg-cyan-900/10 blur-[100px] rounded-full"
                 />
                 <motion.div
                     animate={{
                         scale: [1, 1.3, 1],
-                        opacity: [0.3, 0.5, 0.3]
+                        opacity: [0.1, 0.3, 0.1]
                     }}
                     transition={{ duration: 15, repeat: Infinity }}
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50%] h-[50%] bg-blue-100/20 dark:bg-blue-900/5 blur-[150px] rounded-full"
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50%] h-[50%] bg-blue-400/5 dark:bg-blue-900/5 blur-[150px] rounded-full"
                 />
             </div>
 

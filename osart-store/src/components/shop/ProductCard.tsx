@@ -92,7 +92,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product: rawProduct }) => {
                 transformStyle: 'preserve-3d',
                 perspective: 1000
             }}
-            className="group relative flex flex-col bg-white dark:bg-zinc-900/50 rounded-[2.5rem] border border-zinc-200/50 dark:border-zinc-800/50 hover:border-sky-500/30 transition-all duration-300 overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-sky-500/10"
+            className="group relative flex flex-col bg-card rounded-[2.5rem] border border-border hover:border-sky-500/30 transition-all duration-300 overflow-hidden shadow-sm hover:shadow-2xl hover:shadow-sky-500/10"
         >
             {/* Dynamic Cursor Glow */}
             <AnimatePresence>
@@ -114,7 +114,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product: rawProduct }) => {
                 )}
             </AnimatePresence>
             {/* Image Container with Hover Reveal */}
-            <div className="relative aspect-square overflow-hidden bg-zinc-100 dark:bg-zinc-950/50 flex items-center justify-center">
+            <div className="relative aspect-square overflow-hidden bg-background/50 flex items-center justify-center">
                 {/* Subtle Center Glow */}
                 <div className="absolute w-1/2 h-1/2 bg-sky-500/10 blur-[100px] rounded-full pointer-events-none" />
 
@@ -175,11 +175,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product: rawProduct }) => {
             {/* Content */}
             <div className="p-8 space-y-4">
                 <div className="space-y-1">
-                    <span className="text-[10px] font-black text-sky-500 uppercase tracking-[0.25em]">
+                    <span className="text-[10px] font-black text-sky-500 uppercase tracking-[0.25em] text-readability">
                         {product.brand || 'Osart Premium'}
                     </span>
                     <Link href={`/product/${product.slug}`} className="block">
-                        <h3 className="text-xl font-black text-zinc-900 dark:text-white tracking-tight group-hover:text-sky-500 transition-all line-clamp-1">
+                        <h3 className="text-xl font-black text-foreground tracking-tight group-hover:text-sky-500 transition-all line-clamp-1 text-readability">
                             {product.name}
                         </h3>
                     </Link>
@@ -187,8 +187,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product: rawProduct }) => {
 
                 <div className="flex items-center justify-between">
                     <div className="flex flex-col">
-                        <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Precio Hoy</span>
-                        <span className="text-2xl font-black text-zinc-900 dark:text-white tracking-tighter">
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Precio Hoy</span>
+                        <span className="text-2xl font-black text-foreground tracking-tighter text-readability">
                             ${(product.price * 1000).toLocaleString('es-CL')}
                         </span>
                     </div>

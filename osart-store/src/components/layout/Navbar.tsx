@@ -37,11 +37,11 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 safe-area-pt ${scrolled ? 'py-4 bg-white/70 dark:bg-zinc-950/70 backdrop-blur-2xl border-b border-zinc-200/50 dark:border-zinc-800/50 shadow-2xl' : 'py-6 bg-transparent'}`}>
+            <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 safe-area-pt ${scrolled ? 'py-4 bg-background/80 backdrop-blur-2xl border-b border-border shadow-2xl' : 'py-6 bg-transparent'}`}>
                 <div className="max-w-[1400px] mx-auto px-5 md:px-10 flex items-center justify-between">
                     {/* Logo */}
                     <Link href="/" className="text-xl md:text-2xl font-black tracking-tighter flex items-center gap-2 group">
-                        <span className="text-zinc-900 dark:text-white capitalize">Osart</span>
+                        <span className="text-foreground capitalize text-readability">Osart</span>
                         <span className="w-1.5 h-1.5 rounded-full bg-sky-500 group-hover:scale-150 transition-transform duration-300 shadow-[0_0_10px_rgba(14,165,233,0.5)]" />
                     </Link>
 
@@ -71,17 +71,17 @@ const Navbar = () => {
                         <button
                             onClick={nextTheme}
                             aria-label="Cambiar tema"
-                            className="relative p-2.5 rounded-full border border-foreground/10 hover:border-foreground/30 transition-all active:scale-90 flex items-center justify-center overflow-hidden"
+                            className="relative p-2.5 rounded-xl bg-background/50 border border-foreground/10 hover:border-sky-500/50 transition-all active:scale-90 flex items-center justify-center overflow-hidden hover:bg-sky-500/5 shadow-xl"
                         >
                             <AnimatePresence mode="wait" initial={false}>
                                 {theme === 'dark' && (
                                     <motion.span key="dark" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -20, opacity: 0 }} transition={{ duration: 0.2 }}>
-                                        <Moon size={16} className="text-white" />
+                                        <Moon size={16} className="text-sky-500" />
                                     </motion.span>
                                 )}
                                 {theme === 'light' && (
                                     <motion.span key="light" initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: -20, opacity: 0 }} transition={{ duration: 0.2 }}>
-                                        <Sun size={16} className="text-black" />
+                                        <Sun size={16} className="text-sky-500" />
                                     </motion.span>
                                 )}
                                 {theme === 'red' && (
@@ -131,7 +131,7 @@ const Navbar = () => {
                             onClick={() => setIsCartOpen(true)}
                             className="relative p-2 active:scale-90"
                         >
-                            <ShoppingCart size={22} className="text-zinc-900 dark:text-white" />
+                            <ShoppingCart size={22} className="text-foreground" />
                             {itemCount > 0 && (
                                 <span className="absolute 0 right-0 w-4 h-4 bg-sky-500 text-white text-[10px] font-black rounded-full flex items-center justify-center">
                                     {itemCount}
@@ -139,7 +139,7 @@ const Navbar = () => {
                             )}
                         </button>
                         <button
-                            className="p-2 text-zinc-900 dark:text-white bg-zinc-100 dark:bg-white/5 rounded-xl active:scale-90 transition-transform"
+                            className="p-2 text-foreground bg-muted/20 border border-border rounded-xl active:scale-90 transition-transform"
                             onClick={() => setIsOpen(!isOpen)}
                         >
                             {isOpen ? <X size={24} /> : <Menu size={24} />}

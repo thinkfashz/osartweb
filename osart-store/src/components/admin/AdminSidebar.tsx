@@ -71,7 +71,7 @@ export default function AdminSidebar({ isOpen, setIsOpen }: { isOpen: boolean, s
             transition={{ type: "spring", damping: 30, stiffness: 200 }}
             className={cn(
                 "fixed inset-y-0 left-0 z-50 lg:relative lg:translate-x-0 h-full flex flex-col transition-all",
-                "bg-white/80 dark:bg-zinc-950/80 backdrop-blur-2xl border-r border-zinc-200/50 dark:border-zinc-800/50 shadow-2xl shadow-sky-500/5"
+                "bg-background/80 backdrop-blur-2xl border-r border-border shadow-2xl"
             )}
         >
             {/* Mobile Close Button */}
@@ -128,9 +128,9 @@ export default function AdminSidebar({ isOpen, setIsOpen }: { isOpen: boolean, s
             {/* Status & Logout */}
             <div className="p-6 mt-auto border-t border-zinc-200/50 dark:border-zinc-800/50 bg-zinc-50/50 dark:bg-black/20">
                 {!isCollapsed && (
-                    <div className="px-4 py-3 mb-4 rounded-2xl bg-sky-50 dark:bg-sky-500/10 border border-sky-100 dark:border-sky-500/20 flex items-center gap-3">
+                    <div className="px-4 py-3 mb-4 rounded-2xl bg-muted/20 border border-border flex items-center gap-3">
                         <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                        <span className="text-[10px] font-bold text-sky-600 dark:text-sky-400 uppercase tracking-widest">Nodos Estables</span>
+                        <span className="text-[10px] font-bold text-sky-500 uppercase tracking-widest text-readability">Nodos Estables</span>
                     </div>
                 )}
                 <button
@@ -171,7 +171,7 @@ const NavItem = ({ item, pathname, isCollapsed }: any) => {
             />
             {!isCollapsed && (
                 <span className={cn(
-                    "text-[11px] font-extrabold uppercase tracking-widest transition-all",
+                    "text-[11px] font-extrabold uppercase tracking-widest transition-all text-readability",
                     isActive ? "ml-1" : "group-hover:ml-1"
                 )}>
                     {item.name}
