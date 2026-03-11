@@ -72,14 +72,14 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
     );
 
     return (
-        <div className="min-h-screen bg-zinc-950 pt-28 pb-20 overflow-hidden relative">
+        <div className="min-h-screen bg-zinc-950 pt-20 md:pt-28 pb-20 overflow-hidden relative">
             {/* Ambient Lighting */}
             <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-sky-500/5 blur-[120px] -z-10 pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-1/4 h-1/4 bg-blue-600/5 blur-[100px] -z-10 pointer-events-none" />
 
             <div className="max-w-[1400px] mx-auto px-5 md:px-10">
                 {/* Header / Breadcrumbs */}
-                <div className="flex flex-wrap items-center justify-between gap-6 mb-16">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 md:mb-16">
                     <nav className="flex items-center gap-2 text-[8px] font-black uppercase tracking-[0.2em] text-white/30">
                         <Link href="/" className="hover:text-sky-500 flex items-center gap-1 transition-colors">
                             <Home size={10} />
@@ -91,21 +91,21 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
                         <span className="text-sky-500/80 italic">{product.name}</span>
                     </nav>
 
-                    <div className="flex items-center gap-4">
-                        <div className="hidden sm:flex flex-col items-end">
+                    <div className="flex items-center gap-3 md:gap-4">
+                        <div className="flex flex-col items-start sm:items-end order-2 sm:order-1">
                             <div className="text-[10px] font-black uppercase text-white/90">ID_REF: {(product.id.slice(0, 10)).toUpperCase()}</div>
                             <div className="flex items-center gap-1.5 text-[8px] font-mono text-emerald-500 uppercase tracking-tighter">
                                 <Activity size={8} />
                                 <span>Canal de datos seguro</span>
                             </div>
                         </div>
-                        <button className="p-3 bg-white/5 border border-white/10 rounded-lg text-white/40 hover:text-white hover:border-white/20 transition-all">
+                        <button className="p-2.5 md:p-3 bg-white/5 border border-white/10 rounded-lg text-white/40 hover:text-white hover:border-white/20 transition-all order-1 sm:order-2">
                             <Share2 size={16} />
                         </button>
                     </div>
                 </div>
-
-                <div className="grid lg:grid-cols-[1.2fr,1fr] xl:grid-cols-[1.5fr,1fr] gap-16 lg:gap-24 items-start">
+ 
+                <div className="grid grid-cols-1 lg:grid-cols-[1.2fr,1fr] xl:grid-cols-[1.5fr,1fr] gap-10 md:gap-24 items-start text-readability">
                     {/* Left: Gallery Stage */}
                     <div className="space-y-12">
                         <ProductGallery images={product.images || []} />
@@ -128,14 +128,14 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
 
                 {/* Related Systems Section */}
                 {related.length > 0 && (
-                    <div className="mt-32 pt-20 border-t border-white/5">
-                        <div className="flex items-end justify-between mb-12">
+                    <div className="mt-20 md:mt-32 pt-12 md:pt-20 border-t border-white/5">
+                        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-8 md:mb-12">
                             <div className="space-y-2">
                                 <div className="flex items-center gap-2">
                                     <div className="w-1.5 h-1.5 bg-sky-500 rounded-full animate-pulse" />
                                     <span className="text-[10px] font-black uppercase tracking-[0.3em] text-sky-500">Sistemas Compatibles</span>
                                 </div>
-                                <h2 className="text-3xl font-black uppercase italic tracking-tighter text-white">Componentes Relacionados</h2>
+                                <h2 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter text-white">Componentes Relacionados</h2>
                             </div>
                             <Link href="/catalog" className="text-[10px] font-black uppercase tracking-widest text-white/40 hover:text-white flex items-center gap-2 transition-colors group">
                                 VER TODO <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />

@@ -45,7 +45,7 @@ export const MOCK_LOCAL_PRODUCTS: any[] = [
         createdAt: new Date().toISOString(),
         stock_quantity: 45,
         sku: 'TLD-XRP-2024',
-        image_url: 'https://images.unsplash.com/photo-1504148455328-c39695715583?auto=format&fit=crop&q=80&w=800',
+        image_url: 'https://images.unsplash.com/photo-1572981779307-38b8cabb2407?auto=format&fit=crop&q=80&w=800',
         created_by: 'admin-demo',
         free_shipping: true,
     },
@@ -214,7 +214,7 @@ export const MOCK_LOCAL_PRODUCTS: any[] = [
         createdAt: new Date().toISOString(),
         stock_quantity: 300,
         sku: 'CHL-REF-G2',
-        image_url: 'https://picsum.photos/seed/osart_chl/600/400',
+        image_url: 'https://images.unsplash.com/photo-1591954840042-76bc5d54b18c?auto=format&fit=crop&q=80&w=800',
         created_by: 'admin-demo',
     },
     {
@@ -229,7 +229,7 @@ export const MOCK_LOCAL_PRODUCTS: any[] = [
         createdAt: new Date().toISOString(),
         stock_quantity: 0,
         sku: 'CARR-VD-30L',
-        image_url: 'https://picsum.photos/seed/osart_car/600/400',
+        image_url: 'https://images.unsplash.com/photo-1586864387967-d02ef85d93e8?auto=format&fit=crop&q=80&w=800',
         created_by: 'admin-demo',
     },
     {
@@ -244,7 +244,7 @@ export const MOCK_LOCAL_PRODUCTS: any[] = [
         createdAt: new Date().toISOString(),
         stock_quantity: 26,
         sku: 'LLAV-IMP-02',
-        image_url: 'https://picsum.photos/seed/osart_llv/600/400',
+        image_url: 'https://images.unsplash.com/photo-1581147036324-c17ac41dfa6c?auto=format&fit=crop&q=80&w=800',
         created_by: 'admin-demo',
     },
     {
@@ -259,7 +259,7 @@ export const MOCK_LOCAL_PRODUCTS: any[] = [
         createdAt: new Date().toISOString(),
         stock_quantity: 80,
         sku: 'EXT-ABC-10K',
-        image_url: 'https://picsum.photos/seed/osart_ext/600/400',
+        image_url: 'https://images.unsplash.com/photo-1544724569-5f546fd6f2b5?auto=format&fit=crop&q=80&w=800',
         created_by: 'admin-demo',
     },
     {
@@ -274,7 +274,7 @@ export const MOCK_LOCAL_PRODUCTS: any[] = [
         createdAt: new Date().toISOString(),
         stock_quantity: 3,
         sku: 'POL-CAD-2T',
-        image_url: 'https://picsum.photos/seed/osart_pol/600/400',
+        image_url: 'https://images.unsplash.com/photo-1579758629938-03607ccdbaba?auto=format&fit=crop&q=80&w=800',
         created_by: 'admin-demo',
     }
 ];

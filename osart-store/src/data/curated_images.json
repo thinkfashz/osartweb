@@ -1,0 +1,92 @@
+[
+  {
+    "id": 1,
+    "categoria": "microcontroladores",
+    "alt_text": "Microcontrolador de silicio sobre placa de circuito impreso con conexiones microscópicas",
+    "url": "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    "id": 2,
+    "categoria": "placas_pcb",
+    "alt_text": "Placa de circuito impreso industrial con pistas de cobre y componentes montados",
+    "url": "https://images.unsplash.com/photo-1555664424-778a1e5e1b48?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    "id": 3,
+    "categoria": "capacitores",
+    "alt_text": "Fila de capacitores electrolíticos en una placa base de alta fidelidad",
+    "url": "https://images.unsplash.com/photo-1517077304055-6e89abd10f9a?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    "id": 4,
+    "categoria": "cableado",
+    "alt_text": "Mazo de cables de colores y conectores eléctricos industriales",
+    "url": "https://images.unsplash.com/photo-1504148455328-c376907d081c?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    "id": 5,
+    "categoria": "sensores",
+    "alt_text": "Sensor fotoeléctrico industrial de precisión montado en brazo robótico",
+    "url": "https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    "id": 6,
+    "categoria": "procesadores",
+    "alt_text": "Unidad central de procesamiento (CPU) con arquitectura multicapa vista macro",
+    "url": "https://images.unsplash.com/photo-1591405351990-4726e33df584?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    "id": 7,
+    "categoria": "hardware_interno",
+    "alt_text": "Vista detallada de una placa madre con zócalos de memoria y disipadores",
+    "url": "https://images.unsplash.com/photo-1629739884842-83b4c6b4b7a9?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    "id": 8,
+    "categoria": "prototipado",
+    "alt_text": "Placa de pruebas breadboard con puentes y componentes para desarrollo de hardware",
+    "url": "https://images.unsplash.com/photo-1608564697171-2f63c881f211?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    "id": 9,
+    "categoria": "tarjetas_logicas",
+    "alt_text": "Tarjeta lógica de control con microchips integrados y terminales de oro",
+    "url": "https://images.unsplash.com/photo-1597484662317-9bd7739914b0?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    "id": 10,
+    "categoria": "ensamblaje",
+    "alt_text": "Proceso de soldadura de precisión en componentes electrónicos SMD",
+    "url": "https://images.unsplash.com/photo-1580584126743-309044674afc?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    "id": 11,
+    "categoria": "circuitos_integrados",
+    "alt_text": "Chip de circuito integrado montado en superficie con terminales laterales",
+    "url": "https://images.unsplash.com/photo-1563770660941-20978e870813?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    "id": 12,
+    "categoria": "microchips",
+    "alt_text": "Fotografía macro de la superficie de un procesador con grabado láser",
+    "url": "https://images.unsplash.com/photo-1614935151651-0bea6508db6b?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    "id": 13,
+    "categoria": "sistemas_digitales",
+    "alt_text": "Representación visual de un circuito digital complejo con iluminación LED",
+    "url": "https://images.unsplash.com/photo-1531297484001-80022131f5a1?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    "id": 14,
+    "categoria": "diagnostico",
+    "alt_text": "Ingeniero revisando continuidad en pistas de cobre de una PCB",
+    "url": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&q=80&w=800"
+  },
+  {
+    "id": 15,
+    "categoria": "componentes_smx",
+    "alt_text": "Matriz de componentes pasivos montados en placa de circuito multicapa",
+    "url": "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&q=80&w=800"
+  }
+]

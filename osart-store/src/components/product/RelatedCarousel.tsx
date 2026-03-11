@@ -25,7 +25,7 @@ export function RelatedCarousel({ products, onAddToCart }: RelatedCarouselProps)
                         <div className="w-1.5 h-1.5 bg-sky-500 rounded-full animate-pulse" />
                         <span className="text-[10px] font-black uppercase tracking-[0.3em] text-sky-500">Sistemas Sincronizados</span>
                     </div>
-                    <h2 className="text-3xl font-black uppercase italic tracking-tighter text-white">
+                    <h2 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter text-white text-readability">
                         Componentes Relacionados
                     </h2>
                 </div>
@@ -47,9 +47,9 @@ export function RelatedCarousel({ products, onAddToCart }: RelatedCarouselProps)
                     {displayProducts.map((p, i) => (
                         <div
                             key={`${p.id}-${i}`}
-                            className="w-80 flex-shrink-0 bg-zinc-900 border border-white/5 rounded-3xl p-6 group transition-all hover:border-sky-500/40 relative overflow-hidden"
+                            className="w-72 md:w-80 flex-shrink-0 bg-zinc-900/50 backdrop-blur-sm border border-white/5 rounded-3xl p-5 md:p-6 group transition-all hover:border-sky-500/40 hover:shadow-[0_0_30px_rgba(14,165,233,0.1)] relative overflow-hidden text-readability"
                         >
-                            <div className="aspect-square bg-[#0a0a0a] rounded-2xl mb-6 flex items-center justify-center p-8 transition-transform group-hover:scale-105 border border-white/5 relative">
+                            <div className="aspect-square bg-[#0a0a0a] rounded-2xl mb-6 flex items-center justify-center p-6 md:p-8 transition-all duration-500 group-hover:scale-[1.02] group-hover:bg-zinc-900 border border-white/5 relative">
                                 <div className="absolute top-2 left-2 w-3 h-3 border-t border-l border-white/10" />
                                 <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-white/10" />
 
@@ -64,11 +64,11 @@ export function RelatedCarousel({ products, onAddToCart }: RelatedCarouselProps)
                                 <div className="text-[9px] font-black text-white/30 uppercase tracking-[0.2em]">
                                     {p.brand || 'OSART_GRADE'}
                                 </div>
-                                <h3 className="text-lg font-black uppercase italic tracking-tighter text-white line-clamp-1 group-hover:text-sky-500 transition-colors">
+                                <h3 className="text-base md:text-lg font-black uppercase italic tracking-tighter text-white line-clamp-1 group-hover:text-sky-500 transition-colors">
                                     {p.name}
                                 </h3>
                                 <div className="flex items-center justify-between pt-2">
-                                    <span className="text-xl font-black text-white italic tracking-tighter">${(p.price || 0).toLocaleString('es-CL')}</span>
+                                    <span className="text-lg md:text-xl font-black text-white italic tracking-tighter">${(p.price || 0).toLocaleString('es-CL')}</span>
                                     <div className="flex gap-2">
                                         <button
                                             onClick={() => onAddToCart(p)}

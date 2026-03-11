@@ -15,10 +15,14 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: 'https',
-        hostname: '**.unsplash.com',
+        hostname: 'images.pexels.com',
       },
       {
-        // Allow any https image source (covers CDN-hosted product images)
+        protocol: 'https',
+        hostname: 'cdn.pixabay.com',
+      },
+      {
+        // Allow any https image source (fallback)
         protocol: 'https',
         hostname: '**',
       },
