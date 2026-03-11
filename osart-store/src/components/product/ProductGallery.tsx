@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Image as LucideImage, Maximize2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ProductImage } from '@/lib/graphql/types';
 import { SafeImage } from '@/components/ui/SafeImage';
@@ -16,7 +17,7 @@ export function ProductGallery({ images }: ProductGalleryProps) {
     if (!images || images.length === 0) {
         return (
             <div className="aspect-square rounded-2xl bg-zinc-900/50 flex flex-col items-center justify-center text-zinc-700 gap-4 border border-dashed border-white/10">
-                <ImageIcon size={64} />
+                <LucideImage size={64} />
                 <p className="text-[10px] font-black uppercase tracking-[0.3em]">Sin imágenes en el búfer</p>
             </div>
         );

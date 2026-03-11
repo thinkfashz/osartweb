@@ -141,6 +141,7 @@ export const useProducts = (filter?: { name?: string; categoryId?: string }) => 
       await setCache(CACHE_KEY_PRODUCTS, formatted);
 
     } catch (err: any) {
+      if (err.name === 'AbortError') return;
       console.error('Network fetch failed:', err);
       if (!isMounted) return;
       if (!data) {
@@ -242,6 +243,7 @@ export const useCategories = () => {
       await setCache(CACHE_KEY_CATEGORIES, formatted);
 
     } catch (err: any) {
+      if (err.name === 'AbortError') return;
       console.error('Error fetching categories:', err);
       if (!isMounted) return;
       if (!data) {

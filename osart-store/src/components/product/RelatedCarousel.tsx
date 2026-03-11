@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { Product } from '@/lib/graphql/types';
 import Link from 'next/link';
 import { ShoppingCart, ArrowRight } from 'lucide-react';
+import { SafeImage } from '@/components/ui/SafeImage';
 
 interface RelatedCarouselProps {
     products: Product[];
@@ -52,11 +53,11 @@ export function RelatedCarousel({ products, onAddToCart }: RelatedCarouselProps)
                                 <div className="absolute top-2 left-2 w-3 h-3 border-t border-l border-white/10" />
                                 <div className="absolute bottom-2 right-2 w-3 h-3 border-b border-r border-white/10" />
 
-                                {p.images?.[0]?.url ? (
-                                    <img src={p.images[0].url} alt={p.name} className="w-full h-full object-contain relative z-10" />
-                                ) : (
-                                    <div className="text-zinc-800"><ShoppingCart size={64} /></div>
-                                )}
+                                <SafeImage 
+                                    src={p.images?.[0]?.url} 
+                                    alt={p.name} 
+                                    className="w-full h-full object-contain relative z-10" 
+                                />
                             </div>
 
                             <div className="space-y-4">
