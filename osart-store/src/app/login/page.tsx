@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, Suspense } from 'react';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { Mail, Lock, LogIn, ChevronRight, Loader2, ShieldCheck, Terminal, Cpu } from 'lucide-react';
 import { supabase } from '@/lib/supabase-auth';
