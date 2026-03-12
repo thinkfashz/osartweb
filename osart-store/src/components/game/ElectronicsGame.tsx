@@ -12,7 +12,10 @@ import {
     Trophy,
     CheckCircle2,
     XCircle,
-    Info
+    Info,
+    Code2,
+    CircuitBoard,
+    Layout
 } from 'lucide-react';
 import { supabase } from '@/lib/supabase-auth';
 import { useAuth } from '@/context/AuthContext';
@@ -137,10 +140,33 @@ const ElectronicsGame = () => {
     };
 
     return (
-        <div className="w-full max-w-4xl mx-auto p-4 sm:p-8 bg-zinc-900/50 border border-white/5 rounded-3xl backdrop-blur-xl relative overflow-hidden">
-            {/* Background Decorative Elements */}
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-sky-500/50 to-transparent" />
-            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-[0.03] pointer-events-none" />
+        <div className="w-full max-w-5xl mx-auto md:p-8 bg-zinc-900/40 md:border border-white/5 md:rounded-[2.5rem] backdrop-blur-3xl relative overflow-hidden min-h-[600px] flex flex-col">
+            {/* Background PCB Pattern & Tech Grid */}
+            <div className="absolute inset-0 pointer-events-none opacity-[0.05] overflow-hidden" 
+                style={{ backgroundImage: `radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0)`, backgroundSize: '40px 40px' }}>
+                <svg width="100%" height="100%" className="absolute inset-0">
+                    <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
+                        <path d="M 100 0 L 0 0 0 100" fill="none" stroke="currentColor" strokeWidth="0.5" className="text-sky-500/20" />
+                    </pattern>
+                    <rect width="100%" height="100%" fill="url(#grid)" />
+                </svg>
+            </div>
+
+            {/* Circuit Decorations */}
+            <div className="absolute top-0 right-0 p-4 opacity-20 hidden md:block">
+                <CircuitBoard size={120} strokeWidth={0.5} className="text-sky-500" />
+            </div>
+
+            {/* Mobile Header / Status Bar */}
+            <div className="md:hidden flex items-center justify-between p-4 bg-black/40 border-b border-white/5">
+                <div className="flex items-center gap-2">
+                    <Terminal size={14} className="text-sky-500" />
+                    <span className="text-[10px] font-mono font-black uppercase tracking-widest text-zinc-500">osart_training_v2.0</span>
+                </div>
+                <div className="flex gap-1">
+                    {[1, 2, 3].map(i => <div key={i} className="w-1 h-3 bg-sky-500/30" />)}
+                </div>
+            </div>
 
             <AnimatePresence mode="wait">
                 {gameState === 'start' && (
@@ -184,84 +210,163 @@ const ElectronicsGame = () => {
                 {gameState === 'playing' && (
                     <motion.div 
                         key="playing"
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -20 }}
-                        className="space-y-8"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="flex-1 flex flex-col p-6 md:p-0 space-y-6 md:space-y-8 relative z-10"
                     >
-                        {/* HUD */}
-                        <div className="flex justify-between items-center border-b border-white/5 pb-6">
-                            <div className="flex items-center gap-4">
-                                <div className="flex flex-col">
-                                    <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest leading-none mb-1">XP_CURRENT</span>
-                                    <span className="text-2xl font-black text-white italic tracking-tighter font-mono">{score.toString().padStart(5, '0')}</span>
+                        {/* HUD Superior - Diseño de Código */}
+                        <div className="flex justify-between items-end border-b border-white/5 pb-6">
+                            <div className="flex items-center gap-6">
+                                <div className="space-y-1">
+                                    <div className="flex items-center gap-2">
+                                        <div className="w-2 h-2 rounded-full bg-sky-500 animate-pulse" />
+                                        <span className="text-[9px] font-black text-zinc-500 uppercase tracking-[0.3em] font-mono leading-none">XP_BUFFER</span>
+                                    </div>
+                                    <span className="text-3xl md:text-5xl font-black text-white italic tracking-tighter font-mono block">
+                                        {score.toString().padStart(5, '0')}
+                                    </span>
                                 </div>
-                                <div className="h-10 w-[1px] bg-white/5" />
-                                <div className="flex flex-col">
-                                    <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest leading-none mb-1">ROUND</span>
-                                    <span className="text-2xl font-black text-sky-500 italic tracking-tighter font-mono">{attempts + 1}/05</span>
+                                <div className="h-12 w-px bg-white/10 rotate-12" />
+                                <div className="space-y-1">
+                                    <span className="text-[9px] font-black text-zinc-500 uppercase tracking-[0.3em] font-mono leading-none block">ITERATION</span>
+                                    <span className="text-3xl md:text-5xl font-black text-sky-500 italic tracking-tighter font-mono block">
+                                        0{attempts + 1}<span className="text-zinc-700 text-xl">/05</span>
+                                    </span>
                                 </div>
                             </div>
-                            <Terminal size={24} className="text-zinc-700" />
+                            <div className="hidden md:flex flex-col items-end gap-1 opacity-40">
+                                <div className="flex gap-1 text-sky-500">
+                                    <Layout size={12} /> <Code2 size={12} /> <Terminal size={12} />
+                                </div>
+                                <span className="text-[8px] font-mono text-zinc-600 uppercase tracking-widest">protocol_active_hw_id</span>
+                            </div>
                         </div>
 
-                        {/* Round Content */}
-                        <div className="grid md:grid-cols-2 gap-8 items-center">
-                            <div className="relative aspect-square bg-zinc-800 rounded-2xl overflow-hidden border border-white/10 group">
-                                <img 
-                                    src={currentComponent.imageUrl} 
-                                    alt="Componente" 
-                                    className="w-full h-full object-cover grayscale-[0.5] group-hover:grayscale-0 transition-all duration-700"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                                <div className="absolute bottom-4 left-4 right-4 flex items-start gap-3">
-                                    <Info size={16} className="text-sky-500 shrink-0 mt-0.5" />
-                                    <p className="text-[10px] text-zinc-400 font-bold uppercase tracking-wider leading-relaxed">
-                                        Pista: {currentComponent.hint}
-                                    </p>
+                        {/* Contenido Principal con Enfoque de Análisis */}
+                        <div className="grid lg:grid-cols-12 gap-8 flex-1">
+                            {/* Visualizador de Hardware */}
+                            <div className="lg:col-span-12 relative group rounded-[2rem] overflow-hidden border border-white/5 bg-zinc-950/50 p-2 md:p-4 transition-all hover:border-sky-500/20">
+                                <div className="relative aspect-video lg:aspect-auto lg:h-[300px] overflow-hidden rounded-[1.5rem]">
+                                    <motion.img 
+                                        key={currentComponent.id}
+                                        initial={{ scale: 1.1, filter: 'grayscale(1) brightness(0.5)' }}
+                                        animate={{ scale: 1, filter: 'grayscale(0) brightness(1)' }}
+                                        src={currentComponent.imageUrl} 
+                                        alt="Componente" 
+                                        className="w-full h-full object-cover transition-all duration-1000"
+                                    />
+                                    
+                                    {/* Overlay de Diagnóstico */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/20" />
+                                    
+                                    {/* Scanning Line Animation */}
+                                    <motion.div 
+                                        animate={{ top: ['0%', '100%'] }}
+                                        transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
+                                        className="absolute left-0 right-0 h-px bg-sky-500/50 shadow-[0_0_15px_rgba(14,165,233,0.8)] z-10"
+                                    />
+
+                                    <div className="absolute bottom-4 left-6 right-6 flex items-end justify-between">
+                                        <div className="flex items-start gap-4 max-w-md">
+                                            <div className="p-3 bg-sky-500 text-black rounded-xl">
+                                                <Info size={16} />
+                                            </div>
+                                            <div className="space-y-1">
+                                                <span className="text-[9px] font-black text-sky-500 uppercase tracking-widest block">Sugerencia del Sistema</span>
+                                                <p className="text-[11px] md:text-xs text-zinc-300 font-bold uppercase tracking-wider leading-relaxed italic">
+                                                    {currentComponent.hint}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="space-y-6">
-                                <div className="space-y-2">
-                                    <span className="text-[10px] font-black text-sky-500 uppercase tracking-[0.4em]">Análisis Requerido:</span>
-                                    <h3 className="text-2xl font-black text-white uppercase italic tracking-tight">¿Qué componente es este?</h3>
+                            {/* Panel de Decisiones (Código) */}
+                            <div className="lg:col-span-12 space-y-6">
+                                <div className="flex items-center gap-4">
+                                    <div className="h-px flex-1 bg-white/5" />
+                                    <h3 className="text-[10px] font-black text-zinc-500 uppercase tracking-[0.5em] font-mono">Input_Selection_Required</h3>
+                                    <div className="h-px flex-1 bg-white/5" />
                                 </div>
 
-                                <div className="grid gap-3">
-                                    {options.map((option, idx) => (
-                                        <button
-                                            key={option}
-                                            onClick={() => handleAnswer(option)}
-                                            disabled={!!feedback}
-                                            className={`w-full p-5 rounded-xl border font-black uppercase italic tracking-tighter text-left transition-all ${
-                                                feedback?.message.includes(option) || (feedback?.type === 'correct' && option === currentComponent.name)
-                                                    ? 'bg-emerald-500 border-emerald-400 text-black translate-x-2'
-                                                    : feedback?.type === 'wrong' && option === currentComponent.name
-                                                    ? 'bg-sky-500/20 border-sky-500/40 text-sky-400'
-                                                    : 'bg-white/5 border-white/5 text-zinc-400 hover:bg-white/10 hover:border-white/10'
-                                            } disabled:cursor-not-allowed`}
-                                        >
-                                            <div className="flex justify-between items-center">
-                                                <span>{idx + 1}. {option}</span>
-                                                {feedback?.type === 'correct' && option === currentComponent.name && <CheckCircle2 size={20} />}
-                                            </div>
-                                        </button>
-                                    ))}
+                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    {options.map((option, idx) => {
+                                        const isCorrect = feedback?.message.includes(option) || (feedback?.type === 'correct' && option === currentComponent.name);
+                                        const isWrong = feedback?.type === 'wrong' && option !== currentComponent.name && feedback.message.includes(option); // Este check es complejo, mejor simplificar
+                                        
+                                        return (
+                                            <button
+                                                key={option}
+                                                onClick={() => handleAnswer(option)}
+                                                disabled={!!feedback}
+                                                className={`group relative p-6 rounded-2xl border transition-all duration-300 ${
+                                                    isCorrect
+                                                        ? 'bg-emerald-500 border-emerald-400 text-black shadow-[0_0_30px_rgba(16,185,129,0.3)]'
+                                                        : feedback?.type === 'wrong' && option === currentComponent.name
+                                                        ? 'bg-sky-500/20 border-sky-500/50 text-sky-400'
+                                                        : 'bg-zinc-950/50 border-white/5 text-zinc-400 hover:border-sky-500/50 hover:bg-zinc-900'
+                                                } disabled:cursor-not-allowed overflow-hidden active:scale-95`}
+                                            >
+                                                {/* Button Number Indicator */}
+                                                <span className={`absolute top-3 left-4 text-[9px] font-mono leading-none ${isCorrect ? 'text-black/50' : 'text-zinc-600'}`}>
+                                                    0{idx + 1}
+                                                </span>
+                                                
+                                                <div className="flex flex-col items-center gap-2 pt-2">
+                                                    <span className="text-lg font-black uppercase tracking-tighter italic">{option}</span>
+                                                    <div className={`h-1 w-8 rounded-full transition-all ${isCorrect ? 'bg-black/20' : 'bg-transparent group-hover:bg-sky-500/30'}`} />
+                                                </div>
+
+                                                {isCorrect && (
+                                                    <motion.div 
+                                                        initial={{ scale: 0 }}
+                                                        animate={{ scale: 1 }}
+                                                        className="absolute -right-4 -bottom-4 opacity-20"
+                                                    >
+                                                        <CheckCircle2 size={80} />
+                                                    </motion.div>
+                                                )}
+                                            </button>
+                                        );
+                                    })}
                                 </div>
 
-                                {/* Feedback Message */}
+                                {/* Dynamic Error/Success UI Overlay */}
                                 <AnimatePresence>
                                     {feedback && (
                                         <motion.div
-                                            initial={{ opacity: 0, y: 10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            className={`p-4 rounded-xl flex items-center gap-3 ${
-                                                feedback.type === 'correct' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-rose-500/10 text-rose-500'
+                                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                                            className={`relative mt-4 p-6 rounded-2xl border overflow-hidden ${
+                                                feedback.type === 'correct' 
+                                                    ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' 
+                                                    : 'bg-rose-500/10 border-rose-500/30 text-rose-400'
                                             }`}
                                         >
-                                            {feedback.type === 'correct' ? <Zap size={18} /> : <XCircle size={18} />}
-                                            <span className="text-[10px] font-black uppercase tracking-widest">{feedback.message}</span>
+                                            {/* Glitch Effect Background on Error */}
+                                            {feedback.type === 'wrong' && (
+                                                <motion.div 
+                                                    animate={{ opacity: [0.1, 0.3, 0.1] }}
+                                                    transition={{ duration: 0.2, repeat: Infinity }}
+                                                    className="absolute inset-0 bg-rose-500/5"
+                                                />
+                                            )}
+                                            
+                                            <div className="flex items-center gap-4 relative z-10">
+                                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                                                    feedback.type === 'correct' ? 'bg-emerald-500 text-black' : 'bg-rose-500 text-black'
+                                                }`}>
+                                                    {feedback.type === 'correct' ? <Zap size={24} /> : <XCircle size={24} />}
+                                                </div>
+                                                <div className="flex flex-col">
+                                                    <span className="text-[9px] font-black uppercase tracking-[0.3em] opacity-60">
+                                                        {feedback.type === 'correct' ? 'Transacción_Exitosa' : 'Fallo_de_Sincronización'}
+                                                    </span>
+                                                    <span className="text-sm font-black uppercase tracking-widest">{feedback.message}</span>
+                                                </div>
+                                            </div>
                                         </motion.div>
                                     )}
                                 </AnimatePresence>
