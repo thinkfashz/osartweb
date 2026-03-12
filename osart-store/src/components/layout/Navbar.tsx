@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { ShoppingCart, User, Menu, X, Zap, LogOut, Terminal, Package, Sun, Moon } from 'lucide-react';
+import { ShoppingCart, User, Menu, X, Zap, LogOut, Terminal, Package, Sun, Moon, BookOpen } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/hooks/useCart';
 import { CartDrawer } from '../cart/CartDrawer';
@@ -48,6 +48,10 @@ const Navbar = () => {
                     {/* Desktop Menu */}
                     <div className="hidden lg:flex items-center gap-10">
                         <Link href="/catalog" className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-500 hover:text-sky-500 transition-colors">Catálogo</Link>
+                        <Link href="/academy" className="text-[11px] font-black uppercase tracking-[0.2em] text-sky-500 hover:text-sky-400 transition-colors flex items-center gap-1.5">
+                            <BookOpen size={12} strokeWidth={3} />
+                            Academia
+                        </Link>
                         <Link href="/services" className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-500 hover:text-sky-500 transition-colors">Servicios</Link>
                         <Link href="/about" className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-500 hover:text-sky-500 transition-colors">Nosotros</Link>
                         <Link href="/admin" className="text-[10px] font-black uppercase tracking-[0.2em] px-4 py-1.5 rounded-full bg-sky-500/10 text-sky-500 hover:bg-sky-500 hover:text-white transition-all">Consola Admin</Link>
@@ -159,6 +163,7 @@ const Navbar = () => {
                             <div className="flex flex-col gap-10">
                                 <nav className="flex flex-col gap-8 text-left">
                                     <MobileNavLink href="/catalog" onClick={() => setIsOpen(false)}>Catálogo</MobileNavLink>
+                                    <MobileNavLink href="/academy" onClick={() => setIsOpen(false)} variant="accent">Academia</MobileNavLink>
                                     <MobileNavLink href="/services" onClick={() => setIsOpen(false)}>Servicios</MobileNavLink>
                                     <MobileNavLink href="/about" onClick={() => setIsOpen(false)}>Nosotros</MobileNavLink>
                                     <MobileNavLink href="/admin" onClick={() => setIsOpen(false)} variant="accent">Admin Panel</MobileNavLink>
