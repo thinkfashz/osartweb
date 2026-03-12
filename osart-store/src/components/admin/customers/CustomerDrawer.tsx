@@ -12,12 +12,19 @@ import {
     CreditCard,
     Shield,
     Activity,
+    User,
+    Trash2,
+    Save,
+    UserCheck,
+    AlertCircle,
     Zap,
+    ExternalLink,
     ShieldAlert,
     CheckCircle2,
-    ExternalLink,
     Clock
 } from 'lucide-react';
+import { toast } from 'sonner';
+import { supabase } from '@/lib/supabase-auth';
 import { useQuery } from '@apollo/client/react';
 import { ADMIN_CUSTOMER_DETAIL } from '@/lib/graphql/adminQueries';
 import { TableSkeleton } from '@/components/ui/Skeletons';

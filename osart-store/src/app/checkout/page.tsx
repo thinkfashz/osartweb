@@ -23,7 +23,7 @@ const steps = [
 ];
 
 export default function CheckoutPage() {
-    const { items, subtotal, discount, total, refetch, couponData } = useCart();
+    const { items, subtotal, discount, total, refetch, coupon } = useCart();
     const { user } = useAuth();
     const router = useRouter();
     const [currentStep, setCurrentStep] = useState(0);
@@ -42,8 +42,8 @@ export default function CheckoutPage() {
         if (user) {
             setFormData(prev => ({
                 ...prev,
-                name: user.full_name || prev.name,
-                email: user.email || prev.email,
+                name: (user as any)?.full_name || prev.name,
+                email: user?.email || prev.email,
             }));
         }
     }, [user]);
@@ -58,7 +58,7 @@ export default function CheckoutPage() {
                     body: JSON.stringify({
                         userId: user?.id,
                         shippingAddress: formData,
-                        couponCode: couponData?.code || null,
+                        couponCode: coupon?.code || null,
                     }),
                 });
 

@@ -32,7 +32,7 @@ export default function WishlistPage() {
                         className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 hover:text-sky-500 transition-colors mb-8 group"
                     >
                         <ArrowLeft size={14} className="group-hover:-translate-x-1 transition-transform" />
-                        Retornar al Nodo de Suministro
+                        Retornar al Suministro de Productos
                     </Link>
 
                     <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-8">

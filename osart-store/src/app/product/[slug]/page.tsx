@@ -65,7 +65,7 @@ export default function ProductDetailPage({ params }: { params: Promise<{ slug: 
                     href="/catalog"
                     className="px-8 py-4 border border-white/10 text-white rounded-xl font-black uppercase italic tracking-widest hover:bg-white/5 transition-all"
                 >
-                    Volver al Nodo Central
+                    Volver al Catálogo Central
                 </Link>
             </div>
         </div>

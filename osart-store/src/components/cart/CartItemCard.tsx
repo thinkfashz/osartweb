@@ -45,26 +45,35 @@ const CartItemCard: React.FC<CartItemCardProps> = ({ item, onUpdateQty, onRemove
                 <div className="flex-grow flex flex-col justify-between min-w-0 py-1">
                     <div className="space-y-1">
                         <div className="flex justify-between items-start gap-4">
-                            <Link
-                                href={`/product/${item.product.slug}`}
-                                className="group/title inline-flex items-center gap-1.5"
-                            >
-                                <h3 className="font-black text-base sm:text-xl text-zinc-100 uppercase italic tracking-tighter leading-tight decoration-sky-500/0 group-hover/title:decoration-sky-500/50 underline transition-all duration-300">
-                                    {item.product.name}
-                                </h3>
-                                <ExternalLink size={12} className="text-zinc-500 opacity-0 group-hover/title:opacity-100 -translate-y-1 translate-x-1 group-hover/title:translate-x-0 group-hover/title:translate-y-0 transition-all" />
-                            </Link>
+                            <div className="flex flex-col gap-1 min-w-0">
+                                <Link
+                                    href={`/product/${item.product.slug}`}
+                                    className="group/title inline-flex items-center gap-1.5"
+                                >
+                                    <h3 className="font-black text-base sm:text-xl text-zinc-100 uppercase italic tracking-tighter leading-tight decoration-sky-500/0 group-hover/title:decoration-sky-500/50 underline transition-all duration-300 truncate">
+                                        {item.product.name}
+                                    </h3>
+                                </Link>
+                                
+                                <Link 
+                                    href={`/product/${item.product.slug}`}
+                                    className="inline-flex items-center gap-1.5 text-[9px] font-black uppercase tracking-[0.2em] text-sky-500/60 hover:text-sky-400 transition-colors w-fit"
+                                >
+                                    <span>Ver Producto</span>
+                                    <ExternalLink size={10} strokeWidth={3} />
+                                </Link>
+                            </div>
                             
                             <button
                                 onClick={() => onRemove(item.productId)}
-                                className="text-zinc-500 hover:text-red-500 hover:bg-red-500/10 transition-all p-2 rounded-lg"
+                                className="text-zinc-500 hover:text-red-500 hover:bg-red-500/10 transition-all p-2 rounded-lg flex-shrink-0"
                                 aria-label="Eliminar"
                             >
                                 <Trash2 size={18} strokeWidth={1.5} />
                             </button>
                         </div>
                         
-                        <p className="text-[10px] font-bold text-sky-500/70 uppercase tracking-[0.25em] font-mono">
+                        <p className="text-[10px] font-bold text-zinc-500/50 uppercase tracking-[0.25em] font-mono mt-2">
                             SN: {item.productId.slice(0, 8)} | COMP_V2
                         </p>
                     </div>

@@ -85,7 +85,7 @@ const LoginForm = () => {
                         <label htmlFor="password" className="text-[9px] font-black uppercase tracking-[0.4em] text-zinc-500 flex items-center gap-2">
                             <div className="w-1 h-1 bg-zinc-700" /> Código_Acceso
                         </label>
-                        <Link href="/forgot-password" size="sm" className="text-[8px] text-zinc-600 hover:text-sky-500 uppercase font-black tracking-widest transition-colors">
+                        <Link href="/forgot-password" className="text-[8px] text-zinc-600 hover:text-sky-500 uppercase font-black tracking-widest transition-colors">
                             Recuperar_Acceso
                         </Link>
                     </div>

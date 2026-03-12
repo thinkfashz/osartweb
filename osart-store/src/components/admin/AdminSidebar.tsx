@@ -130,7 +130,7 @@ export default function AdminSidebar({ isOpen, setIsOpen }: { isOpen: boolean, s
                 {!isCollapsed && (
                     <div className="px-4 py-3 mb-4 rounded-2xl bg-muted/20 border border-border flex items-center gap-3">
                         <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                        <span className="text-[10px] font-bold text-sky-500 uppercase tracking-widest text-readability">Nodos Estables</span>
+                        <span className="text-[10px] font-bold text-sky-500 uppercase tracking-widest text-readability">Productos Activos</span>
                     </div>
                 )}
                 <button

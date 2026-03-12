@@ -100,7 +100,7 @@ export default function ProfilePage() {
                         Acceso <span className="text-rose-500">Denegado</span>
                     </h1>
                     <p className="text-zinc-500 font-mono text-[10px] uppercase mb-12 tracking-[0.3em] leading-loose">
-                        [ERROR_403]: SESIÓN NO DETECTADA EN EL NODO ACTUAL.<br />
+                        [ERROR_403]: SESIÓN NO DETECTADA EN EL SISTEMA ACTUAL.<br />
                         SE REQUIERE AUTORIZACIÓN NIVEL 1 PARA ACCEDER AL PANEL.
                     </p>
                     <Link href="/login" className="group relative px-12 py-5 bg-white text-black font-black uppercase italic tracking-[0.2em] overflow-hidden transition-all hover:bg-sky-500 block w-full text-center">

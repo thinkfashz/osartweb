@@ -19,6 +19,7 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { AdminProduct } from '@/types/admin';
+import Link from 'next/link';
 
 export default function AdminCatalogTable({ products, view }: { products: AdminProduct[], view: 'table' | 'grid' }) {
     const formatPrice = (val: number) =>
@@ -39,17 +40,11 @@ export default function AdminCatalogTable({ products, view }: { products: AdminP
                             {/* Visual Unit Area */}
                             <div className="aspect-square bg-slate-50 rounded-[2rem] mb-6 overflow-hidden relative group-hover:scale-[1.02] transition-transform duration-500">
                                 <div className="absolute top-4 right-4 flex gap-2 z-10">
-                                    {p.isFeatured && (
-                                        <div className="bg-amber-400 text-white p-2 rounded-xl shadow-lg shadow-amber-200 animate-pulse">
-                                            <Star size={14} fill="currentColor" />
+                                    {p.is_active && (
+                                        <div className="bg-emerald-500 text-white p-2 rounded-xl shadow-lg shadow-emerald-200">
+                                            <CheckCircle2 size={14} />
                                         </div>
                                     )}
-                                    <div className={cn(
-                                        "p-2 rounded-xl text-white shadow-lg",
-                                        p.isActive ? 'bg-emerald-500 shadow-emerald-200' : 'bg-slate-400 shadow-slate-200'
-                                    )}>
-                                        {p.isActive ? <CheckCircle2 size={14} /> : <XCircle size={14} />}
-                                    </div>
                                 </div>
                                 <div className="w-full h-full flex flex-col items-center justify-center text-slate-200 group-hover:text-slate-900 transition-colors">
                                     <Package size={64} strokeWidth={1} className="mb-2" />
@@ -84,7 +79,7 @@ export default function AdminCatalogTable({ products, view }: { products: AdminP
                             <div className="mt-6 flex items-center justify-between pt-6 border-t border-slate-50">
                                 <div className="flex flex-col">
                                     <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Inversión Unidad</span>
-                                    <span className="text-xl font-black text-slate-950 tracking-tighter">{formatPrice(p.price)}</span>
+                                    <span className="text-xl font-black text-slate-950 tracking-tighter">{formatPrice(p.price || 0)}</span>
                                 </div>
                                 <Link
                                     href={`/admin/products/${p.id}`}
@@ -142,20 +137,17 @@ export default function AdminCatalogTable({ products, view }: { products: AdminP
                                     <div className="flex items-center gap-3">
                                         <div className={cn(
                                             "w-2.5 h-2.5 rounded-full ring-4 transition-all",
-                                            p.isActive ? 'bg-emerald-500 ring-emerald-50 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-slate-300 ring-slate-50'
+                                            p.is_active ? 'bg-emerald-500 ring-emerald-50 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-slate-300 ring-slate-50'
                                         )} />
                                         <div className="flex flex-col">
                                             <span className="text-[9px] font-black uppercase text-slate-950 tracking-wider font-mono leading-none">
-                                                {p.isActive ? 'ACTIVO' : 'BORRADOR'}
+                                                {p.is_active ? 'ACTIVO' : 'BORRADOR'}
                                             </span>
-                                            {p.isFeatured && (
-                                                <span className="text-[8px] font-black uppercase text-amber-500 tracking-tighter mt-1">SISTEMA DESTACADO</span>
-                                            )}
                                         </div>
                                     </div>
                                 </td>
                                 <td className="px-6 md:px-10 py-6 text-center">
-                                    <span className="text-sm md:text-base font-black text-slate-950 tracking-tighter italic font-mono">{formatPrice(p.price)}</span>
+                                    <span className="text-sm md:text-base font-black text-slate-950 tracking-tighter italic font-mono">{formatPrice(p.price || 0)}</span>
                                 </td>
                                 <td className="px-6 md:px-10 py-6 text-center">
                                     <div className={cn(
