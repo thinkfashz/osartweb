@@ -9,6 +9,9 @@ import {
 import { toast } from 'sonner';
 import { useAuth } from '@/context/AuthContext';
 import { motion } from 'framer-motion';
+import { supabase } from '@/lib/supabase';
+import { MOCK_LOCAL_PRODUCTS, MOCK_CATEGORIES } from '@/lib/mockData';
+
 
 interface ToggleProps {
     checked: boolean;
@@ -66,7 +69,9 @@ export default function SettingsPage() {
     });
     const [saved, setSaved] = useState(false);
     const [saving, setSaving] = useState(false);
+    const [deploying, setDeploying] = useState(false);
     const [dirty, setDirty] = useState(false);
+
 
     const toggle = (key: string) => (val: boolean) => {
         setSettings(s => ({ ...s, [key]: val }));
@@ -92,7 +97,62 @@ export default function SettingsPage() {
         setTimeout(() => setSaved(false), 3000);
     };
 
+    const handleDeployExamples = async () => {
+        if (!confirm('¿Estás seguro de que quieres desplegar los productos de ejemplo a Supabase? Esto insertará nuevas categorías y productos en tu base de datos activa.')) return;
+
+        setDeploying(true);
+        const toastId = toast.loading('Sincronizando componentes industriales...');
+
+        try {
+            // 1. Sync Categories
+            const categoriesToInsert = MOCK_CATEGORIES.map(({ id, ...cat }) => ({
+                ...cat,
+                slug: cat.slug || cat.name.toLowerCase().replace(/ /g, '-')
+            }));
+
+            const { data: catData, error: catError } = await supabase
+                .from('categories')
+                .upsert(categoriesToInsert, { onConflict: 'name' })
+                .select();
+
+            if (catError) throw catError;
+
+            // Create a mapping of Name -> ID
+            const catMap: Record<string, string> = {};
+            catData?.forEach(c => { catMap[c.name] = c.id; });
+
+
+            // 2. Sync Products
+            const productsToInsert = MOCK_LOCAL_PRODUCTS.map(({ id, category, category_id, createdAt, arrive_today, ...prod }) => {
+                // Find category ID by name if possible, or fallback
+                const realCatId = catData?.find(c => c.name === category?.name)?.id;
+                
+                return {
+                    ...prod,
+                    category_id: realCatId || null,
+                    stock: prod.stock_quantity || 0,
+                    image_url: prod.image_url,
+                    is_active: true
+                };
+            });
+
+            const { error: prodError } = await supabase
+                .from('products')
+                .upsert(productsToInsert, { onConflict: 'name' });
+
+            if (prodError) throw prodError;
+
+            toast.success('Sincronización completa: 10 componentes industriales desplegados', { id: toastId });
+        } catch (error: any) {
+            console.error('Error deploying examples:', error);
+            toast.error(`Fallo en el despliegue: ${error.message}`, { id: toastId });
+        } finally {
+            setDeploying(false);
+        }
+    };
+
     // Load saved settings on mount
+
     useEffect(() => {
         try {
             const saved = localStorage.getItem('osart_admin_settings');
@@ -234,8 +294,20 @@ export default function SettingsPage() {
                                     />
                                 </div>
                             </div>
+
+                            <div className="pt-4 border-t border-zinc-800 flex justify-end">
+                                <button
+                                    onClick={handleDeployExamples}
+                                    disabled={deploying}
+                                    className="flex items-center gap-2 px-6 py-3 bg-sky-500/10 text-sky-500 border border-sky-500/20 rounded-xl text-[9px] font-black uppercase tracking-widest hover:bg-sky-500/20 transition-all disabled:opacity-50"
+                                >
+                                    {deploying ? <Loader2 size={14} className="animate-spin" /> : <RefreshCcw size={14} />}
+                                    Desplegar Ejemplos Industriales
+                                </button>
+                            </div>
                         </motion.div>
                     )}
+
                 </div>
 
                 {/* Settings Grid */}
