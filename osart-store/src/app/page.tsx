@@ -7,40 +7,10 @@ import FeaturedBanner from "@/components/shop/FeaturedBanner";
 import { Loader2, Zap, ShieldCheck, CreditCard, ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import GsapReveal from "@/components/ui/GsapReveal";
 
 import { useProducts } from '@/hooks/useShop';
 import { OfferLinks } from '@/components/shop/OfferLinks';
-
-// ─── Animate on scroll — uses native IntersectionObserver to avoid Turbopack HMR issues ───
-function AnimateIn({ children, delay = 0, className = '' }: { children: React.ReactNode; delay?: number; className?: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
-      { rootMargin: '-80px 0px' }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-
-  return (
-    <div
-      ref={ref}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? 'translateY(0)' : 'translateY(40px)',
-        transition: `opacity 0.6s ease ${delay}s, transform 0.6s ease ${delay}s`,
-      }}
-      className={className}
-    >
-      {children}
-    </div>
-  );
-}
 
 export default function Home() {
   const { data, loading } = useProducts();
@@ -101,7 +71,7 @@ export default function Home() {
           style={{ background: 'radial-gradient(ellipse 60% 40% at 50% 100%, rgba(14, 165, 233, 0.05), transparent)' }} />
 
         <div className="max-w-[1200px] mx-auto px-5 relative z-10">
-          <AnimateIn className="flex flex-col md:flex-row md:items-end justify-between mb-20 px-4 sm:px-0 gap-6">
+          <GsapReveal className="flex flex-col md:flex-row md:items-end justify-between mb-20 px-4 sm:px-0 gap-6">
             <div className="space-y-3">
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-sky-500/10 border border-sky-500/20 rounded-full">
                 <div className="w-1.5 h-1.5 rounded-full bg-sky-500 animate-pulse" />
@@ -114,7 +84,7 @@ export default function Home() {
             <Link href="/catalog" className="hidden sm:flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors group">
               Explorar Todo <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
             </Link>
-          </AnimateIn>
+          </GsapReveal>
 
           {loading ? (
             <div className="flex flex-col items-center justify-center py-20 gap-4">
@@ -158,14 +128,14 @@ export default function Home() {
           style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, #0ea5e9 1px, transparent 0)', backgroundSize: '40px 40px' }} />
 
         <div className="max-w-[1200px] mx-auto px-5 relative z-10">
-          <AnimateIn className="text-center mb-16">
+          <GsapReveal className="text-center mb-16">
             <span className="text-[10px] font-black uppercase tracking-[0.4em] text-sky-500 block mb-4">Segmentos de Hardware</span>
             <h2 className="text-4xl lg:text-5xl font-black tracking-tighter text-zinc-900 dark:text-white uppercase italic">Zonas del Sistema</h2>
-          </AnimateIn>
+          </GsapReveal>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {CATEGORY_CARDS.map((cat, i) => (
-              <AnimateIn key={i} delay={i * 0.1}>
+              <GsapReveal key={i} delay={i * 0.1}>
                 <div className="bg-white/50 dark:bg-zinc-900/50 backdrop-blur-xl h-full p-12 rounded-[2.5rem] border border-zinc-200/50 dark:border-zinc-800/50 hover:border-sky-500/30 transition-all group relative overflow-hidden cursor-pointer shadow-sm hover:shadow-2xl hover:shadow-sky-500/5">
                   <div className="absolute top-0 left-0 w-full h-1.5 bg-sky-500 opacity-0 group-hover:opacity-100 transition-opacity" />
                   <div className="absolute top-0 right-0 p-6 opacity-40 group-hover:opacity-100 transition-opacity">
@@ -179,7 +149,7 @@ export default function Home() {
                     Acceder al Nodo <ChevronRight size={14} className="text-sky-500 group-hover/link:translate-x-1 transition-transform" />
                   </Link>
                 </div>
-              </AnimateIn>
+              </GsapReveal>
             ))}
           </div>
         </div>
@@ -192,7 +162,7 @@ export default function Home() {
 
         <div className="max-w-[1200px] mx-auto px-5 relative z-10">
           <div className="grid lg:grid-cols-2 gap-20 items-center">
-            <AnimateIn className="space-y-10">
+            <GsapReveal className="space-y-10">
               <div className="space-y-4">
                 <span className="text-xs font-bold uppercase tracking-[0.4em] text-sky-500">¿Por qué OSART?</span>
                 <h2 className="text-5xl lg:text-7xl font-black tracking-tighter leading-[0.9] text-zinc-900 dark:text-white">
@@ -227,9 +197,9 @@ export default function Home() {
                   </motion.div>
                 ))}
               </div>
-            </AnimateIn>
+            </GsapReveal>
 
-            <AnimateIn delay={0.15} className="relative">
+            <GsapReveal delay={0.15} className="relative">
               {/* Glow halo */}
               <div className="absolute -inset-10 bg-sky-500/10 blur-[120px] rounded-full -z-10 animate-pulse" />
               <div className="bg-white/50 dark:bg-zinc-900/50 backdrop-blur-2xl aspect-video lg:aspect-square flex items-center justify-center relative border border-zinc-200 dark:border-zinc-800 rounded-[3rem] overflow-hidden shadow-2xl">
@@ -244,7 +214,7 @@ export default function Home() {
                   </Link>
                 </div>
               </div>
-            </AnimateIn>
+            </GsapReveal>
           </div>
         </div>
       </section>

@@ -19,7 +19,8 @@ import {
     Layers,
     Webhook,
     Layout,
-    Video
+    Video,
+    CreditCard
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
@@ -34,6 +35,7 @@ const NAV_ITEMS = [
     { name: 'Productos', icon: Package, path: '/admin/products' },
     { name: 'Categorías', icon: Layers, path: '/admin/categories' },
     { name: 'Stock en Vivo', icon: TrendingUp, path: '/admin/stock' },
+    { name: 'Pagos', icon: CreditCard, path: '/admin/payments' },
     { name: 'Configuraciones', icon: Settings, path: '/admin/settings' },
 ];
 

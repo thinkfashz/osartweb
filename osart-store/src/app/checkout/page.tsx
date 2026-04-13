@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Truck, CreditCard, CheckCircle, Package, ArrowRight, ArrowLeft, ShieldCheck, MapPin } from 'lucide-react';
+import { Truck, CreditCard, CheckCircle, Package, ArrowRight, ArrowLeft, ShieldCheck, MapPin, Banknote, ExternalLink } from 'lucide-react';
 import { useCart } from '@/hooks/useCart';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
@@ -15,6 +15,14 @@ import { twMerge } from 'tailwind-merge';
 function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
 }
+
+type PaymentMethod = 'mercadopago' | 'stripe' | 'transfer';
+
+const PAYMENT_METHODS: { id: PaymentMethod; label: string; desc: string; badge?: string }[] = [
+    { id: 'mercadopago', label: 'MercadoPago', desc: 'Tarjetas, débito y cuotas sin interés', badge: 'Recomendado' },
+    { id: 'stripe', label: 'Tarjeta Internacional', desc: 'Visa, Mastercard, Amex vía Stripe', badge: '' },
+    { id: 'transfer', label: 'Transferencia Bancaria', desc: 'Banco Estado · Chile · 0–1 día hábil', badge: '' },
+];
 
 const steps = [
     { id: 'shipping', title: 'Distribución', icon: Truck },
@@ -29,6 +37,7 @@ export default function CheckoutPage() {
     const [currentStep, setCurrentStep] = useState(0);
     const [orderId, setOrderId] = useState<string | null>(null);
     const [orderLoading, setOrderLoading] = useState(false);
+    const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('mercadopago');
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -52,6 +61,7 @@ export default function CheckoutPage() {
         if (currentStep === 1) {
             setOrderLoading(true);
             try {
+                // 1. Create the order first
                 const response = await fetch('/api/orders', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -68,10 +78,42 @@ export default function CheckoutPage() {
                 }
 
                 const data = await response.json();
-                setOrderId(data.orderId);
+                const newOrderId = data.orderId;
+                setOrderId(newOrderId);
+                refetch();
+
+                // 2. Redirect to payment gateway if needed
+                if (paymentMethod === 'mercadopago') {
+                    const mpRes = await fetch('/api/payments/mercadopago', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            orderId: newOrderId,
+                            payerEmail: formData.email,
+                            items: items.map((it: any) => ({
+                                title: it.product.name,
+                                quantity: it.quantity,
+                                unit_price: it.product.price,
+                                currency_id: 'CLP',
+                            })),
+                        }),
+                    });
+
+                    if (mpRes.ok) {
+                        const mp = await mpRes.json();
+                        const redirectUrl = process.env.NODE_ENV === 'production'
+                            ? mp.initPoint
+                            : mp.sandboxInitPoint || mp.initPoint;
+                        if (redirectUrl) {
+                            window.location.href = redirectUrl;
+                            return;
+                        }
+                    }
+                    // Fallback: show confirmation screen
+                }
+
                 setCurrentStep(2);
                 toast.success('ORDEN PROCESADA EXITOSAMENTE');
-                refetch();
             } catch (e: any) {
                 toast.error(e.message);
             } finally {
@@ -239,33 +281,86 @@ export default function CheckoutPage() {
                                         <div className="h-px flex-1 bg-zinc-800" />
                                     </div>
 
-                                    <div className="bg-zinc-900/30 border border-zinc-800 p-8 space-y-6">
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-5">
-                                                <div className="w-12 h-12 bg-sky-500/10 border border-sky-500/20 flex items-center justify-center">
-                                                    <ShieldCheck className="w-6 h-6 text-sky-500" />
+                                    {/* Payment Method Selector */}
+                                    <div className="space-y-3">
+                                        {PAYMENT_METHODS.map((method) => (
+                                            <button
+                                                key={method.id}
+                                                onClick={() => setPaymentMethod(method.id)}
+                                                className={cn(
+                                                    'w-full flex items-center justify-between p-5 border transition-all text-left',
+                                                    paymentMethod === method.id
+                                                        ? 'border-sky-500 bg-sky-500/5'
+                                                        : 'border-zinc-800 bg-zinc-900/30 hover:border-zinc-700'
+                                                )}
+                                            >
+                                                <div className="flex items-center gap-4">
+                                                    <div className={cn(
+                                                        'w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-all',
+                                                        paymentMethod === method.id ? 'border-sky-500' : 'border-zinc-700'
+                                                    )}>
+                                                        {paymentMethod === method.id && (
+                                                            <div className="w-2.5 h-2.5 rounded-full bg-sky-500" />
+                                                        )}
+                                                    </div>
+                                                    <div>
+                                                        <div className="flex items-center gap-2">
+                                                            <span className="font-black uppercase tracking-widest text-sm text-white">{method.label}</span>
+                                                            {method.badge && (
+                                                                <span className="px-2 py-0.5 bg-sky-500/20 text-sky-400 text-[9px] font-black uppercase tracking-widest rounded-full">{method.badge}</span>
+                                                            )}
+                                                        </div>
+                                                        <p className="text-[10px] font-mono text-zinc-500 mt-0.5">{method.desc}</p>
+                                                    </div>
                                                 </div>
-                                                <div>
-                                                    <p className="font-black uppercase tracking-widest text-sm">Transacción Encriptada</p>
-                                                    <p className="text-[10px] font-mono text-zinc-500">ST-PAYMENT SENSOR: ACTIVE</p>
-                                                </div>
-                                            </div>
-                                        </div>
+                                                {method.id === 'mercadopago' && (
+                                                    <ExternalLink size={14} className="text-zinc-600 shrink-0" />
+                                                )}
+                                                {method.id === 'transfer' && (
+                                                    <Banknote size={14} className="text-zinc-600 shrink-0" />
+                                                )}
+                                                {method.id === 'stripe' && (
+                                                    <CreditCard size={14} className="text-zinc-600 shrink-0" />
+                                                )}
+                                            </button>
+                                        ))}
+                                    </div>
 
-                                        <div className="p-6 border border-zinc-800 bg-black/50 space-y-4">
-                                            <div className="flex justify-between items-center text-xs font-mono">
-                                                <span className="text-zinc-500">PROVEEDOR:</span>
-                                                <span className="text-white">STRIPE_SANDBOX</span>
-                                            </div>
-                                            <div className="flex justify-between items-center text-xs font-mono">
-                                                <span className="text-zinc-500">DIVISA:</span>
-                                                <span className="text-white">CLP (PESOS CHILENOS)</span>
-                                            </div>
-                                        </div>
+                                    {/* Bank transfer details */}
+                                    <AnimatePresence>
+                                        {paymentMethod === 'transfer' && (
+                                            <motion.div
+                                                initial={{ opacity: 0, height: 0 }}
+                                                animate={{ opacity: 1, height: 'auto' }}
+                                                exit={{ opacity: 0, height: 0 }}
+                                                className="bg-zinc-900/30 border border-zinc-800 p-6 space-y-3 overflow-hidden"
+                                            >
+                                                <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 mb-4">Datos de Transferencia</p>
+                                                {[
+                                                    { label: 'Banco', value: 'Banco Estado' },
+                                                    { label: 'Tipo', value: 'Cuenta Corriente' },
+                                                    { label: 'N° Cuenta', value: '00123456789' },
+                                                    { label: 'RUT', value: '76.XXX.XXX-X' },
+                                                    { label: 'Nombre', value: 'OSART SpA' },
+                                                    { label: 'Email', value: 'pagos@osart.cl' },
+                                                ].map(row => (
+                                                    <div key={row.label} className="flex justify-between text-[11px] font-mono">
+                                                        <span className="text-zinc-500">{row.label.toUpperCase()}</span>
+                                                        <span className="text-white font-bold">{row.value}</span>
+                                                    </div>
+                                                ))}
+                                                <p className="text-[9px] font-mono text-zinc-600 pt-2 border-t border-zinc-800 uppercase">
+                                                    Envía el comprobante a pagos@osart.cl con el N° de orden.
+                                                </p>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
 
-                                        <div className="text-[10px] text-zinc-600 font-mono leading-relaxed border-l-2 border-zinc-800 pl-4 uppercase">
-                                            Al finalizar, confirmas que has verificado la compatibilidad técnica de los componentes seleccionados.
-                                        </div>
+                                    <div className="p-4 bg-zinc-900/20 border border-zinc-800/50 flex items-center gap-3">
+                                        <ShieldCheck className="w-4 h-4 text-sky-500 shrink-0" />
+                                        <span className="text-[9px] font-mono text-zinc-500 uppercase tracking-widest">
+                                            Transacción encriptada SSL · Tus datos están protegidos
+                                        </span>
                                     </div>
 
                                     <button
@@ -275,7 +370,7 @@ export default function CheckoutPage() {
                                     >
                                         <div className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 skew-x-[-20deg]" />
                                         <span className="relative z-10 flex items-center justify-center gap-3">
-                                            {orderLoading ? 'Sincronizando...' : 'Finalizar Transacción'}
+                                            {orderLoading ? 'Procesando...' : paymentMethod === 'mercadopago' ? 'Pagar con MercadoPago' : paymentMethod === 'stripe' ? 'Pagar con Tarjeta' : 'Confirmar Transferencia'}
                                             {!orderLoading && <CheckCircle className="w-5 h-5" />}
                                         </span>
                                     </button>

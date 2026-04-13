@@ -406,7 +406,38 @@
   animation: shimmer 2s infinite;
 }
 
-/* ─── Navbar ─── */
+/* ─── GSAP Initial States ─── */
+/* Elements animated by GSAP start invisible; GSAP sets opacity on mount */
+.gsap-hidden {
+  opacity: 0;
+}
+
+/* ─── Improved responsive utilities ─── */
+@layer utilities {
+  /* Fluid container */
+  .container-fluid {
+    width: 100%;
+    max-width: 1280px;
+    margin-inline: auto;
+    padding-inline: clamp(1rem, 4vw, 2.5rem);
+  }
+
+  /* Responsive grid helpers */
+  .grid-auto-fill-sm {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  }
+
+  .grid-auto-fill-md {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  }
+
+  /* Touch-safe interactive targets */
+  .touch-safe {
+    @apply min-h-[44px] min-w-[44px];
+  }
+}
+
+
 @layer components {
   .navbar-link {
     @apply text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-all relative;

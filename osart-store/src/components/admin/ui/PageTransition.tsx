@@ -1,20 +1,34 @@
 "use client";
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef, useEffect } from 'react';
 
+/**
+ * GSAP-powered page transition wrapper for the admin panel.
+ * Replaces the previous framer-motion version while keeping the same API.
+ */
 export const PageTransition = ({ children }: { children: React.ReactNode }) => {
+    const ref = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        let ctx: any;
+        (async () => {
+            const { gsap } = await import('gsap');
+            const el = ref.current;
+            if (!el) return;
+            ctx = gsap.context(() => {
+                gsap.fromTo(
+                    el,
+                    { opacity: 0, x: 16 },
+                    { opacity: 1, x: 0, duration: 0.35, ease: 'power2.out' }
+                );
+            }, el);
+        })();
+        return () => ctx?.revert();
+    }, []);
+
     return (
-        <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            transition={{
-                duration: 0.3,
-                ease: [0.23, 1, 0.32, 1] // Custom cubic-bezier for premium feel
-            }}
-        >
+        <div ref={ref} style={{ opacity: 0 }}>
             {children}
-        </motion.div>
+        </div>
     );
 };
