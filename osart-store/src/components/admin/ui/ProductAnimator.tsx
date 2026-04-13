@@ -45,7 +45,7 @@ export const ProductAnimator: React.FC<ProductAnimatorProps> = ({
 
             {/* Overlay UI */}
             <div className="absolute top-6 left-6 flex items-center gap-2 px-4 py-2 bg-black/40 backdrop-blur-md rounded-xl border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <Sparkles size={14} className="text-sky-400" />
+                <Sparkles size={14} className="text-violet-400" />
                 <span className="text-[10px] font-black uppercase tracking-widest text-white">Remotion Live</span>
             </div>
 

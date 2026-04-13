@@ -4,7 +4,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import { PageTransition } from '@/components/admin/ui/PageTransition';
 import {
     Settings, Shield, Zap, Database, Save, Bell, Globe,
-    Moon, Loader2, Check, ChevronRight, User, Lock, RefreshCcw
+    Moon, Loader2, Check, ChevronRight, User, Lock, RefreshCcw, CreditCard, Key
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '@/context/AuthContext';
@@ -65,7 +65,17 @@ export default function SettingsPage() {
         compact_mode: false,
         osart_data_mode: 'local', // 'local' | 'database' - Defaulting to local demo products per user request
         osart_custom_db_url: '',
-        osart_custom_db_key: ''
+        osart_custom_db_key: '',
+        // Payment API keys
+        mercadopago_access_token: '',
+        mercadopago_public_key: '',
+        stripe_secret_key: '',
+        stripe_publishable_key: '',
+        stripe_webhook_secret: '',
+        bank_account_name: 'OSART SpA',
+        bank_account_number: '',
+        bank_rut: '',
+        bank_email: 'pagos@osart.cl',
     });
     const [saved, setSaved] = useState(false);
     const [saving, setSaving] = useState(false);
@@ -324,6 +334,118 @@ export default function SettingsPage() {
                         color="bg-sky-500/20 text-sky-500"
                         rows={PERFORMANCE_SETTINGS}
                     />
+                </div>
+
+                {/* Payment API Configuration */}
+                <div className="bg-zinc-900 border border-zinc-800 rounded-[2rem] p-6 md:p-8 space-y-6">
+                    <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-white flex items-center gap-3 mb-6">
+                        <div className="w-8 h-8 rounded-xl flex items-center justify-center bg-sky-500/20 text-sky-400">
+                            <CreditCard size={16} />
+                        </div>
+                        Integraciones de Pago
+                    </h3>
+
+                    {/* MercadoPago */}
+                    <div className="space-y-3">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 flex items-center gap-2">
+                            <Key size={12} className="text-sky-500" /> MercadoPago
+                        </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-2">Access Token</label>
+                                <input
+                                    type="password"
+                                    value={settings.mercadopago_access_token || ''}
+                                    onChange={handleTextChange('mercadopago_access_token')}
+                                    placeholder="APP_USR-..."
+                                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white text-xs font-mono focus:border-sky-500 outline-none transition-all"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-2">Public Key</label>
+                                <input
+                                    type="text"
+                                    value={settings.mercadopago_public_key || ''}
+                                    onChange={handleTextChange('mercadopago_public_key')}
+                                    placeholder="APP_USR-..."
+                                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white text-xs font-mono focus:border-sky-500 outline-none transition-all"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="h-px bg-zinc-800" />
+
+                    {/* Stripe */}
+                    <div className="space-y-3">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 flex items-center gap-2">
+                            <Key size={12} className="text-violet-400" /> Stripe
+                        </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-2">Secret Key</label>
+                                <input
+                                    type="password"
+                                    value={settings.stripe_secret_key || ''}
+                                    onChange={handleTextChange('stripe_secret_key')}
+                                    placeholder="sk_live_..."
+                                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white text-xs font-mono focus:border-violet-500 outline-none transition-all"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-2">Publishable Key</label>
+                                <input
+                                    type="text"
+                                    value={settings.stripe_publishable_key || ''}
+                                    onChange={handleTextChange('stripe_publishable_key')}
+                                    placeholder="pk_live_..."
+                                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white text-xs font-mono focus:border-violet-500 outline-none transition-all"
+                                />
+                            </div>
+                            <div className="sm:col-span-2">
+                                <label className="block text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-2">Webhook Secret</label>
+                                <input
+                                    type="password"
+                                    value={settings.stripe_webhook_secret || ''}
+                                    onChange={handleTextChange('stripe_webhook_secret')}
+                                    placeholder="whsec_..."
+                                    className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white text-xs font-mono focus:border-violet-500 outline-none transition-all"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="h-px bg-zinc-800" />
+
+                    {/* Bank Transfer */}
+                    <div className="space-y-3">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 flex items-center gap-2">
+                            <Key size={12} className="text-emerald-400" /> Transferencia Bancaria
+                        </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {[
+                                { key: 'bank_account_name', label: 'Nombre Titular', placeholder: 'OSART SpA', type: 'text' },
+                                { key: 'bank_rut', label: 'RUT', placeholder: '76.XXX.XXX-X', type: 'text' },
+                                { key: 'bank_account_number', label: 'N° Cuenta', placeholder: '00123456789', type: 'text' },
+                                { key: 'bank_email', label: 'Email de Pagos', placeholder: 'pagos@osart.cl', type: 'email' },
+                            ].map(field => (
+                                <div key={field.key}>
+                                    <label className="block text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-2">{field.label}</label>
+                                    <input
+                                        type={field.type}
+                                        value={(settings as Record<string, any>)[field.key] || ''}
+                                        onChange={handleTextChange(field.key)}
+                                        placeholder={field.placeholder}
+                                        className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white text-xs font-mono focus:border-emerald-500 outline-none transition-all"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+
+                    <p className="text-[9px] font-mono text-zinc-600 leading-relaxed">
+                        ⚠️ Las claves API se guardan en localStorage del navegador. Para producción, configura las variables de entorno (MERCADOPAGO_ACCESS_TOKEN, STRIPE_SECRET_KEY) en tu plataforma de deploy.
+                    </p>
                 </div>
 
                 {/* Danger Zone */}
