@@ -46,8 +46,10 @@ export async function POST(request: NextRequest) {
         const paymentId = body?.data?.id ?? body?.id;
         const accessToken = process.env.MERCADOPAGO_ACCESS_TOKEN;
 
-        if (accessToken && paymentId) {
-          const mpRes = await fetch(`https://api.mercadopago.com/v1/payments/${paymentId}`, {
+        // Validate paymentId is a numeric string to prevent SSRF
+        if (accessToken && paymentId && /^\d+$/.test(String(paymentId))) {
+          const safePaymentId = String(paymentId);
+          const mpRes = await fetch(`https://api.mercadopago.com/v1/payments/${safePaymentId}`, {
             headers: { Authorization: `Bearer ${accessToken}` },
           });
 
@@ -78,23 +80,25 @@ export async function POST(request: NextRequest) {
       // Verify signature if secret is configured
       if (webhookSecret && sig) {
         try {
-          // Dynamic import to avoid server-side issues without stripe package
           const crypto = await import('crypto');
-          const [, timestampPart, signaturePart] = sig.split(',').reduce<Record<string, string>>((acc, part) => {
-            const [k, v] = part.split('=');
-            acc[k.trim()] = v.trim();
+          // Parse Stripe signature header: "t=<ts>,v1=<hash>"
+          const parts = sig.split(',').reduce<Record<string, string>>((acc, part) => {
+            const eqIdx = part.indexOf('=');
+            if (eqIdx !== -1) {
+              acc[part.slice(0, eqIdx).trim()] = part.slice(eqIdx + 1).trim();
+            }
             return acc;
-          }, {}) as any;
+          }, {});
 
-          const t = timestampPart ?? '';
-          const v1 = signaturePart ?? '';
+          const t = parts['t'] ?? '';
+          const v1 = parts['v1'] ?? '';
           const payload = `${t}.${rawBody}`;
           const expectedSig = crypto
             .createHmac('sha256', webhookSecret)
             .update(payload)
             .digest('hex');
 
-          if (expectedSig !== v1) {
+          if (!t || expectedSig !== v1) {
             return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
           }
         } catch {

@@ -433,7 +433,7 @@ export default function SettingsPage() {
                                     <label className="block text-[9px] font-black text-zinc-500 uppercase tracking-widest mb-2">{field.label}</label>
                                     <input
                                         type={field.type}
-                                        value={settings[field.key] || ''}
+                                        value={(settings as Record<string, any>)[field.key] || ''}
                                         onChange={handleTextChange(field.key)}
                                         placeholder={field.placeholder}
                                         className="w-full bg-zinc-950 border border-zinc-800 rounded-xl px-4 py-3 text-white text-xs font-mono focus:border-emerald-500 outline-none transition-all"

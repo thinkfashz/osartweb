@@ -27,7 +27,7 @@ export const PageTransition = ({ children }: { children: React.ReactNode }) => {
     }, []);
 
     return (
-        <div ref={ref} style={{ opacity: 0 }}>
+        <div ref={ref} className="gsap-hidden">
             {children}
         </div>
     );

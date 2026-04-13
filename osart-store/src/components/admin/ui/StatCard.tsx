@@ -41,8 +41,7 @@ export const StatCard = ({ title, value, icon: Icon, trend, description, color =
     return (
         <div
             ref={ref}
-            style={{ opacity: 0 }}
-            className="saas-glass dark:saas-glass-dark border border-white/40 dark:border-zinc-800/50 rounded-[2.5rem] p-5 md:p-8 shadow-xl shadow-sky-500/5 relative overflow-hidden group flex flex-col justify-between min-h-[160px] hover:-translate-y-1 transition-transform duration-300"
+            className={`gsap-hidden saas-glass dark:saas-glass-dark border border-white/40 dark:border-zinc-800/50 rounded-[2.5rem] p-5 md:p-8 shadow-xl shadow-sky-500/5 relative overflow-hidden group flex flex-col justify-between min-h-[160px] hover:-translate-y-1 transition-transform duration-300`}
         >
             {/* Ambient Background Glow */}
             <div className="absolute -right-10 -top-10 w-32 h-32 rounded-full bg-sky-500/10 blur-[50px] group-hover:bg-sky-500/20 transition-all duration-500" />

@@ -101,9 +101,11 @@ export default function CheckoutPage() {
 
                     if (mpRes.ok) {
                         const mp = await mpRes.json();
-                        const redirectUrl = process.env.NODE_ENV === 'production'
-                            ? mp.initPoint
-                            : mp.sandboxInitPoint || mp.initPoint;
+                        // Use sandbox URL only when explicitly set, otherwise use production
+                        const isSandbox = process.env.NEXT_PUBLIC_MERCADOPAGO_SANDBOX === 'true';
+                        const redirectUrl = isSandbox
+                            ? (mp.sandboxInitPoint || mp.initPoint)
+                            : mp.initPoint;
                         if (redirectUrl) {
                             window.location.href = redirectUrl;
                             return;
