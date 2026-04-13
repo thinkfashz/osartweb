@@ -41,7 +41,7 @@ export const SupabaseStatusPanel = () => {
 
             <div className="relative z-10">
                 <div className="flex items-center justify-between mb-8">
-                    <div className="p-3 bg-sky-50 dark:bg-sky-500/10 rounded-2xl text-sky-600">
+                    <div className="p-3 bg-violet-500/10 dark:bg-violet-500/100/10 rounded-2xl text-violet-400">
                         <Database size={20} />
                     </div>
                     <div className={`px-4 py-1.5 rounded-full flex items-center gap-2 border ${status === 'online'
@@ -85,7 +85,7 @@ export const SupabaseStatusPanel = () => {
             </div>
 
             <div className="mt-8 pt-6 border-t border-zinc-200/50 dark:border-zinc-800/30 relative z-10">
-                <div className="flex items-center gap-3 p-4 bg-sky-600 rounded-2xl shadow-lg shadow-sky-600/20 group-hover:scale-[1.02] transition-transform cursor-pointer">
+                <div className="flex items-center gap-3 p-4 bg-violet-600 rounded-2xl shadow-lg shadow-violet-600/20 group-hover:scale-[1.02] transition-transform cursor-pointer">
                     <CheckCircle2 size={18} className="text-white" />
                     <span className="text-[10px] font-black text-white uppercase tracking-widest">Ver Historial de Commit</span>
                 </div>

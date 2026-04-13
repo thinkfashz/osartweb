@@ -15,7 +15,7 @@ interface StatCardProps {
     color?: string;
 }
 
-export const StatCard = ({ title, value, icon: Icon, trend, description, color = "sky-500" }: StatCardProps) => {
+export const StatCard = ({ title, value, icon: Icon, trend, description, color = "violet-500" }: StatCardProps) => {
     const ref = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -36,15 +36,15 @@ export const StatCard = ({ title, value, icon: Icon, trend, description, color =
 
     const iconColor = color === 'red-500'
         ? 'bg-red-500 shadow-red-500/30'
-        : 'bg-sky-500 shadow-sky-500/30';
+        : 'bg-violet-600 shadow-violet-500/30';
 
     return (
         <div
             ref={ref}
-            className={`gsap-hidden saas-glass dark:saas-glass-dark border border-white/40 dark:border-zinc-800/50 rounded-[2.5rem] p-5 md:p-8 shadow-xl shadow-sky-500/5 relative overflow-hidden group flex flex-col justify-between min-h-[160px] hover:-translate-y-1 transition-transform duration-300`}
+            className="gsap-hidden bg-[#0d0d1a] border border-violet-500/20 rounded-[2rem] p-5 md:p-8 shadow-xl relative overflow-hidden group flex flex-col justify-between min-h-[160px] hover:-translate-y-1 transition-transform duration-300 hover:border-violet-500/40"
         >
             {/* Ambient Background Glow */}
-            <div className="absolute -right-10 -top-10 w-32 h-32 rounded-full bg-sky-500/10 blur-[50px] group-hover:bg-sky-500/20 transition-all duration-500" />
+            <div className="absolute -right-10 -top-10 w-32 h-32 rounded-full bg-violet-500/10 blur-[50px] group-hover:bg-violet-500/20 transition-all duration-500" />
 
             <div className="flex items-start justify-between relative z-10">
                 <div className="flex-1 min-w-0">

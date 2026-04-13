@@ -27,7 +27,7 @@ export default function SalesCharts({ data }: { data: any }) {
                         Fecha: {label}
                     </p>
                     <div className="space-y-1">
-                        <p className="text-base font-black text-sky-600 dark:text-sky-400">
+                        <p className="text-base font-black text-violet-400 dark:text-violet-400">
                             {new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP' }).format(payload[0].value)}
                         </p>
                         <p className="text-[10px] font-bold text-zinc-500">
