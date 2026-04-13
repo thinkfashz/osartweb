@@ -14,7 +14,6 @@ import {
     X,
     LogOut,
     TrendingUp,
-    ShieldCheck,
     Zap,
     Layers,
     Webhook,
@@ -73,7 +72,7 @@ export default function AdminSidebar({ isOpen, setIsOpen }: { isOpen: boolean, s
             transition={{ type: "spring", damping: 30, stiffness: 200 }}
             className={cn(
                 "fixed inset-y-0 left-0 z-50 lg:relative lg:translate-x-0 h-full flex flex-col transition-all",
-                "bg-background/80 backdrop-blur-2xl border-r border-border shadow-2xl"
+                "bg-[#0d0d1a] border-r border-violet-500/10 shadow-2xl shadow-violet-500/5"
             )}
         >
             {/* Mobile Close Button */}
@@ -87,10 +86,10 @@ export default function AdminSidebar({ isOpen, setIsOpen }: { isOpen: boolean, s
             {/* Sidebar Toggle (Desktop Only) */}
             <button
                 onClick={() => setIsCollapsed(!isCollapsed)}
-                className="absolute -right-3 top-20 bg-zinc-900 border border-zinc-800 rounded-full p-1.5 shadow-xl hover:bg-zinc-800 hover:border-zinc-700 transition-all hidden lg:flex items-center justify-center z-50 group interactive-focus"
+                className="absolute -right-3 top-20 bg-[#0d0d1a] border border-violet-500/20 rounded-full p-1.5 shadow-xl hover:bg-violet-500/10 hover:border-violet-500/40 transition-all hidden lg:flex items-center justify-center z-50 group interactive-focus"
             >
                 {isCollapsed ?
-                    <Menu size={11} className="text-zinc-400 group-hover:text-sky-500 transition-colors" /> :
+                    <Menu size={11} className="text-zinc-400 group-hover:text-violet-400 transition-colors" /> :
                     <X size={11} className="text-zinc-400 group-hover:text-red-400 transition-colors" />
                 }
             </button>
@@ -103,8 +102,8 @@ export default function AdminSidebar({ isOpen, setIsOpen }: { isOpen: boolean, s
             {/* Navigation */}
             <nav className="flex-1 px-4 space-y-10 overflow-y-auto custom-scrollbar-dark py-4">
                 <div>
-                    <h3 className={`px-4 mb-4 text-[9px] font-black uppercase tracking-[0.3em] text-zinc-600 flex items-center gap-2 ${isCollapsed ? 'justify-center px-0' : ''}`}>
-                        <div className="w-1 h-3 bg-zinc-800 rounded-full" />
+                    <h3 className={`px-4 mb-4 text-[9px] font-black uppercase tracking-[0.3em] text-violet-400/60 flex items-center gap-2 ${isCollapsed ? 'justify-center px-0' : ''}`}>
+                        <div className="w-1 h-3 bg-violet-500/30 rounded-full" />
                         {!isCollapsed && "Núcleo Operativo"}
                     </h3>
                     <div className="space-y-1.5">
@@ -115,8 +114,8 @@ export default function AdminSidebar({ isOpen, setIsOpen }: { isOpen: boolean, s
                 </div>
 
                 <div>
-                    <h3 className={`px-4 mb-4 text-[9px] font-black uppercase tracking-[0.3em] text-zinc-600 flex items-center gap-2 ${isCollapsed ? 'justify-center px-0' : ''}`}>
-                        <div className="w-1 h-3 bg-zinc-800 rounded-full" />
+                    <h3 className={`px-4 mb-4 text-[9px] font-black uppercase tracking-[0.3em] text-violet-400/60 flex items-center gap-2 ${isCollapsed ? 'justify-center px-0' : ''}`}>
+                        <div className="w-1 h-3 bg-violet-500/30 rounded-full" />
                         {!isCollapsed && "Sistemas de Red"}
                     </h3>
                     <div className="space-y-1.5">
@@ -128,18 +127,18 @@ export default function AdminSidebar({ isOpen, setIsOpen }: { isOpen: boolean, s
             </nav>
 
             {/* Status & Logout */}
-            <div className="p-6 mt-auto border-t border-zinc-200/50 dark:border-zinc-800/50 bg-zinc-50/50 dark:bg-black/20">
+            <div className="p-6 mt-auto border-t border-violet-500/10">
                 {!isCollapsed && (
-                    <div className="px-4 py-3 mb-4 rounded-2xl bg-muted/20 border border-border flex items-center gap-3">
+                    <div className="px-4 py-3 mb-4 rounded-2xl bg-violet-500/10 border border-violet-500/20 flex items-center gap-3">
                         <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
-                        <span className="text-[10px] font-bold text-sky-500 uppercase tracking-widest text-readability">Productos Activos</span>
+                        <span className="text-[10px] font-bold text-violet-300 uppercase tracking-widest">Productos Activos</span>
                     </div>
                 )}
                 <button
                     onClick={handleLogout}
                     className={cn(
                         "flex items-center gap-3 px-4 py-3.5 w-full rounded-2xl transition-all group",
-                        "text-zinc-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10",
+                        "text-zinc-500 hover:text-red-400 hover:bg-red-500/10",
                         isCollapsed && "justify-center"
                     )}
                 >
@@ -159,8 +158,8 @@ const NavItem = ({ item, pathname, isCollapsed }: any) => {
             className={cn(
                 "flex items-center gap-3 px-5 py-3.5 rounded-2xl transition-all group relative overflow-hidden",
                 isActive
-                    ? 'bg-sky-500 text-white shadow-lg shadow-sky-500/20'
-                    : 'text-zinc-500 hover:text-sky-600 hover:bg-sky-50 dark:hover:bg-sky-500/5',
+                    ? 'bg-violet-600 text-white shadow-lg shadow-violet-500/25'
+                    : 'text-zinc-400 hover:text-violet-300 hover:bg-violet-500/10',
                 isCollapsed && "justify-center px-0 mx-2"
             )}
         >
@@ -173,7 +172,7 @@ const NavItem = ({ item, pathname, isCollapsed }: any) => {
             />
             {!isCollapsed && (
                 <span className={cn(
-                    "text-[11px] font-extrabold uppercase tracking-widest transition-all text-readability",
+                    "text-[11px] font-extrabold uppercase tracking-widest transition-all",
                     isActive ? "ml-1" : "group-hover:ml-1"
                 )}>
                     {item.name}
@@ -183,7 +182,7 @@ const NavItem = ({ item, pathname, isCollapsed }: any) => {
             {isActive && !isCollapsed && (
                 <motion.div
                     layoutId="nav-active"
-                    className="absolute left-0 top-3 bottom-3 w-1.5 bg-white rounded-r-full"
+                    className="absolute left-0 top-3 bottom-3 w-1.5 bg-white/60 rounded-r-full"
                     transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 />
             )}

@@ -85,11 +85,11 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     // Show spinner only on first load — not on subsequent in-app navigations
     if (authLoading || roleLoading) {
         return (
-            <div className="h-screen w-full bg-zinc-950 flex flex-col items-center justify-center gap-6">
+            <div className="h-screen w-full bg-[#070710] flex flex-col items-center justify-center gap-6">
                 <div className="relative w-16 h-16">
-                    <div className="absolute inset-0 w-16 h-16 border-2 border-zinc-800 border-t-sky-500 rounded-2xl animate-spin" />
+                    <div className="absolute inset-0 w-16 h-16 border-2 border-violet-900/50 border-t-violet-500 rounded-2xl animate-spin" />
                     <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-2 h-2 rounded-full bg-sky-500" />
+                        <div className="w-2 h-2 rounded-full bg-violet-500" />
                     </div>
                 </div>
                 <p className="text-[10px] font-mono text-zinc-500 uppercase tracking-widest">
@@ -103,9 +103,9 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
     if (role !== 'admin') return null;
 
     return (
-        <div className="flex h-screen bg-background text-foreground font-inter overflow-hidden relative transition-colors duration-500">
+        <div className="flex h-screen bg-[#070710] text-foreground font-inter overflow-hidden relative transition-colors duration-500">
 
-            {/* Rondón Animado: Background logic */}
+            {/* Animated background blobs */}
             <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
                 <motion.div
                     animate={{
@@ -114,7 +114,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                         scale: [1, 1.2, 1]
                     }}
                     transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                    className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-sky-400/10 dark:bg-sky-900/10 blur-[120px] rounded-full"
+                    className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-violet-900/10 blur-[120px] rounded-full"
                 />
                 <motion.div
                     animate={{
@@ -123,7 +123,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                         scale: [1, 1.1, 1]
                     }}
                     transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-                    className="absolute bottom-[10%] right-[5%] w-[35%] h-[35%] bg-cyan-400/10 dark:bg-cyan-900/10 blur-[100px] rounded-full"
+                    className="absolute bottom-[10%] right-[5%] w-[35%] h-[35%] bg-purple-900/10 blur-[100px] rounded-full"
                 />
                 <motion.div
                     animate={{
@@ -131,7 +131,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
                         opacity: [0.1, 0.3, 0.1]
                     }}
                     transition={{ duration: 15, repeat: Infinity }}
-                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50%] h-[50%] bg-blue-400/5 dark:bg-blue-900/5 blur-[150px] rounded-full"
+                    className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[50%] h-[50%] bg-violet-800/5 blur-[150px] rounded-full"
                 />
             </div>
 
