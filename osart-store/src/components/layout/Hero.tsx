@@ -133,13 +133,6 @@ const Hero = () => {
             <div className="absolute top-1/2 right-10 -translate-y-1/2 hidden lg:block opacity-[0.04] select-none pointer-events-none" style={{ writingMode: 'vertical-rl' }}>
                 <span className="text-[10px] font-black uppercase tracking-[1em] text-white">SYSTEM_STABILITY_V4.02</span>
             </div>
-
-            <style jsx>{`
-                @keyframes aurora-pulse {
-                    0%, 100% { opacity: 0.6; }
-                    50% { opacity: 1; }
-                }
-            `}</style>
         </section>
     );
 };
